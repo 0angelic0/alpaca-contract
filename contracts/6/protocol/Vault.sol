@@ -186,6 +186,7 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
     uint256 total = totalToken().sub(amountToken);
     uint256 share = total == 0 ? amountToken : amountToken.mul(totalSupply()).div(total);
     _mint(msg.sender, share);
+    require(totalSupply() > 1e17, "vault:deposit: no tiny shares");
   }
 
   /// @dev Withdraw token from the lending and burning ibToken.
@@ -195,10 +196,11 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
     if (token == config.getWrappedNativeAddr()) {
       SafeToken.safeTransfer(token, config.getWNativeRelayer(), amount);
       WNativeRelayer(uint160(config.getWNativeRelayer())).withdraw(amount);
-      msg.sender.transfer(amount);
+      SafeToken.safeTransferETH(msg.sender, amount);
       return;
     }
     SafeToken.safeTransfer(token, msg.sender, amount);
+    require(totalSupply() > 1e17, "vault:withdraw: no tiny shares");
   }
 
   /// @dev Request Funds from user through Vault
