@@ -13,13 +13,13 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   ░░░╚═╝░░░╚═╝░░╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚══╝╚═╝╚═╝░░╚══╝░╚═════╝░
   Check all variables below before execute the deployment script
   */
-  const FAIR_LAUNCH_ADDR = '0x6BF1c9Dd8a88c703FbFBA34d5F4fa0c141a62b35';
+  const FAIR_LAUNCH_ADDR = '0x31402C656f48F09284755d7B97Ffd40Ea372D531';
   const MIN_DEBT_SIZE = ethers.utils.parseEther('400');
   const RESERVE_POOL_BPS = '1000';
   const KILL_PRIZE_BPS = '500';
-  const INTEREST_MODEL = '0x9ef2Ad30f723BD55B1adF54158F9Df283E5E8Fd0';
+  const INTEREST_MODEL = '0xAf35eac61ADb72ca435aa5e12E32AD7b62a8c9DA';
   const WNATV_ADDR = '0x0421b6CE68C71708CD18652aF5123fc2573DBCCC';
-  const WNATV_RLY_ADDR = '0x78e3F05BF68Af579CAefb358696F5dBDf112D6a5';
+  const WNATV_RLY_ADDR = '0x01EBAC2f65eC3cE064EDcf05f9fAd9B8D9a419Ee';
 
   const TIMELOCK = '0x771F70042ebb6d2Cfc29b7BF9f3caf9F959385B8';
 

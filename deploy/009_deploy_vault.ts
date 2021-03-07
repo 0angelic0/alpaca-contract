@@ -14,15 +14,15 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   Check all variables below before execute the deployment script
   */
 
-  const FAIR_LAUNCH_ADDR = '0x6BF1c9Dd8a88c703FbFBA34d5F4fa0c141a62b35';
+  const FAIR_LAUNCH_ADDR = '0x31402C656f48F09284755d7B97Ffd40Ea372D531';
   const ALLOC_POINT_FOR_DEPOSIT = 100;
   const ALLOC_POINT_FOR_OPEN_POSITION = 100;
-  const CONFIG_ADDR = '0x1b9a864a510Cd86B0Ab2dF8C44B5a80633fA459D';
+  const CONFIG_ADDR = '0x950e8137B8c0d403DCBeAb41AF1160a56862ba5a';
   const BASE_TOKEN_ADDR = '0x1f1F4D015A3CE748b838f058930dea311F3b69AE'
   const VAULT_NAME = 'BUSD VAULT'
   const NAME = 'Interest Bearing BUSD'
   const SYMBOL = 'ibBUSD';
-  const WNATIVE_RELAYER_ADDR = '0x78e3F05BF68Af579CAefb358696F5dBDf112D6a5';
+  const WNATIVE_RELAYER_ADDR = '0x01EBAC2f65eC3cE064EDcf05f9fAd9B8D9a419Ee';
 
   const TIMELOCK = '0x771F70042ebb6d2Cfc29b7BF9f3caf9F959385B8';
 

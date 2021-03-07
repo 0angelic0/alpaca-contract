@@ -16,9 +16,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   */
   const ALPACA_REWARD_PER_BLOCK = ethers.utils.parseEther('20');
   const BONUS_MULTIPLIER = 7;
-  const BONUS_END_BLOCK = '6813210';
+  const BONUS_END_BLOCK = '7216410';
   const BONUS_LOCK_BPS = '7000';
-  const START_BLOCK = '7216410';
+  const START_BLOCK = '6823000';
   const ALPACA_START_RELEASE = '11997210';
   const ALPACA_END_RELEASE = '17181210';
 
