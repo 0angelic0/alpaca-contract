@@ -31,7 +31,7 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
   IPancakeMasterChef public masterChef;
   IUniswapV2Factory public factory;
   IUniswapV2Router02 public router;
-  IUniswapV2Pair public lpToken;
+  IUniswapV2Pair public override lpToken;
   address public wNative;
   address public baseToken;
   address public quoteToken;

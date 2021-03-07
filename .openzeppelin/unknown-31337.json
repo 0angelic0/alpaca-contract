@@ -163,7 +163,7 @@
           {
             "contract": "StrategyAddBaseTokenOnly",
             "label": "router",
-            "type": "t_contract(IUniswapV2Router02)8725",
+            "type": "t_contract(IUniswapV2Router02)8704",
             "src": "contracts/6/protocol/strategies/pancakeswap/StrategyAddBaseTokenOnly.sol:21"
           }
         ],
@@ -171,7 +171,7 @@
           "t_contract(IUniswapV2Factory)3151": {
             "label": "contract IUniswapV2Factory"
           },
-          "t_contract(IUniswapV2Router02)8725": {
+          "t_contract(IUniswapV2Router02)8704": {
             "label": "contract IUniswapV2Router02"
           },
           "t_bool": {
@@ -233,7 +233,7 @@
           {
             "contract": "StrategyLiquidate",
             "label": "router",
-            "type": "t_contract(IUniswapV2Router02)8725",
+            "type": "t_contract(IUniswapV2Router02)8704",
             "src": "contracts/6/protocol/strategies/pancakeswap/StrategyLiquidate.sol:18"
           }
         ],
@@ -241,7 +241,7 @@
           "t_contract(IUniswapV2Factory)3151": {
             "label": "contract IUniswapV2Factory"
           },
-          "t_contract(IUniswapV2Router02)8725": {
+          "t_contract(IUniswapV2Router02)8704": {
             "label": "contract IUniswapV2Router02"
           },
           "t_bool": {
@@ -394,7 +394,7 @@
     },
     "7e7f6b47b25e8cd1cdd270eb6ef5de787c564e0a1b509bb323141430130ff0c8": {
       "address": "0xC0FbC62e9237C86c4f082f1f290667A54155D81a",
-      "txHash": "0xfcd7828f7bef3b93f4f4f9d66bb75f7036d112e6b4af021eefd6793fe06da977",
+      "txHash": "0xb2407c99f31e830d238bc0f944e5a43ae2dd38f19b008d1997296f9ebdc47d88",
       "layout": {
         "storage": [
           {
@@ -448,7 +448,7 @@
           {
             "contract": "PancakeswapWorker",
             "label": "masterChef",
-            "type": "t_contract(IPancakeMasterChef)11573",
+            "type": "t_contract(IPancakeMasterChef)11552",
             "src": "contracts/6/protocol/workers/PancakeswapWorker.sol:31"
           },
           {
@@ -460,7 +460,7 @@
           {
             "contract": "PancakeswapWorker",
             "label": "router",
-            "type": "t_contract(IUniswapV2Router02)8725",
+            "type": "t_contract(IUniswapV2Router02)8704",
             "src": "contracts/6/protocol/workers/PancakeswapWorker.sol:33"
           },
           {
@@ -526,13 +526,13 @@
           {
             "contract": "PancakeswapWorker",
             "label": "addStrat",
-            "type": "t_contract(IStrategy)11586",
+            "type": "t_contract(IStrategy)11565",
             "src": "contracts/6/protocol/workers/PancakeswapWorker.sol:46"
           },
           {
             "contract": "PancakeswapWorker",
             "label": "liqStrat",
-            "type": "t_contract(IStrategy)11586",
+            "type": "t_contract(IStrategy)11565",
             "src": "contracts/6/protocol/workers/PancakeswapWorker.sol:47"
           },
           {
@@ -543,13 +543,13 @@
           }
         ],
         "types": {
-          "t_contract(IPancakeMasterChef)11573": {
+          "t_contract(IPancakeMasterChef)11552": {
             "label": "contract IPancakeMasterChef"
           },
           "t_contract(IUniswapV2Factory)3151": {
             "label": "contract IUniswapV2Factory"
           },
-          "t_contract(IUniswapV2Router02)8725": {
+          "t_contract(IUniswapV2Router02)8704": {
             "label": "contract IUniswapV2Router02"
           },
           "t_contract(IUniswapV2Pair)3393": {
@@ -570,7 +570,7 @@
           "t_bool": {
             "label": "bool"
           },
-          "t_contract(IStrategy)11586": {
+          "t_contract(IStrategy)11565": {
             "label": "contract IStrategy"
           },
           "t_array(t_uint256)49_storage": {
@@ -1372,9 +1372,9 @@
         }
       }
     },
-    "05910342708b15901901ff666ecb7614f7b7cc7e2b7477ffe7e06b4c3d1a23e3": {
+    "c3688dc9026033a75223d5cec6e2662d54afd9726b0bb416f57c96f49f9d033d": {
       "address": "0x1284a28a6d1a3B52B1d4412791B721114c6996fd",
-      "txHash": "0x161838ab4a949d0717c2b4cbb5e70ae60d88bbb22897a401c0a4aceb51cb82fe",
+      "txHash": "0x5b8913b48ef70a95c6d287f078a947fcfb96c4ab2b461de68f1f89715f3ea66c",
       "layout": {
         "storage": [
           {
@@ -1500,7 +1500,7 @@
           {
             "contract": "Vault",
             "label": "config",
-            "type": "t_contract(IVaultConfig)11700",
+            "type": "t_contract(IVaultConfig)11679",
             "src": "contracts/6/protocol/Vault.sol:58"
           },
           {
@@ -1553,7 +1553,7 @@
           "t_address": {
             "label": "address"
           },
-          "t_contract(IVaultConfig)11700": {
+          "t_contract(IVaultConfig)11679": {
             "label": "contract IVaultConfig"
           },
           "t_mapping(t_uint256,t_struct(Position)6721_storage)": {

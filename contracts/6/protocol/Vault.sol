@@ -128,7 +128,7 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
 
     debtToken = _debtToken;
 
-    IERC20(debtToken).approve(config.getFairLaunchAddr(), uint256(-1));
+    SafeToken.safeApprove(debtToken, config.getFairLaunchAddr(), uint256(-1));
 
     // free-up execution scope
     _IN_EXEC_LOCK = _NOT_ENTERED;
@@ -141,7 +141,7 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
   function pendingInterest(uint256 value) public view returns (uint256) {
     if (now > lastAccrueTime) {
       uint256 timePast = now.sub(lastAccrueTime);
-      uint256 balance = IERC20(token).balanceOf(address(this)).sub(value);
+      uint256 balance = SafeToken.myBalance(token).sub(value);
       uint256 ratePerSec = config.getInterestRate(vaultDebtVal, balance);
       return ratePerSec.mul(vaultDebtVal).mul(timePast).div(1e18);
     } else {
@@ -172,7 +172,7 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
 
   /// @dev Return the total token entitled to the token holders. Be careful of unaccrued interests.
   function totalToken() public view override returns (uint256) {
-    return IERC20(token).balanceOf(address(this)).add(vaultDebtVal).sub(reservePool);
+    return SafeToken.myBalance(token).add(vaultDebtVal).sub(reservePool);
   }
 
   /// @dev Add more token to the lending pool. Hope to get some good returns.
@@ -236,7 +236,7 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
   {
     require(fairLaunchPoolId != uint256(-1), "work: poolId not set");
     // 1. Sanity check the input position, or add a new position of ID is 0.
-    Position memory pos;
+    Position storage pos;
     if (id == 0) {
       id = nextPositionID++;
       pos = positions[id];
@@ -260,12 +260,12 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
     // 3. Perform the actual work, using a new scope to avoid stack-too-deep errors.
     uint256 back;
     {
-      uint256 sendERC20 = principalAmount.add(loan);
-      require(sendERC20 <= IERC20(token).balanceOf(address(this)), "insufficient funds in the vault");
-      uint256 beforeERC20 = IERC20(token).balanceOf(address(this)).sub(sendERC20);
-      IERC20(token).transfer(worker, sendERC20);
+      uint256 sendBEP20 = principalAmount.add(loan);
+      require(sendBEP20 <= SafeToken.myBalance(token), "insufficient funds in the vault");
+      uint256 beforeBEP20 = SafeToken.myBalance(token).sub(sendBEP20);
+      SafeToken.safeTransfer(token, worker, sendBEP20);
       IWorker(worker).work(id, msg.sender, debt, data);
-      back = IERC20(token).balanceOf(address(this)).sub(beforeERC20);
+      back = SafeToken.myBalance(token).sub(beforeBEP20);
     }
     // 4. Check and update position debt.
     uint256 lessDebt = Math.min(debt, Math.min(back, maxReturn));
@@ -305,9 +305,9 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
     uint256 killFactor = config.killFactor(pos.worker, debt);
     require(health.mul(killFactor) < debt.mul(10000), "can't liquidate");
     // 2. Perform liquidation and compute the amount of token received.
-    uint256 beforeToken = IERC20(token).balanceOf(address(this));
+    uint256 beforeToken = SafeToken.myBalance(token);
     IWorker(pos.worker).liquidate(id);
-    uint256 back = IERC20(token).balanceOf(address(this)).sub(beforeToken);
+    uint256 back = SafeToken.myBalance(token).sub(beforeToken);
     uint256 prize = back.mul(config.getKillBps()).div(10000);
     uint256 rest = back.sub(prize);
     // 3. Clear position debt and return funds to liquidator and position owner.
@@ -368,7 +368,7 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
   }
 
   function setFairLaunchPoolId(uint256 _poolId) external onlyOwner {
-    IERC20(debtToken).approve(config.getFairLaunchAddr(), uint256(-1));
+    SafeToken.safeApprove(debtToken, config.getFairLaunchAddr(), uint256(-1));
     fairLaunchPoolId = _poolId;
   }
 

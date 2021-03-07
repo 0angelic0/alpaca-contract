@@ -5,15 +5,10 @@ import "@openzeppelin/contracts-ethereum-package/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol";
 
-import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol";
-
+import "../interfaces/IWorker.sol";
 import "../interfaces/IWorkerConfig.sol";
 import "../PriceOracle.sol";
 import "../../utils/SafeToken.sol";
-
-interface IWorker {
-  function lpToken() external view returns (IUniswapV2Pair);
-}
 
 contract WorkerConfig is OwnableUpgradeSafe, IWorkerConfig {
   using SafeToken for address;
