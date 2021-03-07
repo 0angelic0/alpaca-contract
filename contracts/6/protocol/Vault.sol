@@ -281,9 +281,10 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
       if(token == config.getWrappedNativeAddr()) {
         SafeToken.safeTransfer(token, config.getWNativeRelayer(), back.sub(lessDebt));
         WNativeRelayer(uint160(config.getWNativeRelayer())).withdraw(back.sub(lessDebt));
-        msg.sender.transfer(back.sub(lessDebt));
+        SafeToken.safeTransferETH(msg.sender, lessDebt);
+      } else {
+        SafeToken.safeTransfer(token, msg.sender, back.sub(lessDebt));
       }
-      SafeToken.safeTransfer(token, msg.sender, back.sub(lessDebt));
     }
     // Release execution scope
     POSITION_ID = _NO_ID;
