@@ -40,26 +40,30 @@ contract StrategyAddBaseTokenOnly is ReentrancyGuardUpgradeSafe, IStrategy {
     // 1. Find out what farming token we are dealing with and min additional LP tokens.
     (
       address baseToken,
-      address quoteToken,
+      address farmingToken,
       uint256 minLPAmount
     ) = abi.decode(data, (address, address, uint256));
-    IUniswapV2Pair lpToken = IUniswapV2Pair(factory.getPair(quoteToken, baseToken));
+    IUniswapV2Pair lpToken = IUniswapV2Pair(factory.getPair(farmingToken, baseToken));
     IERC20(baseToken).approve(address(router), uint256(-1)); // trust router 100%
-    // 2. Compute the optimal amount of baseToken to be converted to quoteToken.
+    // 2. Compute the optimal amount of baseToken to be converted to farmingToken.
     uint256 balance = IERC20(baseToken).balanceOf(address(this));
     (uint256 r0, uint256 r1, ) = lpToken.getReserves();
     uint256 rIn = lpToken.token0() == baseToken ? r0 : r1;
-    uint256 aIn = AlpacaMath.sqrt(rIn.mul(balance.mul(3988000).add(rIn.mul(3988009)))).sub(rIn.mul(1997)) / 1994;
-    // 3. Convert that portion of baseToken to quoteToken.
+    // find how many baseToken need to be converted to farmingToken
+    // Constants come from
+    // 4(1-f) = 4*998*1000 = 3992000, where f = 0.002 and 1,000 is a way to avoid floating point
+    // 1998^2 = 3992004
+    uint256 aIn = AlpacaMath.sqrt(rIn.mul(balance.mul(3992000).add(rIn.mul(3992004)))).sub(rIn.mul(1998)) / 1996;
+    // 3. Convert that portion of baseToken to farmingToken.
     address[] memory path = new address[](2);
     path[0] = baseToken;
-    path[1] = quoteToken;
+    path[1] = farmingToken;
     router.swapExactTokensForTokens(aIn, 0, path, address(this), now);
     // 4. Mint more LP tokens and return all LP tokens to the sender.
-    quoteToken.safeApprove(address(router), 0);
-    quoteToken.safeApprove(address(router), uint(-1));
+    farmingToken.safeApprove(address(router), 0);
+    farmingToken.safeApprove(address(router), uint(-1));
     (,, uint256 moreLPAmount) = router.addLiquidity(
-      baseToken, quoteToken, IERC20(baseToken).balanceOf(address(this)), quoteToken.myBalance(), 0, 0, address(this), now
+      baseToken, farmingToken, IERC20(baseToken).balanceOf(address(this)), farmingToken.myBalance(), 0, 0, address(this), now
     );
     require(moreLPAmount >= minLPAmount, "insufficient LP tokens received");
     lpToken.transfer(msg.sender, lpToken.balanceOf(address(this)));

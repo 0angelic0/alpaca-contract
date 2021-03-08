@@ -174,7 +174,7 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
   function getMktSellAmount(uint256 aIn, uint256 rIn, uint256 rOut) public pure returns (uint256) {
     if (aIn == 0) return 0;
     require(rIn > 0 && rOut > 0, "bad reserve values");
-    uint256 aInWithFee = aIn.mul(997);
+    uint256 aInWithFee = aIn.mul(998);
     uint256 numerator = aInWithFee.mul(rOut);
     uint256 denominator = rIn.mul(1000).add(aInWithFee);
     return numerator / denominator;
