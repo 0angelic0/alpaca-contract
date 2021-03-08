@@ -43,7 +43,7 @@ contract StrategyAddTwoSidesOptimal is ReentrancyGuardUpgradeSafe, IStrategy {
     uint256 amtB,
     uint256 resA,
     uint256 resB
-  ) internal pure returns (uint256 swapAmt, bool isReversed) {
+  ) internal view returns (uint256 swapAmt, bool isReversed) {
     if (amtA.mul(resB) >= amtB.mul(resA)) {
       swapAmt = _optimalDepositA(amtA, amtB, resA, resB);
       isReversed = false;
@@ -63,7 +63,7 @@ contract StrategyAddTwoSidesOptimal is ReentrancyGuardUpgradeSafe, IStrategy {
     uint256 amtB,
     uint256 resA,
     uint256 resB
-  ) internal pure returns (uint256) {
+  ) internal view returns (uint256) {
     require(amtA.mul(resB) >= amtB.mul(resA), "Reversed");
 
     uint256 a = 998;
@@ -82,7 +82,7 @@ contract StrategyAddTwoSidesOptimal is ReentrancyGuardUpgradeSafe, IStrategy {
 
   /// @dev Execute worker strategy. Take LP tokens + ETH. Return LP tokens + ETH.
   /// @param data Extra calldata information passed along to this strategy.
-  function execute(address /* user */, uint256, /* debt */ bytes calldata data) external override payable nonReentrant
+  function execute(address user, uint256, /* debt */ bytes calldata data) external override payable nonReentrant
   {
     // 1. Find out what farming token we are dealing with.
     (
@@ -94,7 +94,7 @@ contract StrategyAddTwoSidesOptimal is ReentrancyGuardUpgradeSafe, IStrategy {
     IUniswapV2Pair lpToken = IUniswapV2Pair(factory.getPair(farmingToken, baseToken));
     // 2. Compute the optimal amount of BaseToken and FarmingToken to be converted.
     vault.requestFunds(farmingToken, farmingTokenAmount);
-    uint256 baseTokenBalance = baseToken.balanceOf(address(this));
+    uint256 baseTokenBalance = baseToken.myBalance();
     uint256 swapAmt;
     bool isReversed;
     {
@@ -117,6 +117,13 @@ contract StrategyAddTwoSidesOptimal is ReentrancyGuardUpgradeSafe, IStrategy {
     );
     require(moreLPAmount >= minLPAmount, "insufficient LP tokens received");
     lpToken.transfer(msg.sender, lpToken.balanceOf(address(this)));
+    // return leftover back to user
+    if (baseToken.myBalance() > 0) {
+      baseToken.safeTransfer(user, baseToken.myBalance());
+    }
+    if (farmingToken.myBalance() > 0) {
+      farmingToken.safeTransfer(user, farmingToken.myBalance());
+    }
   }
 
   receive() external payable {}

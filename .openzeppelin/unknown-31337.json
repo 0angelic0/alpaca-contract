@@ -190,8 +190,8 @@
       }
     },
     "16eb2d598a98c1b50ee4e5d1b76001180b1fbfbd5b86f451536394b46b1b2c8f": {
-      "address": "0xC94C872deB2e982887C8566fF4085B24823D33D0",
-      "txHash": "0xb6c065b247fbbf54a48e05584566733ebb3c9d9bd8158e086161c22a11035610",
+      "address": "0x281F7e11327393e1397C8c76Ef8b1AF151C62a72",
+      "txHash": "0xf509d884598d93479a36b3cced8bf38084b04f2c97a0b70b10389b4fee3ec00c",
       "layout": {
         "storage": [
           {
@@ -260,8 +260,8 @@
       }
     },
     "d7ce81080628c6da5f97d698a902da85f7578fa00b96a7f747803be4f8388144": {
-      "address": "0x796a99E37C2225e3AD7b8AaB6fc25F8398975F67",
-      "txHash": "0xa1babf6a53b2e963d1870b4b89812acf9309db389bdae89bcb4805fe5ac81dc5",
+      "address": "0xbaC9859592d7DA3d87564f2a58c2432F40d38199",
+      "txHash": "0x36187b91e29fe68b52002217df8053783b22faddeb4ca7ca91a25ea700891232",
       "layout": {
         "storage": [
           {
@@ -813,97 +813,6 @@
         }
       }
     },
-    "e5176cef0c3d0fd30d509ac44387fdbc45ad0c475cd081f858c21dd071cc597f": {
-      "address": "0x73cAF30eE07EEcEeAF8d872e30D663693DA4487A",
-      "txHash": "0xdc5b6cf077ac35c814c1fe1d6bb021809215076d2aaee84f9d8f5269e2d7b634",
-      "layout": {
-        "storage": [
-          {
-            "contract": "Initializable",
-            "label": "initialized",
-            "type": "t_bool",
-            "src": "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol:21"
-          },
-          {
-            "contract": "Initializable",
-            "label": "initializing",
-            "type": "t_bool",
-            "src": "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol:26"
-          },
-          {
-            "contract": "Initializable",
-            "label": "______gap",
-            "type": "t_array(t_uint256)50_storage",
-            "src": "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol:61"
-          },
-          {
-            "contract": "ContextUpgradeSafe",
-            "label": "__gap",
-            "type": "t_array(t_uint256)50_storage",
-            "src": "@openzeppelin/contracts-ethereum-package/contracts/GSN/Context.sol:37"
-          },
-          {
-            "contract": "OwnableUpgradeSafe",
-            "label": "_owner",
-            "type": "t_address",
-            "src": "@openzeppelin/contracts-ethereum-package/contracts/access/Ownable.sol:18"
-          },
-          {
-            "contract": "OwnableUpgradeSafe",
-            "label": "__gap",
-            "type": "t_array(t_uint256)49_storage",
-            "src": "@openzeppelin/contracts-ethereum-package/contracts/access/Ownable.sol:78"
-          },
-          {
-            "contract": "IbTokenRouter",
-            "label": "router",
-            "type": "t_address",
-            "src": "contracts/6/protocol/IbTokenRouter.sol:17"
-          },
-          {
-            "contract": "IbTokenRouter",
-            "label": "token",
-            "type": "t_address",
-            "src": "contracts/6/protocol/IbTokenRouter.sol:18"
-          },
-          {
-            "contract": "IbTokenRouter",
-            "label": "ibToken",
-            "type": "t_address",
-            "src": "contracts/6/protocol/IbTokenRouter.sol:19"
-          },
-          {
-            "contract": "IbTokenRouter",
-            "label": "alpaca",
-            "type": "t_address",
-            "src": "contracts/6/protocol/IbTokenRouter.sol:20"
-          },
-          {
-            "contract": "IbTokenRouter",
-            "label": "lpToken",
-            "type": "t_address",
-            "src": "contracts/6/protocol/IbTokenRouter.sol:21"
-          }
-        ],
-        "types": {
-          "t_address": {
-            "label": "address"
-          },
-          "t_array(t_uint256)49_storage": {
-            "label": "uint256[49]"
-          },
-          "t_uint256": {
-            "label": "uint256"
-          },
-          "t_array(t_uint256)50_storage": {
-            "label": "uint256[50]"
-          },
-          "t_bool": {
-            "label": "bool"
-          }
-        }
-      }
-    },
     "3a5d5bec7133abe89788b762ecb89d83a0578355906a5b54745224a94433b313": {
       "address": "0x07D72cbCA3E10264818819E7d1e7f6d5e97fBAF9",
       "txHash": "0x4ee152a9eb5aba3a2c80f654b4d6307636be292b7de09ab9422d975e315946e0",
@@ -1294,8 +1203,8 @@
       }
     },
     "c3688dc9026033a75223d5cec6e2662d54afd9726b0bb416f57c96f49f9d033d": {
-      "address": "0x5EF0C6E857F16977A1b001ABf0726B9D7153393D",
-      "txHash": "0x82dd33900abbe6ae395b2dd7971717d7a3e2d97957e29ea777b704534f20cf6b",
+      "address": "0xA84213ac88cA1d4ee1326d8f5663e5b638837999",
+      "txHash": "0x9256f5e7459303857cf7a6b0af1d6cdc22f1cc6721afda5ffcd06eaeeb1bd990",
       "layout": {
         "storage": [
           {
@@ -1524,158 +1433,9 @@
         }
       }
     },
-    "1dc8fc16d9a8b3754b391ad572404f72f40fc2de60e5ec5e2dc8d69b1ef6b838": {
-      "address": "0x3326943a5Ba444df683811505f02b5a31217C916",
-      "txHash": "0x5a5e369e2362419be22d152ddbf446c903b4446967039f74ceeda166898b0a5a",
-      "layout": {
-        "storage": [
-          {
-            "contract": "Initializable",
-            "label": "initialized",
-            "type": "t_bool",
-            "src": "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol:21"
-          },
-          {
-            "contract": "Initializable",
-            "label": "initializing",
-            "type": "t_bool",
-            "src": "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol:26"
-          },
-          {
-            "contract": "Initializable",
-            "label": "______gap",
-            "type": "t_array(t_uint256)50_storage",
-            "src": "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol:61"
-          },
-          {
-            "contract": "ReentrancyGuardUpgradeSafe",
-            "label": "_notEntered",
-            "type": "t_bool",
-            "src": "@openzeppelin/contracts-ethereum-package/contracts/utils/ReentrancyGuard.sol:21"
-          },
-          {
-            "contract": "ReentrancyGuardUpgradeSafe",
-            "label": "__gap",
-            "type": "t_array(t_uint256)49_storage",
-            "src": "@openzeppelin/contracts-ethereum-package/contracts/utils/ReentrancyGuard.sol:63"
-          },
-          {
-            "contract": "StrategyAddBaseTokenOnly",
-            "label": "factory",
-            "type": "t_contract(IUniswapV2Factory)3151",
-            "src": "contracts/6/protocol/strategies/pancakeswap/StrategyAddBaseTokenOnly.sol:20"
-          },
-          {
-            "contract": "StrategyAddBaseTokenOnly",
-            "label": "router",
-            "type": "t_contract(IUniswapV2Router02)8704",
-            "src": "contracts/6/protocol/strategies/pancakeswap/StrategyAddBaseTokenOnly.sol:21"
-          }
-        ],
-        "types": {
-          "t_contract(IUniswapV2Factory)3151": {
-            "label": "contract IUniswapV2Factory"
-          },
-          "t_contract(IUniswapV2Router02)8704": {
-            "label": "contract IUniswapV2Router02"
-          },
-          "t_bool": {
-            "label": "bool"
-          },
-          "t_array(t_uint256)49_storage": {
-            "label": "uint256[49]"
-          },
-          "t_uint256": {
-            "label": "uint256"
-          },
-          "t_array(t_uint256)50_storage": {
-            "label": "uint256[50]"
-          }
-        }
-      }
-    },
-    "342ab6da7ee6056e9d09c7ef6d271fab6ec72e6934318039f2baaa2c2daf227e": {
-      "address": "0xdd141361c7013aB5B92dAc7bb553fE44514Da9A4",
-      "txHash": "0xef0311e46e0fbf789cb9b0cf3b3c3a457efc0394d32dceeb8a24b49766a5908c",
-      "layout": {
-        "storage": [
-          {
-            "contract": "Initializable",
-            "label": "initialized",
-            "type": "t_bool",
-            "src": "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol:21"
-          },
-          {
-            "contract": "Initializable",
-            "label": "initializing",
-            "type": "t_bool",
-            "src": "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol:26"
-          },
-          {
-            "contract": "Initializable",
-            "label": "______gap",
-            "type": "t_array(t_uint256)50_storage",
-            "src": "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol:61"
-          },
-          {
-            "contract": "ReentrancyGuardUpgradeSafe",
-            "label": "_notEntered",
-            "type": "t_bool",
-            "src": "@openzeppelin/contracts-ethereum-package/contracts/utils/ReentrancyGuard.sol:21"
-          },
-          {
-            "contract": "ReentrancyGuardUpgradeSafe",
-            "label": "__gap",
-            "type": "t_array(t_uint256)49_storage",
-            "src": "@openzeppelin/contracts-ethereum-package/contracts/utils/ReentrancyGuard.sol:63"
-          },
-          {
-            "contract": "StrategyAddTwoSidesOptimal",
-            "label": "factory",
-            "type": "t_contract(IUniswapV2Factory)3151",
-            "src": "contracts/6/protocol/strategies/pancakeswap/StrategyAddTwoSidesOptimal.sol:22"
-          },
-          {
-            "contract": "StrategyAddTwoSidesOptimal",
-            "label": "router",
-            "type": "t_contract(IUniswapV2Router02)8704",
-            "src": "contracts/6/protocol/strategies/pancakeswap/StrategyAddTwoSidesOptimal.sol:23"
-          },
-          {
-            "contract": "StrategyAddTwoSidesOptimal",
-            "label": "vault",
-            "type": "t_contract(IVault)11594",
-            "src": "contracts/6/protocol/strategies/pancakeswap/StrategyAddTwoSidesOptimal.sol:24"
-          }
-        ],
-        "types": {
-          "t_contract(IUniswapV2Factory)3151": {
-            "label": "contract IUniswapV2Factory"
-          },
-          "t_contract(IUniswapV2Router02)8704": {
-            "label": "contract IUniswapV2Router02"
-          },
-          "t_contract(IVault)11594": {
-            "label": "contract IVault"
-          },
-          "t_bool": {
-            "label": "bool"
-          },
-          "t_array(t_uint256)49_storage": {
-            "label": "uint256[49]"
-          },
-          "t_uint256": {
-            "label": "uint256"
-          },
-          "t_array(t_uint256)50_storage": {
-            "label": "uint256[50]"
-          }
-        }
-      }
-    },
     "b760d200fafdb60ea03b4d514f188e8034186925e4d8556fed05ddd209f9ee76": {
-      "address": "0xB49f7A97920876d2Ea99903Bce5C8aF948506914",
-      "txHash": "0x0f3722877eb07e6a81cb9ff5c76949eb7f83ae2b3d793da7a0a85864a1ae5112",
+      "address": "0xEDFb338672aC6d228f5fd1CbaeA3D0C9ae8d0C2F",
+      "txHash": "0x0256183b693f5b8b6fa080c00dd4678cbc1fb84ee1eea65ca2b95c0f53e52dde",
       "layout": {
         "storage": [
           {
@@ -1856,6 +1616,246 @@
           },
           "t_array(t_uint256)49_storage": {
             "label": "uint256[49]"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
+    },
+    "f2a71876ac2efca945b7e524387f2876a51e1a7bf872a67a71c9d4ecb8b6cb6a": {
+      "address": "0x73cAF30eE07EEcEeAF8d872e30D663693DA4487A",
+      "txHash": "0x6baa3cba8779295441ef9d09a9a14239164b6d166bce604b56526c0e5aa8eacd",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "initialized",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol:21"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initializing",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol:26"
+          },
+          {
+            "contract": "Initializable",
+            "label": "______gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol:61"
+          },
+          {
+            "contract": "ContextUpgradeSafe",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/GSN/Context.sol:37"
+          },
+          {
+            "contract": "OwnableUpgradeSafe",
+            "label": "_owner",
+            "type": "t_address",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/access/Ownable.sol:18"
+          },
+          {
+            "contract": "OwnableUpgradeSafe",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/access/Ownable.sol:78"
+          },
+          {
+            "contract": "IbTokenRouter",
+            "label": "router",
+            "type": "t_address",
+            "src": "contracts/6/protocol/IbTokenRouter.sol:17"
+          },
+          {
+            "contract": "IbTokenRouter",
+            "label": "token",
+            "type": "t_address",
+            "src": "contracts/6/protocol/IbTokenRouter.sol:18"
+          },
+          {
+            "contract": "IbTokenRouter",
+            "label": "ibToken",
+            "type": "t_address",
+            "src": "contracts/6/protocol/IbTokenRouter.sol:19"
+          },
+          {
+            "contract": "IbTokenRouter",
+            "label": "alpaca",
+            "type": "t_address",
+            "src": "contracts/6/protocol/IbTokenRouter.sol:20"
+          },
+          {
+            "contract": "IbTokenRouter",
+            "label": "lpToken",
+            "type": "t_address",
+            "src": "contracts/6/protocol/IbTokenRouter.sol:21"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          },
+          "t_bool": {
+            "label": "bool"
+          }
+        }
+      }
+    },
+    "2a1c9c397d4a54dc1eca0723e3ba64848565e9a4db31a6be159d207b6fd4cd95": {
+      "address": "0x3326943a5Ba444df683811505f02b5a31217C916",
+      "txHash": "0x42aaead4048fa9ee632ba5aca9de97000b970c36e3984cff3725dbb5f82dd8bb",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "initialized",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol:21"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initializing",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol:26"
+          },
+          {
+            "contract": "Initializable",
+            "label": "______gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol:61"
+          },
+          {
+            "contract": "ReentrancyGuardUpgradeSafe",
+            "label": "_notEntered",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/utils/ReentrancyGuard.sol:21"
+          },
+          {
+            "contract": "ReentrancyGuardUpgradeSafe",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/utils/ReentrancyGuard.sol:63"
+          },
+          {
+            "contract": "StrategyAddBaseTokenOnly",
+            "label": "factory",
+            "type": "t_contract(IUniswapV2Factory)3151",
+            "src": "contracts/6/protocol/strategies/pancakeswap/StrategyAddBaseTokenOnly.sol:20"
+          },
+          {
+            "contract": "StrategyAddBaseTokenOnly",
+            "label": "router",
+            "type": "t_contract(IUniswapV2Router02)8704",
+            "src": "contracts/6/protocol/strategies/pancakeswap/StrategyAddBaseTokenOnly.sol:21"
+          }
+        ],
+        "types": {
+          "t_contract(IUniswapV2Factory)3151": {
+            "label": "contract IUniswapV2Factory"
+          },
+          "t_contract(IUniswapV2Router02)8704": {
+            "label": "contract IUniswapV2Router02"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
+    },
+    "767051aff897988be2175fbab0c0021ade1f1f6a53c150107e97c8975a394ff9": {
+      "address": "0x9C94acAD1F2c7F86E5E3fBFEC1d841b3ba8faA3E",
+      "txHash": "0x784a4e644493d0223e0e33aa05eb01b2e334e379c13aa1e582051961143f6128",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "initialized",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol:21"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initializing",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol:26"
+          },
+          {
+            "contract": "Initializable",
+            "label": "______gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol:61"
+          },
+          {
+            "contract": "ReentrancyGuardUpgradeSafe",
+            "label": "_notEntered",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/utils/ReentrancyGuard.sol:21"
+          },
+          {
+            "contract": "ReentrancyGuardUpgradeSafe",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/utils/ReentrancyGuard.sol:63"
+          },
+          {
+            "contract": "StrategyAddTwoSidesOptimal",
+            "label": "factory",
+            "type": "t_contract(IUniswapV2Factory)3151",
+            "src": "contracts/6/protocol/strategies/pancakeswap/StrategyAddTwoSidesOptimal.sol:22"
+          },
+          {
+            "contract": "StrategyAddTwoSidesOptimal",
+            "label": "router",
+            "type": "t_contract(IUniswapV2Router02)8704",
+            "src": "contracts/6/protocol/strategies/pancakeswap/StrategyAddTwoSidesOptimal.sol:23"
+          },
+          {
+            "contract": "StrategyAddTwoSidesOptimal",
+            "label": "vault",
+            "type": "t_contract(IVault)11594",
+            "src": "contracts/6/protocol/strategies/pancakeswap/StrategyAddTwoSidesOptimal.sol:24"
+          }
+        ],
+        "types": {
+          "t_contract(IUniswapV2Factory)3151": {
+            "label": "contract IUniswapV2Factory"
+          },
+          "t_contract(IUniswapV2Router02)8704": {
+            "label": "contract IUniswapV2Router02"
+          },
+          "t_contract(IVault)11594": {
+            "label": "contract IVault"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          },
+          "t_uint256": {
+            "label": "uint256"
           },
           "t_array(t_uint256)50_storage": {
             "label": "uint256[50]"
