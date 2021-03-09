@@ -6,7 +6,7 @@
       "id": 0,
       "stakingToken": "debtibBNB",
       "address": "0x5138133f0671071D8b8F1C4c180881bfCfe22CeC",
-      "allocPoint": 200
+      "allocPoint": 0
     }, {
       "id": 1,
       "stakingToken": "ibBNB",
@@ -16,7 +16,7 @@
       "id": 2,
       "stakingToken": "debtibBUSD",
       "address": "0xD19D6253D979cCF663869fee30b8e0Ac86029ebd",
-      "allocPoint": 100
+      "allocPoint": 0
     }, {
       "id": 3,
       "stakingToken": "ibBUSD",

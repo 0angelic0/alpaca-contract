@@ -353,7 +353,7 @@ describe('IbTokenRouter', () => {
     await ibTokenRouterAsAlice.addLiquidityTwoSidesOptimal(
       ethers.utils.parseEther('5'), 0, 0, await alice.getAddress(), FOREVER);
 
-    expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('24.657979004220051623'));
+    expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('24.645637300749018211'));
     AssertHelpers.assertAlmostEqual(
       (await vault.balanceOf(await alice.getAddress())).toString(),
       aliceIbWBTCBalanceBefore.sub(ethers.utils.parseEther('5')).toString()
@@ -374,7 +374,7 @@ describe('IbTokenRouter', () => {
     await ibTokenRouterAsAlice.addLiquidityTwoSidesOptimal(
       0, ethers.utils.parseEther('50'), 0, await alice.getAddress(), FOREVER);
 
-    expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('2.493131844569650832'));
+    expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('2.491884026939823270'));
     AssertHelpers.assertAlmostEqual(
       (await govToken.balanceOf(await alice.getAddress())).toString(),
       aliceALPACABalanceBefore.sub(ethers.utils.parseEther('50')).toString()
@@ -398,7 +398,7 @@ describe('IbTokenRouter', () => {
     await ibTokenRouterAsAlice.addLiquidityTwoSidesOptimal(
       ethers.utils.parseEther('5'), ethers.utils.parseEther('50'), 0, await alice.getAddress(), FOREVER);
 
-    expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('27.220190062987375140'));
+    expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('27.209068544894071126'));
     AssertHelpers.assertAlmostEqual(
       (await govToken.balanceOf(await alice.getAddress())).toString(),
       aliceALPACABalanceBefore.sub(ethers.utils.parseEther('50')).toString()
@@ -426,7 +426,7 @@ describe('IbTokenRouter', () => {
     await ibTokenRouterAsAlice.addLiquidityTwoSidesOptimal(
       ethers.utils.parseEther('0.1'), ethers.utils.parseEther('50'), 0, await alice.getAddress(), FOREVER);
 
-    expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('2.995004473319087933'));
+    expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('2.994005970089653299'));
     AssertHelpers.assertAlmostEqual(
       (await govToken.balanceOf(await alice.getAddress())).toString(),
       aliceALPACABalanceBefore.sub(ethers.utils.parseEther('50')).toString()
@@ -477,7 +477,7 @@ describe('IbTokenRouter', () => {
     await ibTokenRouterAsAlice.addLiquidityTwoSidesOptimalToken(
       ethers.utils.parseEther('5'), 0, 0, await alice.getAddress(), FOREVER);
 
-    expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('23.598262739768173752'));
+    expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('23.586451455805211287'));
     AssertHelpers.assertAlmostEqual(
       (await wbtc.balanceOf(await alice.getAddress())).toString(),
       aliceWBTCBalanceBefore.sub(ethers.utils.parseEther('5')).toString()
@@ -502,7 +502,7 @@ describe('IbTokenRouter', () => {
     await ibTokenRouterAsAlice.addLiquidityTwoSidesOptimalToken(
       ethers.utils.parseEther('5'), ethers.utils.parseEther('50'), 0, await alice.getAddress(), FOREVER);
 
-    expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('26.157827816948699953'));
+    expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('26.147238039580407956'));
     AssertHelpers.assertAlmostEqual(
       (await govToken.balanceOf(await alice.getAddress())).toString(),
       aliceALPACABalanceBefore.sub(ethers.utils.parseEther('50')).toString(),
@@ -531,7 +531,7 @@ describe('IbTokenRouter', () => {
     await ibTokenRouterAsAlice.addLiquidityTwoSidesOptimalToken(
       ethers.utils.parseEther('0.1'), ethers.utils.parseEther('50'), 0, await alice.getAddress(), FOREVER);
 
-    expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('2.973189122784300740'));
+    expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('2.972179777202932144'));
     AssertHelpers.assertAlmostEqual(
       (await govToken.balanceOf(await alice.getAddress())).toString(),
       aliceALPACABalanceBefore.sub(ethers.utils.parseEther('50')).toString(),
