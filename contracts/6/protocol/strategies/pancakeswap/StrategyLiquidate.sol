@@ -41,21 +41,22 @@ contract StrategyLiquidate is ReentrancyGuardUpgradeSafe, IStrategy {
       uint256 minBaseToken
     ) = abi.decode(data, (address, address, uint256));
     IUniswapV2Pair lpToken = IUniswapV2Pair(factory.getPair(farmingToken, baseToken));
-    // 2. Remove all liquidity back to BaseToken and farming tokens.
+    // 2. Approve router to do their stuffs
     lpToken.approve(address(router), uint256(-1));
+    farmingToken.safeApprove(address(router), uint256(-1));
+    // 3. Remove all liquidity back to BaseToken and farming tokens.
     router.removeLiquidity(baseToken, farmingToken, lpToken.balanceOf(address(this)), 0, 0, address(this), now);
-    // 3. Convert farming tokens to baseToken.
+    // 4. Convert farming tokens to baseToken.
     address[] memory path = new address[](2);
     path[0] = farmingToken;
     path[1] = baseToken;
-    farmingToken.safeApprove(address(router), 0);
-    farmingToken.safeApprove(address(router), uint256(-1));
     router.swapExactTokensForTokens(farmingToken.myBalance(), 0, path, address(this), now);
-    // 4. Return all baseToken back to the original caller.
-    uint256 balance = baseToken.balanceOf(address(this));
+    // 5. Return all baseToken back to the original caller.
+    uint256 balance = baseToken.myBalance();
     require(balance >= minBaseToken, "insufficient baseToken received");
     SafeToken.safeTransfer(baseToken, msg.sender, balance);
+    // 6. Reset approve for safety reason
+    lpToken.approve(address(router), 0);
+    farmingToken.safeApprove(address(router), 0);
   }
-
-  receive() external payable {}
 }

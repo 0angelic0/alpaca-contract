@@ -46,6 +46,7 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
   IStrategy public addStrat;
   IStrategy public liqStrat;
   uint256 public reinvestBountyBps;
+  uint256 public maxReinvestBountyBps;
 
   function initialize(
     address _operator,
@@ -79,21 +80,24 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
     okStrats[address(addStrat)] = true;
     okStrats[address(liqStrat)] = true;
     reinvestBountyBps = _reinvestBountyBps;
+    maxReinvestBountyBps = 500;
     lpToken.approve(address(_masterChef), uint256(-1)); // 100% trust in the staking pool
     lpToken.approve(address(router), uint256(-1)); // 100% trust in the router
     quoteToken.safeApprove(address(router), uint256(-1)); // 100% trust in the router
     cake.safeApprove(address(router), uint256(-1)); // 100% trust in the router
+
+    require(reinvestBountyBps <= maxReinvestBountyBps, "PancakeswapWorker::initialize:: reinvestBountyBps exceeded maxReinvestBountyBps");
   }
 
   /// @dev Require that the caller must be an EOA account to avoid flash loans.
   modifier onlyEOA() {
-    require(msg.sender == tx.origin, "not eoa");
+    require(msg.sender == tx.origin, "PancakeswapWorker::initialize:: not eoa");
     _;
   }
 
   /// @dev Require that the caller must be the operator (the bank).
   modifier onlyOperator() {
-    require(msg.sender == operator, "not operator");
+    require(msg.sender == operator, "PancakeswapWorker::initialize:: not operator");
     _;
   }
 
@@ -121,7 +125,7 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
     if (reward == 0) return;
     // 2. Send the reward bounty to the caller.
     uint256 bounty = reward.mul(reinvestBountyBps) / 10000;
-    cake.safeTransfer(msg.sender, bounty);
+    if (bounty > 0) cake.safeTransfer(msg.sender, bounty);
     // 3. Convert all the remaining rewards to BaseToken via Native for liquidity.
     address[] memory path;
     if (baseToken == wNative) {
@@ -157,7 +161,7 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
     _removeShare(id);
     // 2. Perform the worker strategy; sending LP tokens + BaseToken; expecting LP tokens + BaseToken.
     (address strat, bytes memory ext) = abi.decode(data, (address, bytes));
-    require(okStrats[strat], "unapproved work strategy");
+    require(okStrats[strat], "PancakeswapWorker::initialize:: unapproved work strategy");
     lpToken.transfer(strat, lpToken.balanceOf(address(this)));
     baseToken.safeTransfer(strat, baseToken.myBalance());
     IStrategy(strat).execute(user, debt, ext);
@@ -173,8 +177,8 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
   /// @param rOut The amount of asset in reserve for output.
   function getMktSellAmount(uint256 aIn, uint256 rIn, uint256 rOut) public pure returns (uint256) {
     if (aIn == 0) return 0;
-    require(rIn > 0 && rOut > 0, "bad reserve values");
-    uint256 aInWithFee = aIn.mul(997);
+    require(rIn > 0 && rOut > 0, "PancakeswapWorker::initialize:: bad reserve values");
+    uint256 aInWithFee = aIn.mul(998);
     uint256 numerator = aInWithFee.mul(rOut);
     uint256 denominator = rIn.mul(1000).add(aInWithFee);
     return numerator / denominator;
@@ -238,7 +242,15 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
   /// @dev Set the reward bounty for calling reinvest operations.
   /// @param _reinvestBountyBps The bounty value to update.
   function setReinvestBountyBps(uint256 _reinvestBountyBps) external onlyOwner {
+    require(_reinvestBountyBps <= maxReinvestBountyBps, "PancakeswapWorker::setReinvestBountyBps:: _reinvestBountyBps exceeded maxReinvestBountyBps");
     reinvestBountyBps = _reinvestBountyBps;
+  }
+
+  /// @dev Set Max reinvest reward for set upper limit reinvest bounty.
+  /// @param _maxReinvestBountyBps The max reinvest bounty value to update.
+  function setMaxReinvestBountyBps(uint256 _maxReinvestBountyBps) external onlyOwner {
+    require(_maxReinvestBountyBps >= reinvestBountyBps, "PancakeswapWorker::setMaxReinvestBountyBps:: _maxReinvestBountyBps lower than reinvestBountyBps");
+    maxReinvestBountyBps = _maxReinvestBountyBps;
   }
 
   /// @dev Set the given strategies' approval status.
@@ -259,5 +271,4 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
     liqStrat = _liqStrat;
   }
 
-  receive() external payable {}
 }

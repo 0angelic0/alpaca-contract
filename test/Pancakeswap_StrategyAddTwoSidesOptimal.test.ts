@@ -161,8 +161,8 @@ describe('Pancakeswap - StrategyAddTwoSidesOptimal', () => {
     await syrup.deployed();
 
     /// Setup BTOKEN-FTOKEN pair on Uniswap
-    await factory.createPair(baseToken.address, quoteToken.address);
-    lp = await UniswapV2Pair__factory.connect(await factory.getPair(quoteToken.address, baseToken.address), deployer);
+    await factory.createPair(quoteToken.address, baseToken.address);
+    lp = UniswapV2Pair__factory.connect(await factory.getPair(baseToken.address, quoteToken.address), deployer);
     await lp.deployed();
 
     /// Setup BTOKEN-UNI pair on Uniswap
@@ -422,8 +422,8 @@ describe('Pancakeswap - StrategyAddTwoSidesOptimal', () => {
     await vaultAsAlice.work(
       0,
       pancakeswapWorker.address,
-      ethers.utils.parseEther('1'),
-      ethers.utils.parseEther('1'),
+      ethers.utils.parseEther('0.1'),
+      ethers.utils.parseEther('0'),
       '0',
       ethers.utils.defaultAbiCoder.encode([
         'address',
@@ -438,7 +438,7 @@ describe('Pancakeswap - StrategyAddTwoSidesOptimal', () => {
         ], [
           baseToken.address,
           quoteToken.address,
-          ethers.utils.parseEther('1'),
+          ethers.utils.parseEther('0.05'),
           ethers.utils.parseEther('0.01'),
         ])]
       )
