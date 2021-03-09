@@ -190,8 +190,8 @@
       }
     },
     "16eb2d598a98c1b50ee4e5d1b76001180b1fbfbd5b86f451536394b46b1b2c8f": {
-      "address": "0xD5c1b3Df7E630cBfa4cA7ea37D76cb0dD13F7154",
-      "txHash": "0x4443f00d1ab4c9aa9d217e0a8615b34f764c5c01381ef9163172cc1de7f2dc93",
+      "address": "0xC94C872deB2e982887C8566fF4085B24823D33D0",
+      "txHash": "0xb6c065b247fbbf54a48e05584566733ebb3c9d9bd8158e086161c22a11035610",
       "layout": {
         "storage": [
           {
@@ -260,8 +260,8 @@
       }
     },
     "d7ce81080628c6da5f97d698a902da85f7578fa00b96a7f747803be4f8388144": {
-      "address": "0xA84213ac88cA1d4ee1326d8f5663e5b638837999",
-      "txHash": "0xe9c2ddad731924ae3b72fd8881eca1d3cecd216c371fe38c1e734b1b894f1a52",
+      "address": "0x796a99E37C2225e3AD7b8AaB6fc25F8398975F67",
+      "txHash": "0xa1babf6a53b2e963d1870b4b89812acf9309db389bdae89bcb4805fe5ac81dc5",
       "layout": {
         "storage": [
           {
@@ -393,8 +393,8 @@
       }
     },
     "7e7f6b47b25e8cd1cdd270eb6ef5de787c564e0a1b509bb323141430130ff0c8": {
-      "address": "0xC0FbC62e9237C86c4f082f1f290667A54155D81a",
-      "txHash": "0xb2407c99f31e830d238bc0f944e5a43ae2dd38f19b008d1997296f9ebdc47d88",
+      "address": "0xB49f7A97920876d2Ea99903Bce5C8aF948506914",
+      "txHash": "0xa08dc51465a8f9c9c6a08f4db0a5a29c092e9bfec582d4d3666dae515713bf5a",
       "layout": {
         "storage": [
           {
@@ -814,8 +814,8 @@
       }
     },
     "e5176cef0c3d0fd30d509ac44387fdbc45ad0c475cd081f858c21dd071cc597f": {
-      "address": "0x925232A4f056f776cA89dcc541fE9f2E001686e9",
-      "txHash": "0x2e88ca059be0fa6e73e916c762170b0444adc28951e1faa1263942c544dd3a71",
+      "address": "0x73cAF30eE07EEcEeAF8d872e30D663693DA4487A",
+      "txHash": "0xdc5b6cf077ac35c814c1fe1d6bb021809215076d2aaee84f9d8f5269e2d7b634",
       "layout": {
         "storage": [
           {
@@ -948,13 +948,13 @@
           {
             "contract": "StrategyAddTwoSidesOptimal",
             "label": "router",
-            "type": "t_contract(IUniswapV2Router02)8712",
+            "type": "t_contract(IUniswapV2Router02)8704",
             "src": "contracts/6/protocol/strategies/pancakeswap/StrategyAddTwoSidesOptimal.sol:23"
           },
           {
             "contract": "StrategyAddTwoSidesOptimal",
             "label": "vault",
-            "type": "t_contract(IVault)11602",
+            "type": "t_contract(IVault)11594",
             "src": "contracts/6/protocol/strategies/pancakeswap/StrategyAddTwoSidesOptimal.sol:24"
           }
         ],
@@ -962,10 +962,10 @@
           "t_contract(IUniswapV2Factory)3151": {
             "label": "contract IUniswapV2Factory"
           },
-          "t_contract(IUniswapV2Router02)8712": {
+          "t_contract(IUniswapV2Router02)8704": {
             "label": "contract IUniswapV2Router02"
           },
-          "t_contract(IVault)11602": {
+          "t_contract(IVault)11594": {
             "label": "contract IVault"
           },
           "t_bool": {
@@ -1027,7 +1027,7 @@
           {
             "contract": "StrategyWithdrawMinimizeTrading",
             "label": "router",
-            "type": "t_contract(IUniswapV2Router02)8712",
+            "type": "t_contract(IUniswapV2Router02)8704",
             "src": "contracts/6/protocol/strategies/pancakeswap/StrategyWithdrawMinimizeTrading.sol:19"
           }
         ],
@@ -1035,7 +1035,7 @@
           "t_contract(IUniswapV2Factory)3151": {
             "label": "contract IUniswapV2Factory"
           },
-          "t_contract(IUniswapV2Router02)8712": {
+          "t_contract(IUniswapV2Router02)8704": {
             "label": "contract IUniswapV2Router02"
           },
           "t_bool": {
@@ -1054,8 +1054,8 @@
       }
     },
     "7f29d4fd64f3656c2c27c15f92ba44e0910ee99be21b0bcbc9fd9c46f4b6044d": {
-      "address": "0x0A30d75152853cb69675CAa55553ad06199f2Dd1",
-      "txHash": "0x5444223663a24e614bb647fd112f04758718c44cf961e0a54af1d4ede0436568",
+      "address": "0x68343eA3C09FD2D40178cdc087883a4dc26dec2c",
+      "txHash": "0x28448eb42d8f657b54ea9df7da9267259499cf4caf8ead1b29f36e34901350d5",
       "layout": {
         "storage": [
           {
@@ -1115,7 +1115,7 @@
           {
             "contract": "ConfigurableInterestVaultConfig",
             "label": "workers",
-            "type": "t_mapping(t_address,t_contract(IWorkerConfig)11780)",
+            "type": "t_mapping(t_address,t_contract(IWorkerConfig)11778)",
             "src": "contracts/6/protocol/ConfigurableInterestVaultConfig.sol:48"
           },
           {
@@ -1147,13 +1147,13 @@
           "t_uint256": {
             "label": "uint256"
           },
-          "t_mapping(t_address,t_contract(IWorkerConfig)11780)": {
+          "t_mapping(t_address,t_contract(IWorkerConfig)11778)": {
             "label": "mapping(address => contract IWorkerConfig)"
           },
           "t_address": {
             "label": "address"
           },
-          "t_contract(IWorkerConfig)11780": {
+          "t_contract(IWorkerConfig)11778": {
             "label": "contract IWorkerConfig"
           },
           "t_contract(InterestModel)3918": {
@@ -1172,8 +1172,8 @@
       }
     },
     "d7b62848423c8c0885c38c4c3c2e724470e136b5731686ae9a38e21a2cdd088b": {
-      "address": "0x235Ca007b0Bc680Fe204e897f2a3146f099f71Fb",
-      "txHash": "0x9fc7e5227bb1098b4ee872839aee69347b69e7acf2ba125e4e866d82353ac117",
+      "address": "0x54fb978Cd810E26202496Ba1Be6e85cF6CCfdd02",
+      "txHash": "0x095ed9c7f458078ba86f2cfc3544367f34589fcb525cbcbd7dc73d131b3375b0",
       "layout": {
         "storage": [
           {
@@ -1270,8 +1270,8 @@
       }
     },
     "6c883b146c73b165c5657fe34f9eb19c86870b61d1141bb7bcfe3617158d2576": {
-      "address": "0x50690dFBDF9F121640eCA72d57348BB0A073ffDE",
-      "txHash": "0x4598d5b518ec30fed30cc1c238b8ddbc2b122013213214c7796cfd922329f7c9",
+      "address": "0x5e06e0E3Dec59D54E93F3Bdd621184508DEB2a94",
+      "txHash": "0xc59f81f6de2c1d39ec19b12a53ddb325de62f5323605afe89ebff033d83b6a2d",
       "layout": {
         "storage": [
           {
@@ -1314,26 +1314,26 @@
             "contract": "WorkerConfig",
             "label": "oracle",
             "type": "t_contract(PriceOracle)6127",
-            "src": "contracts/6/protocol/workers/WorkerConfig.sol:29"
+            "src": "contracts/6/protocol/workers/WorkerConfig.sol:24"
           },
           {
             "contract": "WorkerConfig",
             "label": "workers",
-            "type": "t_mapping(t_address,t_struct(Config)14432_storage)",
-            "src": "contracts/6/protocol/workers/WorkerConfig.sol:30"
+            "type": "t_mapping(t_address,t_struct(Config)14423_storage)",
+            "src": "contracts/6/protocol/workers/WorkerConfig.sol:25"
           }
         ],
         "types": {
           "t_contract(PriceOracle)6127": {
             "label": "contract PriceOracle"
           },
-          "t_mapping(t_address,t_struct(Config)14432_storage)": {
+          "t_mapping(t_address,t_struct(Config)14423_storage)": {
             "label": "mapping(address => struct WorkerConfig.Config)"
           },
           "t_address": {
             "label": "address"
           },
-          "t_struct(Config)14432_storage": {
+          "t_struct(Config)14423_storage": {
             "label": "struct WorkerConfig.Config",
             "members": [
               {
@@ -1373,8 +1373,8 @@
       }
     },
     "c3688dc9026033a75223d5cec6e2662d54afd9726b0bb416f57c96f49f9d033d": {
-      "address": "0x1284a28a6d1a3B52B1d4412791B721114c6996fd",
-      "txHash": "0x5b8913b48ef70a95c6d287f078a947fcfb96c4ab2b461de68f1f89715f3ea66c",
+      "address": "0x5EF0C6E857F16977A1b001ABf0726B9D7153393D",
+      "txHash": "0x82dd33900abbe6ae395b2dd7971717d7a3e2d97957e29ea777b704534f20cf6b",
       "layout": {
         "storage": [
           {
@@ -1596,6 +1596,76 @@
           },
           "t_array(t_uint256)44_storage": {
             "label": "uint256[44]"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
+    },
+    "18dec4a6813dec4f9c2026d349308546bc2e91b2aad50ada15c4d61cf4cea03b": {
+      "address": "0x3326943a5Ba444df683811505f02b5a31217C916",
+      "txHash": "0xc062580ca22ededf6196b26f2e1b2015053a18ab083728e1986916c31e87ac12",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "initialized",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol:21"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initializing",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol:26"
+          },
+          {
+            "contract": "Initializable",
+            "label": "______gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol:61"
+          },
+          {
+            "contract": "ReentrancyGuardUpgradeSafe",
+            "label": "_notEntered",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/utils/ReentrancyGuard.sol:21"
+          },
+          {
+            "contract": "ReentrancyGuardUpgradeSafe",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/utils/ReentrancyGuard.sol:63"
+          },
+          {
+            "contract": "StrategyAddBaseTokenOnly",
+            "label": "factory",
+            "type": "t_contract(IUniswapV2Factory)3151",
+            "src": "contracts/6/protocol/strategies/pancakeswap/StrategyAddBaseTokenOnly.sol:20"
+          },
+          {
+            "contract": "StrategyAddBaseTokenOnly",
+            "label": "router",
+            "type": "t_contract(IUniswapV2Router02)8704",
+            "src": "contracts/6/protocol/strategies/pancakeswap/StrategyAddBaseTokenOnly.sol:21"
+          }
+        ],
+        "types": {
+          "t_contract(IUniswapV2Factory)3151": {
+            "label": "contract IUniswapV2Factory"
+          },
+          "t_contract(IUniswapV2Router02)8704": {
+            "label": "contract IUniswapV2Router02"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          },
+          "t_uint256": {
+            "label": "uint256"
           },
           "t_array(t_uint256)50_storage": {
             "label": "uint256[50]"

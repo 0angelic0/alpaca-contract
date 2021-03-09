@@ -52,6 +52,7 @@
     "test:unitwoside": "hardhat test --no-compile ./test/Unisushiswap_StrategyAddTwoSidesOptimal.test.ts",
     "test:router": "hardhat test --no-compile ./test/IbTokenRouter.test.ts",
     "test:timelock": "hardhat test --no-compile ./test/Timelock.test.ts",
+    "test:shield": "hardhat test --no-compile ./test/Shield.test.ts",
     "test:stronkalpaca": "hardhat test --no-compile ./test/StronkAlpaca.test.ts",
     "test": "hardhat test --no-compile",
     "testnet": "hardhat console --no-compile --network testnet",

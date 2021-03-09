@@ -57,7 +57,7 @@ contract StrategyAddBaseTokenOnly is ReentrancyGuardUpgradeSafe, IStrategy {
     router.swapExactTokensForTokens(aIn, 0, path, address(this), now);
     // 4. Mint more LP tokens and return all LP tokens to the sender.
     quoteToken.safeApprove(address(router), 0);
-    quoteToken.safeApprove(address(router), uint(-1));
+    quoteToken.safeApprove(address(router), quoteToken.myBalance());
     (,, uint256 moreLPAmount) = router.addLiquidity(
       baseToken, quoteToken, IERC20(baseToken).balanceOf(address(this)), quoteToken.myBalance(), 0, 0, address(this), now
     );
