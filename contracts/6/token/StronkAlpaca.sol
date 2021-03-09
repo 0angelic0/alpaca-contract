@@ -44,7 +44,7 @@ contract StronkAlpaca is IStronkAlpaca, ERC20("Stronk Alpaca", "sALPACA"), Ownab
 
   /// @dev Require that the caller must be an EOA account to avoid flash loans.
   modifier onlyEOA() {
-    require(msg.sender == tx.origin, "not eoa");
+    require(msg.sender == tx.origin, "StronkAlpaca::onlyEOA:: not eoa");
     _;
   }
 
