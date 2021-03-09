@@ -42,7 +42,13 @@ contract StronkAlpaca is IStronkAlpaca, ERC20("Stronk Alpaca", "sALPACA"), Ownab
     lockEndBlock = _lockEndBlock;
   }
 
-  function prepareHodl() external override nonReentrant {
+  /// @dev Require that the caller must be an EOA account to avoid flash loans.
+  modifier onlyEOA() {
+    require(msg.sender == tx.origin, "not eoa");
+    _;
+  }
+
+  function prepareHodl() external override onlyEOA nonReentrant {
     require(_userRelayerMap[msg.sender] == address(0), "StronkAlpaca::prepareHodl: user has already prepared hodl");
     require(block.number < hodlableEndBlock, "StronkAlpaca::prepareHodl: block.number exceeds hodlableEndBlock");
 
@@ -52,7 +58,7 @@ contract StronkAlpaca is IStronkAlpaca, ERC20("Stronk Alpaca", "sALPACA"), Ownab
     emit PrepareHodl(msg.sender, address(relayer));
   }
 
-  function hodl() external override nonReentrant {
+  function hodl() external override onlyEOA nonReentrant {
     address relayerAddress = _userRelayerMap[msg.sender];
 
     require(relayerAddress != address(0), "StronkAlpaca::hodl: user has not preapare hodl yet");
@@ -65,7 +71,7 @@ contract StronkAlpaca is IStronkAlpaca, ERC20("Stronk Alpaca", "sALPACA"), Ownab
     emit Hodl(msg.sender, address(relayer), relayerAlpacaLockedBalance);
   }
 
-  function unhodl() external override nonReentrant {
+  function unhodl() external override onlyEOA nonReentrant {
     require(
       block.number > IAlpacaToken(alpacaTokenAddress).endReleaseBlock(),
       "StronkAlpaca::unhodl: block.number have not reach alpacaToken.endReleaseBlock"
@@ -79,8 +85,10 @@ contract StronkAlpaca is IStronkAlpaca, ERC20("Stronk Alpaca", "sALPACA"), Ownab
     }
 
     uint256 userStronkAlpacaBalance = balanceOf(msg.sender);
+    // Transfer all userStronkAlpacaBalance to StronkContract and then burn
+    SafeERC20.safeTransferFrom(IERC20(address(this)), msg.sender, address(this), userStronkAlpacaBalance);
     // StronkAlpaca burns all user's StronkAlpaca
-    _burn(msg.sender, userStronkAlpacaBalance);
+    _burn(address(this), userStronkAlpacaBalance);
 
     // transfer Alpaca from Strong Alpaca to user
     SafeERC20.safeTransfer(IERC20(alpacaTokenAddress), msg.sender, userStronkAlpacaBalance);

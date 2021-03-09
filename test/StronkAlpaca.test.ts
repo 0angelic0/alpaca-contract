@@ -222,6 +222,8 @@ describe("StronkAlpaca and StronkAlpacaRelayer", () => {
       // alice unhodl
       expect(await stronkAlpaca.balanceOf(aliceAddress)).to.deep.equal(ethers.utils.parseEther('100'))
       expect(await alpacaToken.balanceOf(aliceAddress)).to.deep.equal(ethers.utils.parseEther('20'))
+      // approve to be able to transfer stronkhodl
+      await stronkAlpacaAsAlice.approve(stronkAlpaca.address, ethers.utils.parseEther('100'))
       await expect(stronkAlpacaAsAlice.unhodl())
         .to.emit(stronkAlpacaAsAlice, 'Unhodl')
         .withArgs(aliceAddress, ethers.utils.parseEther('100'))
@@ -239,6 +241,8 @@ describe("StronkAlpaca and StronkAlpacaRelayer", () => {
       // bob unhodl
       expect(await stronkAlpaca.balanceOf(bobAddress)).to.deep.equal(ethers.utils.parseEther('50'))
       expect(await alpacaToken.balanceOf(bobAddress)).to.deep.equal(ethers.utils.parseEther('0'))
+      // approve to be able to transfer stronkhodl
+      await stronkAlpacaAsBob.approve(stronkAlpaca.address, ethers.utils.parseEther('50'))
       await expect(stronkAlpacaAsBob.unhodl())
         .to.emit(stronkAlpacaAsBob, 'Unhodl')
         .withArgs(bobAddress, ethers.utils.parseEther('50'))
