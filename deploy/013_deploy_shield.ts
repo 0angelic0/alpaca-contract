@@ -16,7 +16,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const TIMELOCK = ''; // Timelock address
   const FAIRLAUNCHV1 = ''; // FairLaunchV1 address
-  const TIMELOCK_TRANSFEROWNERSHIP_ETA = '' // exact eta where ownership's FLV1 need to be transferred to Shield
+  const TIMELOCK_TRANSFEROWNERSHIP_ETA = ''; // exact eta where ownership's FLV1 need to be transferred to Shield
 
 
 
@@ -54,7 +54,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   console.log("✅ Done");
 
   console.log("generate timelock.executeTransaction:")
-  console.log(`await timelock.executeTransaction('${FAIRLAUNCHV1}', '0', 'transferOwnership(address)', ethers.utils.defaultAbiCoder.encode(['address'],[${shield.address}]), ${TIMELOCK_TRANSFEROWNERSHIP_ETA})`)
+  console.log(`await timelock.executeTransaction('${FAIRLAUNCHV1}', '0', 'transferOwnership(address)', ethers.utils.defaultAbiCoder.encode(['address'],['${shield.address}']), ${TIMELOCK_TRANSFEROWNERSHIP_ETA})`)
   console.log("✅ Done");
 };
 
