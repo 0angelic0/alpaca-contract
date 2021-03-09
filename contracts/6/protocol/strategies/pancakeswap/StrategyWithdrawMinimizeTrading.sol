@@ -40,32 +40,33 @@ contract StrategyWithdrawMinimizeTrading is ReentrancyGuardUpgradeSafe, IStrateg
       uint256 minFarmingToken
     ) = abi.decode(data, (address, address, uint256));
     IUniswapV2Pair lpToken = IUniswapV2Pair(factory.getPair(farmingToken, baseToken));
-    // 2. Remove all liquidity back to BaseToken and farming tokens.
+    // 2. Approve router to do their stuffs
     lpToken.approve(address(router), uint256(-1));
+    farmingToken.safeApprove(address(router), uint256(-1));
+    // 3. Remove all liquidity back to BaseToken and farming tokens.
     router.removeLiquidity(baseToken, farmingToken, lpToken.balanceOf(address(this)), 0, 0, address(this), now);
-    // 3. Convert farming tokens to BaseToken.
+    // 4. Convert farming tokens to BaseToken.
     address[] memory path = new address[](2);
     path[0] = farmingToken;
     path[1] = baseToken;
-    farmingToken.safeApprove(address(router), 0);
-    farmingToken.safeApprove(address(router), uint256(-1));
-    baseToken.safeApprove(address(router), 0);
-    baseToken.safeApprove(address(router), uint256(-1));
     uint256 balance = baseToken.myBalance();
     if (debt > balance) {
       // Convert some farming tokens to BaseToken.
       uint256 remainingDebt = debt.sub(balance);
       router.swapTokensForExactTokens(remainingDebt, farmingToken.myBalance(), path, address(this), now);
     }
-    // 4. Return BaseToken back to the original caller.
+    // 5. Return BaseToken back to the original caller.
     uint256 remainingBalance = baseToken.myBalance();
     baseToken.safeTransfer(msg.sender, remainingBalance);
-    // 5. Return remaining farming tokens to user.
+    // 6. Return remaining farming tokens to user.
     uint256 remainingFarmingToken = farmingToken.myBalance();
     require(remainingFarmingToken >= minFarmingToken, "insufficient quote tokens received");
     if (remainingFarmingToken > 0) {
       farmingToken.safeTransfer(user, remainingFarmingToken);
     }
+    // 7. Reset approval for safety reason
+    lpToken.approve(address(router), 0);
+    farmingToken.safeApprove(address(router), 0);
   }
 
   receive() external payable {}

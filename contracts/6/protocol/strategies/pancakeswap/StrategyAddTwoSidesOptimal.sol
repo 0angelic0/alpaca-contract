@@ -1,6 +1,5 @@
 pragma solidity 0.6.6;
 
-import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/SafeERC20.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/utils/ReentrancyGuard.sol";
@@ -43,7 +42,7 @@ contract StrategyAddTwoSidesOptimal is ReentrancyGuardUpgradeSafe, IStrategy {
     uint256 amtB,
     uint256 resA,
     uint256 resB
-  ) internal view returns (uint256 swapAmt, bool isReversed) {
+  ) internal pure returns (uint256 swapAmt, bool isReversed) {
     if (amtA.mul(resB) >= amtB.mul(resA)) {
       swapAmt = _optimalDepositA(amtA, amtB, resA, resB);
       isReversed = false;
@@ -63,7 +62,7 @@ contract StrategyAddTwoSidesOptimal is ReentrancyGuardUpgradeSafe, IStrategy {
     uint256 amtB,
     uint256 resA,
     uint256 resB
-  ) internal view returns (uint256) {
+  ) internal pure returns (uint256) {
     require(amtA.mul(resB) >= amtB.mul(resA), "Reversed");
 
     uint256 a = 998;
@@ -92,7 +91,10 @@ contract StrategyAddTwoSidesOptimal is ReentrancyGuardUpgradeSafe, IStrategy {
         uint256 minLPAmount
     ) = abi.decode(data, (address, address, uint256, uint256));
     IUniswapV2Pair lpToken = IUniswapV2Pair(factory.getPair(farmingToken, baseToken));
-    // 2. Compute the optimal amount of BaseToken and FarmingToken to be converted.
+    // 2. Approve router to do their stuffs
+    baseToken.safeApprove(address(router), uint256(-1));
+    farmingToken.safeApprove(address(router), uint256(-1));
+    // 3. Compute the optimal amount of BaseToken and FarmingToken to be converted.
     vault.requestFunds(farmingToken, farmingTokenAmount);
     uint256 baseTokenBalance = baseToken.myBalance();
     uint256 swapAmt;
@@ -102,28 +104,27 @@ contract StrategyAddTwoSidesOptimal is ReentrancyGuardUpgradeSafe, IStrategy {
       (uint256 baseTokenReserve, uint256 farmingTokenReserve) = lpToken.token0() == baseToken ? (r0, r1) : (r1, r0);
       (swapAmt, isReversed) = optimalDeposit(baseTokenBalance, farmingToken.myBalance(), baseTokenReserve, farmingTokenReserve);
     }
-    // 3. Convert between BaseToken and farming tokens
-    farmingToken.safeApprove(address(router), 0);
-    farmingToken.safeApprove(address(router), uint256(-1));
-    baseToken.safeApprove(address(router), 0);
-    baseToken.safeApprove(address(router), uint256(-1));
+    // 4. Convert between BaseToken and farming tokens
     address[] memory path = new address[](2);
     (path[0], path[1]) = isReversed ? (farmingToken, baseToken) : (baseToken, farmingToken);
-    // 4. Swap according to path
+    // 5. Swap according to path
     router.swapExactTokensForTokens(swapAmt, 0, path, address(this), now);
-    // 5. Mint more LP tokens and return all LP tokens to the sender.
+    // 6. Mint more LP tokens and return all LP tokens to the sender.
     (,, uint256 moreLPAmount) = router.addLiquidity(
       baseToken, farmingToken, baseToken.myBalance(), farmingToken.myBalance(), 0, 0, address(this), now
     );
     require(moreLPAmount >= minLPAmount, "insufficient LP tokens received");
     lpToken.transfer(msg.sender, lpToken.balanceOf(address(this)));
-    // return leftover back to user
+    // 7. Return leftover back to user
     if (baseToken.myBalance() > 0) {
       baseToken.safeTransfer(user, baseToken.myBalance());
     }
     if (farmingToken.myBalance() > 0) {
       farmingToken.safeTransfer(user, farmingToken.myBalance());
     }
+    // 8. Reset approve to 0 for safety reason
+    farmingToken.safeApprove(address(router), 0);
+    baseToken.safeApprove(address(router), 0);
   }
 
   receive() external payable {}
