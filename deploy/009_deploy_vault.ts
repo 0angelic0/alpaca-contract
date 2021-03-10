@@ -14,18 +14,15 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   Check all variables below before execute the deployment script
   */
 
-  const FAIR_LAUNCH_ADDR = '0xA625AB01B08ce023B2a342Dbb12a16f2C8489A8F';
+  const FAIR_LAUNCH_ADDR = '0x31402C656f48F09284755d7B97Ffd40Ea372D531';
   const ALLOC_POINT_FOR_DEPOSIT = 100;
   const ALLOC_POINT_FOR_OPEN_POSITION = 100;
-  const CONFIG_ADDR = '0xd7b805E88c5F52EDE71a9b93F7048c8d632DBEd4';
-  const BASE_TOKEN_ADDR = '0xe9e7cea3dedca5984780bafc599bd69add087d56'
+  const CONFIG_ADDR = '0x950e8137B8c0d403DCBeAb41AF1160a56862ba5a';
+  const BASE_TOKEN_ADDR = '0x1f1F4D015A3CE748b838f058930dea311F3b69AE'
   const VAULT_NAME = 'BUSD VAULT'
   const NAME = 'Interest Bearing BUSD'
   const SYMBOL = 'ibBUSD';
-  const WNATIVE_RELAYER_ADDR = '0xE1D2CA01bc88F325fF7266DD2165944f3CAf0D3D';
-
-  const TIMELOCK = '0x2D5408f2287BF9F9B05404794459a846651D0a59';
-
+  const WNATIVE_RELAYER_ADDR = '0x01EBAC2f65eC3cE064EDcf05f9fAd9B8D9a419Ee';
 
 
 
@@ -54,10 +51,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   console.log(">> Transferring ownership of debtToken to Vault");
   await debtToken.transferOwnership(vault.address);
-  console.log("✅ Done");
-
-  console.log(">> Transferring Vault's ProxyAdmin to Timelock");
-  await upgrades.admin.changeProxyAdmin(vault.address, TIMELOCK);
   console.log("✅ Done");
 
   const fairLaunch = FairLaunch__factory.connect(

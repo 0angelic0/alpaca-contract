@@ -12,7 +12,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   Check all variables below before execute the deployment script
   */
 
-  const WNATIVE_ADDR = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c';
+  const WNATIVE_ADDR = '0x0421b6CE68C71708CD18652aF5123fc2573DBCCC';
 
 
 

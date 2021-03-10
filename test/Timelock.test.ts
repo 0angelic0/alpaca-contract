@@ -61,6 +61,7 @@ describe("Timelock", () => {
   const MIN_DEBT_SIZE = '1'; // 1 ETH min debt size
   const WORK_FACTOR = '7000';
   const KILL_FACTOR = '8000';
+  const MAX_PRICE_DIFF = '1300';
 
   // Timelock-related instance(s)
   let timelock: Timelock;
@@ -475,6 +476,46 @@ describe("Timelock", () => {
       )
 
       expect(await pancakeswapWorkerConfig.oracle()).to.be.eq(await bob.getAddress());
+    });
+
+    it('should setConfigs in WorkerConfig', async () => {
+      const eta = (await TimeHelpers.latest()).add(TimeHelpers.duration.days(ethers.BigNumber.from('4')));
+
+      await timelockAsAdmin.queueTransaction(
+        pancakeswapWorkerConfig.address, '0', 'setConfigs(address[],(bool,uint64,uint64,uint64)[])',
+        ethers.utils.defaultAbiCoder.encode(
+          ['address[]','(bool acceptDebt,uint64 workFactor,uint64 killFactor,uint64 maxPriceDiff)[]'],
+          [
+            [await bob.getAddress()], [{acceptDebt: true, workFactor: WORK_FACTOR, killFactor: KILL_FACTOR, maxPriceDiff: MAX_PRICE_DIFF}]
+          ]
+        ), eta
+      );
+
+      await TimeHelpers.increase(TimeHelpers.duration.days(ethers.BigNumber.from('1')));
+
+      await expect(
+        timelockAsAdmin.executeTransaction(
+          pancakeswapWorkerConfig.address, '0', 'setConfigs(address[],(bool,uint64,uint64,uint64)[])',
+          ethers.utils.defaultAbiCoder.encode(
+            ['address[]','(bool acceptDebt,uint64 workFactor,uint64 killFactor,uint64 maxPriceDiff)[]'],
+            [
+              [await bob.getAddress()], [{acceptDebt: true, workFactor: WORK_FACTOR, killFactor: KILL_FACTOR, maxPriceDiff: MAX_PRICE_DIFF}]
+            ]
+          ), eta
+        )
+      ).to.be.revertedWith("Timelock::executeTransaction: Transaction hasn't surpassed time lock.");
+
+      await TimeHelpers.increase(TimeHelpers.duration.days(ethers.BigNumber.from('4')));
+
+      await timelockAsAdmin.executeTransaction(
+        pancakeswapWorkerConfig.address, '0', 'setConfigs(address[],(bool,uint64,uint64,uint64)[])',
+        ethers.utils.defaultAbiCoder.encode(
+          ['address[]','(bool acceptDebt,uint64 workFactor,uint64 killFactor,uint64 maxPriceDiff)[]'],
+          [
+            [await bob.getAddress()], [{acceptDebt: true, workFactor: WORK_FACTOR, killFactor: KILL_FACTOR, maxPriceDiff: MAX_PRICE_DIFF}]
+          ]
+        ), eta
+      )
     });
   });
 })

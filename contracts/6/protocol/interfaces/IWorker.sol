@@ -20,4 +20,5 @@ interface IWorker {
   function setStrategyOk(address[] calldata strats, bool isOk) external;
 
   function lpToken() external view returns (IUniswapV2Pair);
+
 }

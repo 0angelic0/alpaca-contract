@@ -1,7 +1,7 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { DeployFunction } from 'hardhat-deploy/types';
 import { ethers, upgrades } from 'hardhat';
-import { StrategyAddBaseTokenOnly__factory, StrategyLiquidate__factory } from '../typechain';
+import { StrategyAddBaseTokenOnly__factory, StrategyLiquidate__factory, Timelock__factory } from '../typechain';
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     /*
@@ -14,8 +14,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   Check all variables below before execute the deployment script
   */
 
-  const ROUTER = '0x05fF2B0DB69458A0750badebc4f9e13aDd608C7F';
-  const TIMELOCK = '0x2D5408f2287BF9F9B05404794459a846651D0a59';
+  const ROUTER = '0xEAF62f7bEaC130A36b3770EFd597f7678D7182F3';
 
 
 
@@ -25,12 +24,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
 
 
-
-
-  const { deployments, getNamedAccounts, network } = hre;
-  const { deploy } = deployments;
-
-  const { deployer } = await getNamedAccounts();
 
   console.log(">> Deploying an upgradable StrategyAddBaseTokenOnly contract");
   const StrategyAddBaseTokenOnly = (await ethers.getContractFactory(
@@ -41,10 +34,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   await strategyAddBaseTokenOnly.deployed()
   console.log(`>> Deployed at ${strategyAddBaseTokenOnly.address}`);
 
-  console.log(">> Transferring StrategyAddBaseTokenOnly's ProxyAdmin to Timelock");
-  await upgrades.admin.changeProxyAdmin(strategyAddBaseTokenOnly.address, TIMELOCK);
-  console.log("✅ Done");
-
   console.log(">> Deploying an upgradble StrategyLiquidate contract");
   const StrategyLiquidate = (await ethers.getContractFactory(
     "StrategyLiquidate",
@@ -53,10 +42,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const strategyLiquidate = await upgrades.deployProxy(StrategyLiquidate, [ROUTER]);
   await strategyLiquidate.deployed();
   console.log(`>> Deployed at ${strategyLiquidate.address}`);
-
-  console.log(">> Transferring StrategyLiquidate's ProxyAdmin to Timelock");
-  await upgrades.admin.changeProxyAdmin(strategyLiquidate.address, TIMELOCK);
-  console.log("✅ Done");
 };
 
 export default func;
