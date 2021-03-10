@@ -40,10 +40,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   );
   await workerConfig.deployed();
   console.log(`>> Deployed at ${workerConfig.address}`);
-
-  console.log(">> Transferring WorkConfig's ProxyAdmin to Timelock");
-  await upgrades.admin.changeProxyAdmin(workerConfig.address, TIMELOCK);
-  console.log("✅ Done");
 };
 
 export default func;

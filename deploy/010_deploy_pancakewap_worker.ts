@@ -66,10 +66,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   await pancakeswapWorker.deployed();
   console.log(`>> Deployed at ${pancakeswapWorker.address}`);
 
-  console.log(">> Transferring PancakeswapWorker's ProxyAdmin to Timelock");
-  await upgrades.admin.changeProxyAdmin(pancakeswapWorker.address, TIMELOCK);
-  console.log("✅ Done");
-
   const timelock = Timelock__factory.connect(TIMELOCK, (await ethers.getSigners())[0]);
 
   console.log(">> Timelock: Setting WorkerConfig via Timelock");

@@ -68,8 +68,8 @@
     "ETH": "0xBA7ccf5aa03B678E523C84Fab7Fb78135fA2ae4e"
   },
   "SharedStrategies": {
-    "StrategyAddBaseTokenOnly": "0x88551fc1FDC97f5aA9e729e672cC37f24d345F60",
-    "StrategyLiquidate": "0x7d45cF05D23c7CA82edF0179eF0b712C876aa33d"
+    "StrategyAddBaseTokenOnly": "0x3Eb784B917804D42d84cE1693A0471Da722c6e50",
+    "StrategyLiquidate": "0xC949fc7A2ecF161BAAeA16190D9676E48B902896"
   },
   "SharedConfig": {
     "TripleSlopeModel": "0xAf35eac61ADb72ca435aa5e12E32AD7b62a8c9DA",

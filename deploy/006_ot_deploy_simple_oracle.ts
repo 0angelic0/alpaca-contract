@@ -42,10 +42,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   await simplePriceOracle.deployed();
   console.log(`>> Deployed at ${simplePriceOracle.address}`);
 
-  console.log(">> Transferring SimplePriceOracle's ProxyAdmin to Timelock");
-  await upgrades.admin.changeProxyAdmin(simplePriceOracle.address, TIMELOCK);
-  console.log("✅ Done");
-
 };
 
 export default func;

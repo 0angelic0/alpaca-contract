@@ -45,10 +45,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   await configurableInterestVaultConfig.deployed();
   console.log(`>> Deployed at ${configurableInterestVaultConfig.address}`);
 
-  console.log(">> Transferring ConfigurableInterestVaultConfig's ProxyAdmin to Timelock");
-  await upgrades.admin.changeProxyAdmin(configurableInterestVaultConfig.address, TIMELOCK);
-  console.log("✅ Done");
-
 };
 
 export default func;

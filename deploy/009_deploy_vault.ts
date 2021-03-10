@@ -56,10 +56,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   await debtToken.transferOwnership(vault.address);
   console.log("✅ Done");
 
-  console.log(">> Transferring Vault's ProxyAdmin to Timelock");
-  await upgrades.admin.changeProxyAdmin(vault.address, TIMELOCK);
-  console.log("✅ Done");
-
   const fairLaunch = FairLaunch__factory.connect(
     FAIR_LAUNCH_ADDR, (await ethers.getSigners())[0]) as FairLaunch;
 

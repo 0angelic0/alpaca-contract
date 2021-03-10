@@ -42,11 +42,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   );
   await strategyAddTwoSidesOptimal.deployed();
   console.log(`>> Deployed at ${strategyAddTwoSidesOptimal.address}`);
-
-  console.log(">> Transferring StrategyAddTwoSidesOptimal's ProxyAdmin to Timelock");
-  await upgrades.admin.changeProxyAdmin(strategyAddTwoSidesOptimal.address, TIMELOCK);
-  console.log("✅ Done");
-
 };
 
 export default func;
