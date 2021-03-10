@@ -1,10 +1,10 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { DeployFunction } from 'hardhat-deploy/types';
-import { ethers, upgrades } from 'hardhat';
-import { StrategyAddTwoSidesOptimal__factory } from '../typechain';
+import { ethers } from 'hardhat';
+import { IWorker__factory, IStrategy__factory, Timelock__factory } from '../typechain'
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-    /*
+  /*
   ░██╗░░░░░░░██╗░█████╗░██████╗░███╗░░██╗██╗███╗░░██╗░██████╗░
   ░██║░░██╗░░██║██╔══██╗██╔══██╗████╗░██║██║████╗░██║██╔════╝░
   ░╚██╗████╗██╔╝███████║██████╔╝██╔██╗██║██║██╔██╗██║██║░░██╗░
@@ -14,8 +14,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   Check all variables below before execute the deployment script
   */
 
-  const VAULT_ADDR = '0x947fFd3352136aC34eC67895E4fd392de18157DF';
-  const ROUTER = '0xEAF62f7bEaC130A36b3770EFd597f7678D7182F3';
+  const WORKER_ADDR = '0xF3ECC0e5c238C7082fC59e682104DEA2f49A3787';
+  const STRATEGY_ADDR = '0xA4047bdA5288BC718E4a3De68781dA4D7e801e82';
 
 
 
@@ -25,17 +25,15 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
 
 
-  console.log(">> Deploying an upgradable StrategyAddTwoSidesOptimal contract");
-  const StrategyAddTwoSidesOptimal = (await ethers.getContractFactory(
-    'StrategyAddTwoSidesOptimal',
-    (await ethers.getSigners())[0]
-  )) as StrategyAddTwoSidesOptimal__factory;
-  const strategyAddTwoSidesOptimal = await upgrades.deployProxy(
-    StrategyAddTwoSidesOptimal,[ROUTER, VAULT_ADDR]
-  );
-  await strategyAddTwoSidesOptimal.deployed();
-  console.log(`>> Deployed at ${strategyAddTwoSidesOptimal.address}`);
+
+
+  const worker = IWorker__factory.connect(
+    WORKER_ADDR, (await ethers.getSigners())[0]);
+
+  console.log(">> Setting Strategy for a Worker");
+  worker.setStrategyOk([STRATEGY_ADDR], true);
+  console.log("✅ Done");
 };
 
 export default func;
-func.tags = ['VaultStrategies'];
+func.tags = ['AddWorkerStrategy'];

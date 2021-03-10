@@ -85,36 +85,33 @@
     "address": "0x6883D1297721F4584077fe7471c396538DC5dcbC",
     "debtToken": "0x8E2c554cAbD0Fee5f47c0E0130fD44aE8e3E08e1",
     "config": "0x0901fcc2814348Fa4DFc866376f7A952c1963D9A",
-    "StrategyAddTwoSidesOptimal": "",
+    "StrategyAddTwoSidesOptimal": "0x5389B49D32E43A62351d73659aC13DA48F6E1190",
     "workers": [{
       "name": "CAKE-WBNB PancakeswapWorker",
-      "address": "",
-      "config": "",
-      "masterChef": "",
+      "address": "0xc2440b08478ce53351176d37FD63724f57961197",
+      "config": "0xAB5AD8e7248C9b28e114723E8A43FbB0bFa98483",
       "strategies": [{
-        "StrategyAddAllBaseToken": "",
-        "StrategyLiquidate": "",
-        "StrategyAddTwoSidesOptimal": ""
+        "StrategyAddAllBaseToken": "0x3Eb784B917804D42d84cE1693A0471Da722c6e50",
+        "StrategyLiquidate": "0xC949fc7A2ecF161BAAeA16190D9676E48B902896",
+        "StrategyAddTwoSidesOptimal": "0x5389B49D32E43A62351d73659aC13DA48F6E1190"
       }]
     }, {
       "name": "BTCB-WBNB PancakeswapWorker",
-      "address": "",
-      "config": "",
-      "masterChef": "",
+      "address": "0x6Ac6619BbA455BD247776f4BbE767Fb516E19D18",
+      "config": "0xAB5AD8e7248C9b28e114723E8A43FbB0bFa98483",
       "strategies": [{
-        "StrategyAddAllBaseToken": "",
-        "StrategyLiquidate": "",
-        "StrategyAddTwoSidesOptimal": ""
+        "StrategyAddAllBaseToken": "0x3Eb784B917804D42d84cE1693A0471Da722c6e50",
+        "StrategyLiquidate": "0xC949fc7A2ecF161BAAeA16190D9676E48B902896",
+        "StrategyAddTwoSidesOptimal": "0x5389B49D32E43A62351d73659aC13DA48F6E1190"
       }]
     }, {
       "name": "ETH-WBNB PancakeswapWorker",
-      "address": "",
-      "config": "",
-      "masterChef": "",
+      "address": "0xe7aa7b1c8317203cb5b52a7002DFF489a7086157",
+      "config": "0xAB5AD8e7248C9b28e114723E8A43FbB0bFa98483",
       "strategies": [{
-        "StrategyAddAllBaseToken": "",
-        "StrategyLiquidate": "",
-        "StrategyAddTwoSidesOptimal": ""
+        "StrategyAddAllBaseToken": "0x3Eb784B917804D42d84cE1693A0471Da722c6e50",
+        "StrategyLiquidate": "0xC949fc7A2ecF161BAAeA16190D9676E48B902896",
+        "StrategyAddTwoSidesOptimal": "0x5389B49D32E43A62351d73659aC13DA48F6E1190"
       }]
     }]
   }, {
@@ -123,26 +120,24 @@
     "address": "0x947fFd3352136aC34eC67895E4fd392de18157DF",
     "debtToken": "0x74d54930061E27199CCA8F1E03e69429Bb5bBb0A",
     "config": "0x950e8137B8c0d403DCBeAb41AF1160a56862ba5a",
-    "StrategyAddTwoSidesOptimal": "",
+    "StrategyAddTwoSidesOptimal": "0xA4047bdA5288BC718E4a3De68781dA4D7e801e82",
     "workers": [{
       "name": "USDT-BUSD PancakeswapWorker",
-      "address": "",
-      "config": "",
-      "masterChef": "",
+      "address": "0x0d0875fce644De95c2ae7f0E4D4596b2A8dC43e3",
+      "config": "0xAB5AD8e7248C9b28e114723E8A43FbB0bFa98483",
       "strategies": [{
-        "StrategyAddAllBaseToken": "",
-        "StrategyLiquidate": "",
-        "StrategyAddTwoSidesOptimal": ""
+        "StrategyAddAllBaseToken": "0x3Eb784B917804D42d84cE1693A0471Da722c6e50",
+        "StrategyLiquidate": "0xC949fc7A2ecF161BAAeA16190D9676E48B902896",
+        "StrategyAddTwoSidesOptimal": "0xA4047bdA5288BC718E4a3De68781dA4D7e801e82"
       }]
     }, {
       "name": "WBNB-BUSD PancakeswapWorker",
-      "address": "",
-      "config": "",
-      "masterChef": "",
+      "address": "0xF3ECC0e5c238C7082fC59e682104DEA2f49A3787",
+      "config": "0xAB5AD8e7248C9b28e114723E8A43FbB0bFa98483",
       "strategies": [{
-        "StrategyAddAllBaseToken": "",
-        "StrategyLiquidate": "",
-        "StrategyAddTwoSidesOptimal": ""
+        "StrategyAddAllBaseToken": "0x3Eb784B917804D42d84cE1693A0471Da722c6e50",
+        "StrategyLiquidate": "0xC949fc7A2ecF161BAAeA16190D9676E48B902896",
+        "StrategyAddTwoSidesOptimal": "0xA4047bdA5288BC718E4a3De68781dA4D7e801e82"
       }]
     }]
   }]
