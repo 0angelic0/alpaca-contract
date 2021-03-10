@@ -16,6 +16,8 @@ import "../token/interfaces/IFairLaunch.sol";
 import "../utils/SafeToken.sol";
 import "./WNativeRelayer.sol";
 
+import "hardhat/console.sol";
+
 contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableUpgradeSafe {
   /// @notice Libraries
   using SafeToken for address;
@@ -126,7 +128,7 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
 
     debtToken = _debtToken;
 
-    IERC20(debtToken).approve(config.getFairLaunchAddr(), uint256(-1));
+    SafeToken.safeApprove(debtToken, config.getFairLaunchAddr(), uint256(-1));
 
     // free-up execution scope
     _IN_EXEC_LOCK = _NOT_ENTERED;
@@ -139,7 +141,7 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
   function pendingInterest(uint256 value) public view returns (uint256) {
     if (now > lastAccrueTime) {
       uint256 timePast = now.sub(lastAccrueTime);
-      uint256 balance = IERC20(token).balanceOf(address(this)).sub(value);
+      uint256 balance = SafeToken.myBalance(token).sub(value);
       uint256 ratePerSec = config.getInterestRate(vaultDebtVal, balance);
       return ratePerSec.mul(vaultDebtVal).mul(timePast).div(1e18);
     } else {
@@ -170,7 +172,7 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
 
   /// @dev Return the total token entitled to the token holders. Be careful of unaccrued interests.
   function totalToken() public view override returns (uint256) {
-    return IERC20(token).balanceOf(address(this)).add(vaultDebtVal).sub(reservePool);
+    return SafeToken.myBalance(token).add(vaultDebtVal).sub(reservePool);
   }
 
   /// @dev Add more token to the lending pool. Hope to get some good returns.
@@ -184,6 +186,7 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
     uint256 total = totalToken().sub(amountToken);
     uint256 share = total == 0 ? amountToken : amountToken.mul(totalSupply()).div(total);
     _mint(msg.sender, share);
+    require(totalSupply() > 1e17, "vault:deposit: no tiny shares");
   }
 
   /// @dev Withdraw token from the lending and burning ibToken.
@@ -193,15 +196,32 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
     if (token == config.getWrappedNativeAddr()) {
       SafeToken.safeTransfer(token, config.getWNativeRelayer(), amount);
       WNativeRelayer(uint160(config.getWNativeRelayer())).withdraw(amount);
-      msg.sender.transfer(amount);
+      SafeToken.safeTransferETH(msg.sender, amount);
       return;
     }
     SafeToken.safeTransfer(token, msg.sender, amount);
+    require(totalSupply() > 1e17, "vault:withdraw: no tiny shares");
   }
 
   /// @dev Request Funds from user through Vault
   function requestFunds(address targetedToken, uint amount) external override inExec {
     SafeToken.safeTransferFrom(targetedToken, positions[POSITION_ID].owner, msg.sender, amount);
+  }
+
+  /// @dev _fairLaunchDeposit
+  function _fairLaunchDeposit(uint256 id, uint256 amount) internal {
+    if (amount > 0) {
+      IDebtToken(debtToken).mint(address(this), positions[id].debtShare);
+      IFairLaunch(config.getFairLaunchAddr()).deposit(positions[id].owner, fairLaunchPoolId, amount);
+    }
+  }
+
+  /// @dev _fairLaunchWithdraw
+  function _fairLaunchWithdraw(uint256 id) internal {
+    if (positions[id].debtShare > 0) {
+      IFairLaunch(config.getFairLaunchAddr()).withdraw(positions[id].owner, fairLaunchPoolId, positions[id].debtShare);
+      IDebtToken(debtToken).burn(address(this), positions[id].debtShare);
+    }
   }
 
   /// @dev Create a new farming position to unlock your yield farming potential.
@@ -216,16 +236,18 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
   {
     require(fairLaunchPoolId != uint256(-1), "work: poolId not set");
     // 1. Sanity check the input position, or add a new position of ID is 0.
+    Position storage pos;
     if (id == 0) {
       id = nextPositionID++;
-      positions[id].worker = worker;
-      positions[id].owner = msg.sender;
+      pos = positions[id];
+      pos.worker = worker;
+      pos.owner = msg.sender;
     } else {
+      pos = positions[id];
       require(id < nextPositionID, "bad position id");
-      require(positions[id].worker == worker, "bad position worker");
-      require(positions[id].owner == msg.sender, "not position owner");
-      IFairLaunch(config.getFairLaunchAddr()).withdrawAll(msg.sender, fairLaunchPoolId);
-      IDebtToken(debtToken).burn(address(this), debtToken.balanceOf(address(this)));
+      require(pos.worker == worker, "bad position worker");
+      require(pos.owner == msg.sender, "not position owner");
+      _fairLaunchWithdraw(id);
     }
     emit Work(id, loan);
     // Update execution scope variables
@@ -238,12 +260,12 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
     // 3. Perform the actual work, using a new scope to avoid stack-too-deep errors.
     uint256 back;
     {
-      uint256 sendERC20 = principalAmount.add(loan);
-      require(sendERC20 <= IERC20(token).balanceOf(address(this)), "insufficient funds in the vault");
-      uint256 beforeERC20 = IERC20(token).balanceOf(address(this)).sub(sendERC20);
-      IERC20(token).transfer(worker, sendERC20);
+      uint256 sendBEP20 = principalAmount.add(loan);
+      require(sendBEP20 <= SafeToken.myBalance(token), "insufficient funds in the vault");
+      uint256 beforeBEP20 = SafeToken.myBalance(token).sub(sendBEP20);
+      SafeToken.safeTransfer(token, worker, sendBEP20);
       IWorker(worker).work(id, msg.sender, debt, data);
-      back = IERC20(token).balanceOf(address(this)).sub(beforeERC20);
+      back = SafeToken.myBalance(token).sub(beforeBEP20);
     }
     // 4. Check and update position debt.
     uint256 lessDebt = Math.min(debt, Math.min(back, maxReturn));
@@ -253,18 +275,18 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
       uint256 health = IWorker(worker).health(id);
       uint256 workFactor = config.workFactor(worker, debt);
       require(health.mul(workFactor) >= debt.mul(10000), "bad work factor");
-      IDebtToken(debtToken).mint(address(this), debt);
-      IFairLaunch(config.getFairLaunchAddr()).deposit(msg.sender, fairLaunchPoolId, debt);
       _addDebt(id, debt);
+      _fairLaunchDeposit(id, pos.debtShare);
     }
     // 5. Return excess token back.
     if (back > lessDebt) {
       if(token == config.getWrappedNativeAddr()) {
         SafeToken.safeTransfer(token, config.getWNativeRelayer(), back.sub(lessDebt));
         WNativeRelayer(uint160(config.getWNativeRelayer())).withdraw(back.sub(lessDebt));
-        msg.sender.transfer(back.sub(lessDebt));
+        SafeToken.safeTransferETH(msg.sender, lessDebt);
+      } else {
+        SafeToken.safeTransfer(token, msg.sender, back.sub(lessDebt));
       }
-      SafeToken.safeTransfer(token, msg.sender, back.sub(lessDebt));
     }
     // Release execution scope
     POSITION_ID = _NO_ID;
@@ -283,9 +305,9 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
     uint256 killFactor = config.killFactor(pos.worker, debt);
     require(health.mul(killFactor) < debt.mul(10000), "can't liquidate");
     // 2. Perform liquidation and compute the amount of token received.
-    uint256 beforeToken = IERC20(token).balanceOf(address(this));
+    uint256 beforeToken = SafeToken.myBalance(token);
     IWorker(pos.worker).liquidate(id);
-    uint256 back = IERC20(token).balanceOf(address(this)).sub(beforeToken);
+    uint256 back = SafeToken.myBalance(token).sub(beforeToken);
     uint256 prize = back.mul(config.getKillBps()).div(10000);
     uint256 rest = back.sub(prize);
     // 3. Clear position debt and return funds to liquidator and position owner.
@@ -293,7 +315,7 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
       if (token == config.getWrappedNativeAddr()) {
         SafeToken.safeTransfer(token, config.getWNativeRelayer(), prize);
         WNativeRelayer(uint160(config.getWNativeRelayer())).withdraw(prize);
-        msg.sender.transfer(prize);
+        SafeToken.safeTransferETH(msg.sender, prize);
       } else {
         SafeToken.safeTransfer(token, msg.sender, prize);
       }
@@ -303,14 +325,13 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
       if (token == config.getWrappedNativeAddr()) {
         SafeToken.safeTransfer(token, config.getWNativeRelayer(), left);
         WNativeRelayer(uint160(config.getWNativeRelayer())).withdraw(left);
-        msg.sender.transfer(left);
+        SafeToken.safeTransferETH(pos.owner, left);
       } else {
         SafeToken.safeTransfer(token, pos.owner, left);
       }
     }
-    // 4. Distribute ALPACAs in FairLaunch
-    IFairLaunch(config.getFairLaunchAddr()).withdrawAll(pos.owner, fairLaunchPoolId);
-    IDebtToken(debtToken).burn(address(this), debtToken.balanceOf(address(this)));
+    // 4. Distribute ALPACAs in FairLaunch to owner
+    _fairLaunchWithdraw(id);
     emit Kill(id, msg.sender, prize, left);
   }
 
@@ -347,6 +368,7 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
   }
 
   function setFairLaunchPoolId(uint256 _poolId) external onlyOwner {
+    SafeToken.safeApprove(debtToken, config.getFairLaunchAddr(), uint256(-1));
     fairLaunchPoolId = _poolId;
   }
 

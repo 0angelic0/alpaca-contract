@@ -1,3 +1,4 @@
+
 pragma solidity 0.6.6;
 
 import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol";
@@ -19,4 +20,5 @@ interface IWorker {
   function setStrategyOk(address[] calldata strats, bool isOk) external;
 
   function lpToken() external view returns (IUniswapV2Pair);
+
 }

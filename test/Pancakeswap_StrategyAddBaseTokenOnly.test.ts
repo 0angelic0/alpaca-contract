@@ -152,13 +152,13 @@ describe('Pancakeswap - StrategyAddBaseTokenOnly', () => {
       )
     );
 
-    expect(await lp.balanceOf(await bob.getAddress())).to.be.bignumber.eq(ethers.utils.parseEther('0.015411526978189516'))
+    expect(await lp.balanceOf(await bob.getAddress())).to.be.bignumber.eq(ethers.utils.parseEther('0.015403813051483008'))
     expect(await lp.balanceOf(strat.address)).to.be.bignumber.eq(ethers.utils.parseEther('0'))
     expect(await quoteToken.balanceOf(strat.address)).to.be.bignumber.eq(ethers.utils.parseEther('0'))
 
     // Bob uses AddBaseTokenOnly strategy to add another 0.1 WBTC
     await baseTokenAsBob.transfer(strat.address, ethers.utils.parseEther('0.1'));
-    await lpAsBob.transfer(strat.address, '15411526978189516');
+    await lpAsBob.transfer(strat.address, ethers.utils.parseEther('0.015403813051483008'));
     await stratAsBob.execute(
       await bob.getAddress(), '0',
       ethers.utils.defaultAbiCoder.encode(
@@ -166,7 +166,7 @@ describe('Pancakeswap - StrategyAddBaseTokenOnly', () => {
       )
     );
 
-    expect(await lp.balanceOf(await bob.getAddress())).to.be.bignumber.eq(ethers.utils.parseEther('0.030136025967736233'))
+    expect(await lp.balanceOf(await bob.getAddress())).to.be.bignumber.eq(ethers.utils.parseEther('0.030128652046542732'))
     expect(await lp.balanceOf(strat.address)).to.be.bignumber.eq(ethers.utils.parseEther('0'))
     expect(await quoteToken.balanceOf(strat.address)).to.be.bignumber.eq(ethers.utils.parseEther('0'))
 

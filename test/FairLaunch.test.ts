@@ -15,7 +15,7 @@ import {
 chai.use(solidity);
 const { expect } = chai;
 
-describe("FairLaunch Proxy", () => {
+describe("FairLaunch", () => {
   const ALPACA_REWARD_PER_BLOCK = ethers.utils.parseEther('5000');
   const ALPACA_BONUS_LOCK_UP_BPS = 7000;
 

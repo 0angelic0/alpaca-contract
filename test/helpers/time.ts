@@ -6,6 +6,11 @@ export async function latest(): Promise<BigNumber> {
   return ethers.BigNumber.from(block.timestamp);
 }
 
+export async function latestBlockNumber(): Promise<BigNumber> {
+  const block = await ethers.provider.getBlock('latest');
+  return ethers.BigNumber.from(block.number);
+}
+
 export async function advanceBlock() {
   await ethers.provider.send('evm_mine', []);
 }
@@ -25,4 +30,17 @@ export const duration = {
   days: function (val: BigNumber): BigNumber { return val.mul(this.hours(ethers.BigNumber.from('24'))); },
   weeks: function (val: BigNumber): BigNumber { return val.mul(this.days(ethers.BigNumber.from('7'))); },
   years: function (val: BigNumber): BigNumber { return val.mul(this.days(ethers.BigNumber.from('365'))); },
+}
+
+export async function advanceBlockTo(block: number) {
+  let latestBlock = (await latestBlockNumber()).toNumber()
+
+  if (block <= latestBlock){
+    throw new Error('input block exceeds current block')
+  }
+
+  while (block > latestBlock) {
+    await advanceBlock()
+    latestBlock++
+  }
 }
