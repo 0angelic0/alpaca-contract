@@ -19,7 +19,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const IS_ENABLE = true;
 
   const TIMELOCK = '0x771F70042ebb6d2Cfc29b7BF9f3caf9F959385B8';
-  const DELAYS_SECONDS = 1800;
+  const EXACT_ETA = '';
 
 
 
@@ -37,8 +37,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     STRATEGY_ADDR, (await ethers.getSigners())[0]);
   const timelock = Timelock__factory.connect(TIMELOCK, (await ethers.getSigners())[0]);
 
-  const eta = Math.round(Date.now()/1000) + DELAYS_SECONDS;
-
   console.log(">> Timlock: Setting Strategy for a Worker");
   await timelock.queueTransaction(
     WORKER_ADDR, '0',
@@ -48,10 +46,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       [
         [STRATEGY_ADDR], IS_ENABLE
       ]
-    ), eta
+    ), EXACT_ETA
   );
   console.log("generate timelock.executeTransaction:")
-  console.log(`await timelock.executeTransaction('${WORKER_ADDR}', '0', 'setStrategyOk(address[],bool)', ethers.utils.defaultAbiCoder.encode(['address[]','bool'],[['${STRATEGY_ADDR}'], ${IS_ENABLE}]), ${eta})`);
+  console.log(`await timelock.executeTransaction('${WORKER_ADDR}', '0', 'setStrategyOk(address[],bool)', ethers.utils.defaultAbiCoder.encode(['address[]','bool'],[['${STRATEGY_ADDR}'], ${IS_ENABLE}]), ${EXACT_ETA})`);
   console.log("✅ Done");
 };
 

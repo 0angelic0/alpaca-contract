@@ -7,7 +7,6 @@ import {
   Timelock__factory,
   WorkerConfig__factory
 } from '../typechain';
-import { time } from 'console';
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     /*
@@ -37,7 +36,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const MAX_PRICE_DIFF = '13000';
 
   const TIMELOCK = '0x771F70042ebb6d2Cfc29b7BF9f3caf9F959385B8';
-  const DELAYS_SECONDS = 1800;
+  const EXACT_ETA = '';
 
 
 
@@ -48,8 +47,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments;
 
   const { deployer } = await getNamedAccounts();
-
-  const eta = Math.round(Date.now()/1000) + DELAYS_SECONDS
 
   console.log(`>> Deploying an upgradable PancakeswapWorker contract for ${WORKER_NAME}`);
   const PancakeswapWorker = (await ethers.getContractFactory(
@@ -77,10 +74,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       [
         [pancakeswapWorker.address], [{acceptDebt: true, workFactor: WORK_FACTOR, killFactor: KILL_FACTOR, maxPriceDiff: MAX_PRICE_DIFF}]
       ]
-    ), eta
+    ), EXACT_ETA
   );
   console.log("generate timelock.executeTransaction:")
-  console.log(`await timelock.executeTransaction('${WORKER_CONFIG_ADDR}', '0', 'setConfigs(address[],(bool,uint64,uint64,uint64)[])', ethers.utils.defaultAbiCoder.encode(['address[]','(bool acceptDebt,uint64 workFactor,uint64 killFactor,uint64 maxPriceDiff)[]'],[[${pancakeswapWorker.address}], [{acceptDebt: true, workFactor: ${WORK_FACTOR}, killFactor: ${KILL_FACTOR}, maxPriceDiff: ${MAX_PRICE_DIFF}}]]), ${eta})`)
+  console.log(`await timelock.executeTransaction('${WORKER_CONFIG_ADDR}', '0', 'setConfigs(address[],(bool,uint64,uint64,uint64)[])', ethers.utils.defaultAbiCoder.encode(['address[]','(bool acceptDebt,uint64 workFactor,uint64 killFactor,uint64 maxPriceDiff)[]'],[[${pancakeswapWorker.address}], [{acceptDebt: true, workFactor: ${WORK_FACTOR}, killFactor: ${KILL_FACTOR}, maxPriceDiff: ${MAX_PRICE_DIFF}}]]), ${EXACT_ETA})`)
   console.log("✅ Done");
 
   console.log(">> Timelock: Linking VaultConfig with WorkerConfig via Timelock");
@@ -92,10 +89,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       [
         [pancakeswapWorker.address], [WORKER_CONFIG_ADDR]
       ]
-    ), eta
+    ), EXACT_ETA
   );
   console.log("generate timelock.executeTransaction:")
-  console.log(`await timelock.executeTransaction('${VAULT_CONFIG_ADDR}', '0','setWorkers(address[],address[])', ethers.utils.defaultAbiCoder.encode(['address[]','address[]'],[[${pancakeswapWorker.address}], [${WORKER_CONFIG_ADDR}]]), ${eta})`)
+  console.log(`await timelock.executeTransaction('${VAULT_CONFIG_ADDR}', '0','setWorkers(address[],address[])', ethers.utils.defaultAbiCoder.encode(['address[]','address[]'],[[${pancakeswapWorker.address}], [${WORKER_CONFIG_ADDR}]]), ${EXACT_ETA})`)
   console.log("✅ Done");
 };
 
