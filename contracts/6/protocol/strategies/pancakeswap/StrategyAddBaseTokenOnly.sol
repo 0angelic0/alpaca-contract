@@ -30,7 +30,7 @@ contract StrategyAddBaseTokenOnly is ReentrancyGuardUpgradeSafe, IStrategy {
     router = _router;
   }
 
-  /// @dev Execute worker strategy. Take LP tokens + BaseToken. Return LP tokens + BaseToken.
+  /// @dev Execute worker strategy. Take BaseToken. Return LP tokens.
   /// @param data Extra calldata information passed along to this strategy.
   function execute(address /* user */, uint256 /* debt */, bytes calldata data)
     external

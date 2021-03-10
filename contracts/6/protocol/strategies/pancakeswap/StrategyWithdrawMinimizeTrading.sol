@@ -27,7 +27,7 @@ contract StrategyWithdrawMinimizeTrading is ReentrancyGuardUpgradeSafe, IStrateg
     router = _router;
   }
 
-  /// @dev Execute worker strategy. Take LP tokens. Return LP tokens + BaseToken.
+  /// @dev Execute worker strategy. Take LP tokens. Return FarmingToken + BaseToken.
   /// However, some BaseToken will be deducted to pay the debt
   /// @param user User address to withdraw liquidity.
   /// @param debt Debt amount in WAD of the user.

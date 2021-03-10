@@ -46,7 +46,7 @@ contract IbTokenRouter is OwnableUpgradeSafe {
     return totalToken == 0 ? amountToken : amountToken.mul(IERC20(ibToken).totalSupply()).add(totalToken).sub(1).div(totalToken);
   }
 
-  // Provide liquidity for the ibToken-Token Pool.
+  // Provide liquidity for the Alpaca-ibToken Pool.
   // 1. Receive Token and Alpaca from caller.
   // 2. Mint ibToken based on the given token amount.
   // 3. Provide liquidity to the pool.
@@ -87,7 +87,7 @@ contract IbTokenRouter is OwnableUpgradeSafe {
       SafeToken.safeTransfer(alpaca, msg.sender, amountAlpacaDesired.sub(amountAlpaca));
     }
     IVault(ibToken).withdraw(amountIbTokenDesired.sub(amountIbToken));
-    amountToken = amountTokenDesired - IERC20(token).balanceOf(address(this));
+    amountToken = amountTokenDesired.sub(IERC20(token).balanceOf(address(this)));
     if (amountToken > 0) {
       SafeToken.safeTransfer(token, msg.sender, IERC20(token).balanceOf(address(this)));
     }
@@ -400,7 +400,7 @@ contract IbTokenRouter is OwnableUpgradeSafe {
     if (amountIbTokenInMax > swapAmounts[0]) {
       IVault(ibToken).withdraw(amountIbTokenInMax.sub(swapAmounts[0]));
       amounts[0] = amountTokenIn - address(this).balance;
-      SafeToken.safeTransfer(token, to, IERC20(token).balanceOf(address(this)));
+      SafeToken.safeTransfer(token, msg.sender, IERC20(token).balanceOf(address(this)));
     }
   }
 
