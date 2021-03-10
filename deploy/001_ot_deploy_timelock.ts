@@ -37,7 +37,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     from: deployer,
     args: [
       ADMIN_ADDRESS,
-      2,
+      DELAY_IN_DAYS*24*60*60,
     ],
     log: true,
     deterministicDeployment: false,

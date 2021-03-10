@@ -15,7 +15,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   */
 
   const ROUTER = '0xEAF62f7bEaC130A36b3770EFd597f7678D7182F3';
-  const TIMELOCK = '0x771F70042ebb6d2Cfc29b7BF9f3caf9F959385B8';
 
 
 
@@ -25,13 +24,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
 
 
-
-
-  const { deployments, getNamedAccounts, network } = hre;
-  const { deploy } = deployments;
-
-  const { deployer } = await getNamedAccounts();
-  const timelock = Timelock__factory.connect(TIMELOCK, (await ethers.getSigners())[0]);
 
   console.log(">> Deploying an upgradable StrategyAddBaseTokenOnly contract");
   const StrategyAddBaseTokenOnly = (await ethers.getContractFactory(

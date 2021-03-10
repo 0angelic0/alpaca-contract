@@ -24,9 +24,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const SYMBOL = 'ibBUSD';
   const WNATIVE_RELAYER_ADDR = '0x01EBAC2f65eC3cE064EDcf05f9fAd9B8D9a419Ee';
 
-  const TIMELOCK = '0x771F70042ebb6d2Cfc29b7BF9f3caf9F959385B8';
-
-
 
 
 

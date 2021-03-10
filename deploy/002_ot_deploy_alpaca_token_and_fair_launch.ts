@@ -59,7 +59,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       alpacaToken.address,
       deployer,
       ALPACA_REWARD_PER_BLOCK,
-      START_BLOCK, 0, 0
+      START_BLOCK, BONUS_LOCK_BPS, BONUS_END_BLOCK
     ],
     log: true,
     deterministicDeployment: false,
