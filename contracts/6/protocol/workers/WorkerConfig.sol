@@ -37,7 +37,7 @@ contract WorkerConfig is OwnableUpgradeSafe, IWorkerConfig {
   /// @dev Set worker configurations. Must be called by owner.
   function setConfigs(address[] calldata addrs, Config[] calldata configs) external onlyOwner {
     uint256 len = addrs.length;
-    require(configs.length == len, "bad len");
+    require(configs.length == len, "WorkConfig::setConfigs:: bad len");
     for (uint256 idx = 0; idx < len; idx++) {
       workers[addrs[idx]] = Config({
         acceptDebt: configs[idx].acceptDebt,
@@ -57,34 +57,34 @@ contract WorkerConfig is OwnableUpgradeSafe, IWorkerConfig {
     (uint256 r0, uint256 r1,) = lp.getReserves();
     uint256 t0bal = token0.balanceOf(address(lp));
     uint256 t1bal = token1.balanceOf(address(lp));
-    require(t0bal.mul(100) <= r0.mul(101), "bad t0 balance");
-    require(t1bal.mul(100) <= r1.mul(101), "bad t1 balance");
+    require(t0bal.mul(100) <= r0.mul(101), "WorkerConfig::setConfigs:: bad t0 balance");
+    require(t1bal.mul(100) <= r1.mul(101), "WorkerConfig::setConfigs:: bad t1 balance");
     // 2. Check that price is in the acceptable range
     (uint256 price, uint256 lastUpdate) = oracle.getPrice(token0, token1);
-    require(lastUpdate >= now - 7 days, "price too stale");
+    require(lastUpdate >= now - 7 days, "WorkerConfig::setConfigs:: price too stale");
     uint256 lpPrice = r1.mul(1e18).div(r0);
     uint256 maxPriceDiff = workers[worker].maxPriceDiff;
-    require(lpPrice <= price.mul(maxPriceDiff).div(10000), "price too high");
-    require(lpPrice >= price.mul(10000).div(maxPriceDiff), "price too low");
+    require(lpPrice <= price.mul(maxPriceDiff).div(10000), "WorkerConfig::setConfigs:: price too high");
+    require(lpPrice >= price.mul(10000).div(maxPriceDiff), "WorkerConfig::setConfigs:: price too low");
     // 3. Done
     return true;
   }
 
   /// @dev Return whether the given worker accepts more debt.
   function acceptDebt(address worker) external override view returns (bool) {
-    require(isStable(worker), "!stable");
+    require(isStable(worker), "WorkerConfig::acceptDebt:: !stable");
     return workers[worker].acceptDebt;
   }
 
   /// @dev Return the work factor for the worker + BaseToken debt, using 1e4 as denom.
   function workFactor(address worker, uint256 /* debt */) external override view returns (uint256) {
-    require(isStable(worker), "!stable");
+    require(isStable(worker), "WorkerConfig::workFactor:: !stable");
     return uint256(workers[worker].workFactor);
   }
 
   /// @dev Return the kill factor for the worker + BaseToken debt, using 1e4 as denom.
   function killFactor(address worker, uint256 /* debt */) external override view returns (uint256) {
-    require(isStable(worker), "!stable");
+    require(isStable(worker), "WorkerConfig::killFactor:: !stable");
     return uint256(workers[worker].killFactor);
   }
 }

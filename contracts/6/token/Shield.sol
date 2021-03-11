@@ -44,7 +44,7 @@ contract Shield is Ownable {
   /// @param _to Mint to which address
   /// @param _amount Amount to be minted
   function mintWarchest(address _to, uint256 _amount) public onlyOwner {
-    require(mintCount.add(_amount) <= mintLimit, "shield: mint exceeded mintLimit");
+    require(mintCount.add(_amount) <= mintLimit, "Shield::mintWarchest:: mint exceeded mintLimit");
     fairLaunchV1.manualMint(_to, _amount);
     mintCount = mintCount.add(_amount);
     emit MintWarchest(_to, _amount);

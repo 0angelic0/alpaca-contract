@@ -109,7 +109,7 @@ contract FairLaunchV2 is Ownable {
   /// @notice Withdraw dummyToken from FLV1. This will make FLV1 stop mintting ALPACA
   /// This function is needed if we need FLV3.
   function withdrawMasterPool(address to) public onlyOwner {
-    require(totalAllocPoint == 0, "withdrawMasterPool: totalAllocPoint not zero");
+    require(totalAllocPoint == 0, "FairLaunchV2::withdrawMasterPool:: totalAllocPoint not zero");
     FAIR_LAUNCH_V1.withdraw(
       address(this), MASTER_PID, FAIR_LAUNCH_V1.userInfo(MASTER_PID, address(this)).amount);
     dummyToken.safeTransfer(to, dummyToken.balanceOf(address(this)));
@@ -121,7 +121,7 @@ contract FairLaunchV2 is Ownable {
   /// @param _stakeToken address of the LP token
   /// @param _locker address of the reward Contract
   function addPool(uint256 allocPoint, IERC20 _stakeToken, ILocker _locker, uint256 _startBlock) public onlyOwner {
-    require(!isDuplicatedPool(_stakeToken), "add: stakeToken dup");
+    require(!isDuplicatedPool(_stakeToken), "FairLaunchV2::add:: stakeToken dup");
 
     uint256 lastRewardBlock = block.number > _startBlock ? block.number : _startBlock;
     totalAllocPoint = totalAllocPoint.add(allocPoint);
@@ -209,7 +209,7 @@ contract FairLaunchV2 is Ownable {
     UserInfo storage user = userInfo[pid][_for];
 
     // Validation
-    if (user.fundedBy != address(0)) require(user.fundedBy == msg.sender, "deposit: bad sof");
+    if (user.fundedBy != address(0)) require(user.fundedBy == msg.sender, "FairLaunchV2::deposit:: bad sof");
 
     // Effects
     user.amount = user.amount.add(amount);
@@ -230,8 +230,8 @@ contract FairLaunchV2 is Ownable {
     PoolInfo memory pool = updatePool(pid);
     UserInfo storage user = userInfo[pid][_for];
 
-    require(user.fundedBy == msg.sender, "withdraw: only funder");
-    require(user.amount >= amount, "withdraw: not good");
+    require(user.fundedBy == msg.sender, "FairLaunchV2::withdraw:: only funder");
+    require(user.amount >= amount, "FairLaunchV2::withdraw:: not good");
 
     // Effects
     _harvest(_for, pid);
@@ -262,7 +262,7 @@ contract FairLaunchV2 is Ownable {
     uint256 _pendingAlpaca = accumulatedAlpaca.sub(user.rewardDebt);
     if (_pendingAlpaca == 0) { return; }
 
-    require(_pendingAlpaca <= ALPACA.balanceOf(address(this)), "wtf not enough alpaca");
+    require(_pendingAlpaca <= ALPACA.balanceOf(address(this)), "FairLaunchV2::_harvest:: wtf not enough alpaca");
 
     // Effects
     user.rewardDebt = accumulatedAlpaca;

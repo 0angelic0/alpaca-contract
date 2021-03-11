@@ -95,7 +95,7 @@ contract ConfigurableInterestVaultConfig is IVaultConfig, OwnableUpgradeSafe {
 
   /// @dev Set the configuration for the given workers. Must only be called by the owner.
   function setWorkers(address[] calldata addrs, IWorkerConfig[] calldata configs) external onlyOwner {
-    require(addrs.length == configs.length, "bad length");
+    require(addrs.length == configs.length, "ConfigurableInterestVaultConfig::setWorkers:: bad length");
     for (uint256 idx = 0; idx < addrs.length; idx++) {
       workers[addrs[idx]] = configs[idx];
     }

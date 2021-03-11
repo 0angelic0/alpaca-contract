@@ -19,7 +19,7 @@ contract SimplePriceOracle is OwnableUpgradeSafe, PriceOracle {
   mapping (address => mapping (address => PriceData)) public store;
 
   modifier onlyFeeder() {
-    require(msg.sender == feeder, "only feeder");
+    require(msg.sender == feeder, "SimplePriceOracle::onlyFeeder:: only feeder");
     _;
   }
 
@@ -43,8 +43,8 @@ contract SimplePriceOracle is OwnableUpgradeSafe, PriceOracle {
     onlyFeeder
   {
     uint256 len = token0s.length;
-    require(token1s.length == len, "bad token1s length");
-    require(prices.length == len, "bad prices length");
+    require(token1s.length == len, "SimplePriceOracle::setPrices:: bad token1s length");
+    require(prices.length == len, "SimplePriceOracle::setPrices:: bad prices length");
     for (uint256 idx = 0; idx < len; idx++) {
       address token0 = token0s[idx];
       address token1 = token1s[idx];
@@ -66,7 +66,7 @@ contract SimplePriceOracle is OwnableUpgradeSafe, PriceOracle {
     PriceData memory data = store[token0][token1];
     price = uint256(data.price);
     lastUpdate = uint256(data.lastUpdate);
-    require(price != 0 && lastUpdate != 0, "bad price data");
+    require(price != 0 && lastUpdate != 0, "SimplePriceOracle::getPrice:: bad price data");
     return (price, lastUpdate);
   }
 }

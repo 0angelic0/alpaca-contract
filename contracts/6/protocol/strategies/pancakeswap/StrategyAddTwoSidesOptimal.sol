@@ -113,7 +113,7 @@ contract StrategyAddTwoSidesOptimal is ReentrancyGuardUpgradeSafe, IStrategy {
     (,, uint256 moreLPAmount) = router.addLiquidity(
       baseToken, farmingToken, baseToken.myBalance(), farmingToken.myBalance(), 0, 0, address(this), now
     );
-    require(moreLPAmount >= minLPAmount, "insufficient LP tokens received");
+    require(moreLPAmount >= minLPAmount, "StrategyAddTwoSidesOptimal::execute:: insufficient LP tokens received");
     lpToken.transfer(msg.sender, lpToken.balanceOf(address(this)));
     // 7. Return leftover back to user
     if (baseToken.myBalance() > 0) {

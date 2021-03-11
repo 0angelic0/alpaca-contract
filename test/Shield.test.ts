@@ -394,7 +394,7 @@ describe("Shield", () => {
         ethers.utils.defaultAbiCoder.encode(
           ['address','uint256'],
           [await alice.getAddress(), ethers.utils.parseEther('5000001')]), eta
-      )).to.be.revertedWith('shield: mint exceeded mintLimit');
+      )).to.be.revertedWith('Shield::mintWarchest:: mint exceeded mintLimit');
       expect(await shield.mintCount()).to.be.bignumber.eq(ethers.utils.parseEther('3000000'));
       expect(await alpacaToken.balanceOf(await alice.getAddress())).to.be.bignumber.eq(ethers.utils.parseEther('2750000'));
     });

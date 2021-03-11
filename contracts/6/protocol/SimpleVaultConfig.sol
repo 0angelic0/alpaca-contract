@@ -123,19 +123,19 @@ contract SimpleVaultConfig is IVaultConfig, OwnableUpgradeSafe {
 
   /// @dev Return whether the given worker accepts more debt. Revert on non-worker.
   function acceptDebt(address worker) external view override returns (bool) {
-    require(workers[worker].isWorker, "!worker");
+    require(workers[worker].isWorker, "SimpleVaultConfig::acceptDebt:: !worker");
     return workers[worker].acceptDebt;
   }
 
   /// @dev Return the work factor for the worker + BaseToken debt, using 1e4 as denom. Revert on non-worker.
   function workFactor(address worker, uint256 /* debt */) external view override returns (uint256) {
-    require(workers[worker].isWorker, "!worker");
+    require(workers[worker].isWorker, "SimpleVaultConfig::workFactor:: !worker");
     return workers[worker].workFactor;
   }
 
   /// @dev Return the kill factor for the worker + BaseToken debt, using 1e4 as denom. Revert on non-worker.
   function killFactor(address worker, uint256 /* debt */) external view override returns (uint256) {
-    require(workers[worker].isWorker, "!worker");
+    require(workers[worker].isWorker, "SimpleVaultConfig::killFactor:: !worker");
     return workers[worker].killFactor;
   }
 

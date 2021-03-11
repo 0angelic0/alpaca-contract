@@ -60,7 +60,7 @@ contract StrategyWithdrawMinimizeTrading is ReentrancyGuardUpgradeSafe, IStrateg
     baseToken.safeTransfer(msg.sender, remainingBalance);
     // 6. Return remaining farming tokens to user.
     uint256 remainingFarmingToken = farmingToken.myBalance();
-    require(remainingFarmingToken >= minFarmingToken, "insufficient quote tokens received");
+    require(remainingFarmingToken >= minFarmingToken, "StrategyWithdrawMinimizeTrading::execute:: insufficient quote tokens received");
     if (remainingFarmingToken > 0) {
       farmingToken.safeTransfer(user, remainingFarmingToken);
     }

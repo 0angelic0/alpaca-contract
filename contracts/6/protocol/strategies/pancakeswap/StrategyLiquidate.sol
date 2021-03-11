@@ -53,7 +53,7 @@ contract StrategyLiquidate is ReentrancyGuardUpgradeSafe, IStrategy {
     router.swapExactTokensForTokens(farmingToken.myBalance(), 0, path, address(this), now);
     // 5. Return all baseToken back to the original caller.
     uint256 balance = baseToken.myBalance();
-    require(balance >= minBaseToken, "insufficient baseToken received");
+    require(balance >= minBaseToken, "StrategyLiquidate::execute:: insufficient baseToken received");
     SafeToken.safeTransfer(baseToken, msg.sender, balance);
     // 6. Reset approve for safety reason
     lpToken.approve(address(router), 0);

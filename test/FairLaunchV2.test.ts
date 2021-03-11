@@ -190,7 +190,7 @@ describe("FairLaunchV2", () => {
       expect(await fairLaunchV2.poolLength()).to.eq(stakingTokens.length);
 
       await expect(fairLaunchV2.addPool(1, stakingTokens[0].address, ADDRESS0, 0))
-        .to.be.revertedWith("add: stakeToken dup");
+        .to.be.revertedWith("FairLaunchV2::add:: stakeToken dup");
     });
   });
 
@@ -235,7 +235,7 @@ describe("FairLaunchV2", () => {
 
       // 4. Bob try to withdraw from the pool
       // Bob shuoldn't do that, he can get yield but not the underlaying
-      await expect(fairLaunchV2AsBob.withdraw(await bob.getAddress(), 0, ethers.utils.parseEther('100'))).to.be.revertedWith("withdraw: only funder");
+      await expect(fairLaunchV2AsBob.withdraw(await bob.getAddress(), 0, ethers.utils.parseEther('100'))).to.be.revertedWith("FairLaunchV2::withdraw:: only funder");
     });
 
     it('should allow deposit when funder withdrew funds and owner want to stake his own token', async () => {
@@ -267,7 +267,7 @@ describe("FairLaunchV2", () => {
 
       // 5. Bob try to withdraw from the pool
       // Bob shuoldn't do that, he can get yield but not the underlaying
-      await expect(fairLaunchV2AsBob.withdraw(await bob.getAddress(), 0, ethers.utils.parseEther('100'))).to.be.revertedWith("withdraw: only funder");
+      await expect(fairLaunchV2AsBob.withdraw(await bob.getAddress(), 0, ethers.utils.parseEther('100'))).to.be.revertedWith("FairLaunchV2::withdraw:: only funder");
 
       // 6. Alice withdraw her STOKEN0 that staked on behalf of BOB
       await fairLaunchV2AsAlice.withdraw((await bob.getAddress()), 0, ethers.utils.parseEther('100'));
@@ -303,7 +303,7 @@ describe("FairLaunchV2", () => {
       // 4. Dev try to deposit to the pool on the bahalf of Bob
       // Dev should get revert tx as this will fuck up the tracking
       await stoken0AsDev.approve(fairLaunchV2.address, ethers.utils.parseEther("100"));
-      await expect(fairLaunchV2AsDev.deposit((await bob.getAddress()), 0, ethers.utils.parseEther('1'))).to.be.revertedWith('deposit: bad sof');
+      await expect(fairLaunchV2AsDev.deposit((await bob.getAddress()), 0, ethers.utils.parseEther('1'))).to.be.revertedWith('FairLaunchV2::deposit:: bad sof');
     });
 
     it('should harvest yield from the position opened by funder', async () => {
