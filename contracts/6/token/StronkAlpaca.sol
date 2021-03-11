@@ -13,6 +13,9 @@ contract StronkAlpaca is IStronkAlpaca, ERC20("Stronk Alpaca", "sALPACA"), Ownab
   using SafeMath for uint256;
   using SafeERC20 for IERC20;
 
+  //Block number when locked ALPACA can be turned to sALPACA
+  uint256 public hodlableStartBlock;
+
   // Block number when locked ALPACA can be turned to sALPACA
   uint256 public hodlableEndBlock;
 
@@ -32,12 +35,13 @@ contract StronkAlpaca is IStronkAlpaca, ERC20("Stronk Alpaca", "sALPACA"), Ownab
 
   constructor(
     address _alpacaAddress,
+    uint256 _hodlableStartBlock,
     uint256 _hodlableEndBlock,
     uint256 _lockEndBlock
   ) public {
     _setupDecimals(18);
     alpacaTokenAddress = _alpacaAddress;
-
+    hodlableStartBlock = _hodlableStartBlock;
     hodlableEndBlock = _hodlableEndBlock;
     lockEndBlock = _lockEndBlock;
   }
@@ -50,6 +54,7 @@ contract StronkAlpaca is IStronkAlpaca, ERC20("Stronk Alpaca", "sALPACA"), Ownab
 
   function prepareHodl() external override onlyEOA nonReentrant {
     require(_userRelayerMap[msg.sender] == address(0), "StronkAlpaca::prepareHodl: user has already prepared hodl");
+    require(block.number > hodlableStartBlock, "StronkAlpaca::prepareHodl: block.number not reach hodlableStartBlock");
     require(block.number < hodlableEndBlock, "StronkAlpaca::prepareHodl: block.number exceeds hodlableEndBlock");
 
     // create relayer contract
@@ -77,6 +82,8 @@ contract StronkAlpaca is IStronkAlpaca, ERC20("Stronk Alpaca", "sALPACA"), Ownab
       "StronkAlpaca::unhodl: block.number have not reach alpacaToken.endReleaseBlock"
     );
     require(block.number > lockEndBlock, "StronkAlpaca::unhodl: block.number have not reach lockEndBlock");
+
+    require(balanceOf(msg.sender) > 0, "StronkAlpaca::unhodl: user's sAlpaca must be greater than zero");
 
     // unlock all the Alpaca token in case it never have been unlocked yet
     // Note: given that releasePeriodEnd has passed, so that locked token has been 100% released

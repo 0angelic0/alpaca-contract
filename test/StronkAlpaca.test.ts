@@ -53,7 +53,7 @@ describe("StronkAlpaca and StronkAlpacaRelayer", () => {
       "StronkAlpaca",
       deployer
     )) as StronkAlpaca__factory;
-    stronkAlpaca = await StronkAlpaca.deploy(alpacaToken.address, nowBlock + 100, nowBlock + 500);
+    stronkAlpaca = await StronkAlpaca.deploy(alpacaToken.address, nowBlock+50, nowBlock + 100, nowBlock + 500);
     await stronkAlpaca.deployed();
 
     stronkAlpacaAsAlice = StronkAlpaca__factory.connect(stronkAlpaca.address, alice);
@@ -73,6 +73,8 @@ describe("StronkAlpaca and StronkAlpacaRelayer", () => {
       await alpacaToken.mint(bobAddress, ethers.utils.parseEther('50'))
       await alpacaToken.lock(bobAddress, ethers.utils.parseEther('50'))
 
+      // Advance 50 blocks to reach holdStartBlock
+      await TimeHelpers.advanceBlockTo(nowBlock + 50)
       // Alice prepare hodl
       expect(await stronkAlpaca.getRelayerAddress(aliceAddress)).to.equal(ADDRESS0)
       await expect(stronkAlpacaAsAlice.prepareHodl())
@@ -145,10 +147,20 @@ describe("StronkAlpaca and StronkAlpacaRelayer", () => {
 
   context('when alice has already called prepareHodl once', async () => {
     it('should not allow to prepareHodl when user has already prepare hodl', async () => {
+      // Advance 50 blocks to reach holdStartBlock
+      await TimeHelpers.advanceBlockTo(nowBlock + 50)
       await stronkAlpacaAsAlice.prepareHodl()
       await expect(stronkAlpacaAsAlice.prepareHodl())
         .to.be
         .revertedWith('StronkAlpaca::prepareHodl: user has already prepared hodl')
+    })
+  })
+
+  context('when alice want to hodl StronkAlpaca before hodlableStartBlock', async () => {
+    it('should not allow to do so when block.number is not reach hodlableStartBlock', async () => {
+      await expect(stronkAlpacaAsAlice.prepareHodl())
+        .to.be
+        .revertedWith('StronkAlpaca::prepareHodl: block.number not reach hodlableStartBlock')
     })
   })
 
@@ -172,6 +184,8 @@ describe("StronkAlpaca and StronkAlpacaRelayer", () => {
   context('when the relayer is created (prepareHodl)', async() => {
     it('should allow transferAllAlpaca to be called by only StronkAlpaca contract', async () => {
       const aliceAddress = await alice.getAddress()
+      // Advance 50 blocks to reach holdStartBlock
+      await TimeHelpers.advanceBlockTo(nowBlock + 50)
       await stronkAlpacaAsAlice.prepareHodl()
       const aliceRelayerAddress = await stronkAlpaca.getRelayerAddress(aliceAddress)
       const relayerAsAlice = StronkAlpacaRelayer__factory.connect(aliceRelayerAddress, alice)
@@ -198,6 +212,8 @@ describe("StronkAlpaca and StronkAlpacaRelayer", () => {
       await alpacaToken.mint(bobAddress, ethers.utils.parseEther('50'))
       await alpacaToken.lock(bobAddress, ethers.utils.parseEther('50'))
 
+      // Advance 50 blocks to reach holdStartBlock
+      await TimeHelpers.advanceBlockTo(nowBlock + 50)
       // prepare hodl
       await stronkAlpacaAsAlice.prepareHodl()
       const aliceRelayerAddress = await stronkAlpaca.getRelayerAddress(aliceAddress)
@@ -268,6 +284,13 @@ describe("StronkAlpaca and StronkAlpacaRelayer", () => {
       await expect(stronkAlpacaAsAlice.unhodl())
         .to.be
         .revertedWith('StronkAlpaca::unhodl: block.number have not reach lockEndBlock')
+    })
+
+    it(`should not allow to do so before balance of user's sAlpaca is zero or less than zero`, async () => {
+      await TimeHelpers.advanceBlockTo(nowBlock + 500)
+      await expect(stronkAlpacaAsAlice.unhodl())
+      .to.be.
+      revertedWith(`StronkAlpaca::unhodl: user's sAlpaca must be greater than zero`)
     })
 
   })
