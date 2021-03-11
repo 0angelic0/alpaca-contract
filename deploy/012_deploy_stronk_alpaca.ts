@@ -15,6 +15,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   */
 
   const ALPACA_TOKEN_ADDR = '0x19C64173a4fD5C2Db375f68444B2aA3070e0de08';
+  const HODLABLE_START_BLOCK = '5311496'
   const HODLABLE_END_BLOCK = '5411496'; // hodl can be called until this block
   const LOCK_END_BLOCK = '5511496'; // unhodl can be called after this block
 
@@ -33,6 +34,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const StronkAlpaca = (await ethers.getContractFactory(   "StronkAlpaca",    (await ethers.getSigners())[0],  )) as StronkAlpaca__factory;
   const stronkAlpaca = await StronkAlpaca.deploy(
     ALPACA_TOKEN_ADDR,
+    ethers.BigNumber.from(HODLABLE_START_BLOCK),
     ethers.BigNumber.from(HODLABLE_END_BLOCK),
     ethers.BigNumber.from(LOCK_END_BLOCK),
   );
