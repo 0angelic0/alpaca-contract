@@ -147,6 +147,10 @@ describe("StronkAlpaca and StronkAlpacaRelayer", () => {
 
   context('when alice has already called prepareHodl once', async () => {
     it('should not allow to prepareHodl when user has already prepare hodl', async () => {
+      const aliceAddress = await alice.getAddress()
+      //100 alpaca to alice and then lock with 100
+      await alpacaToken.mint(aliceAddress, ethers.utils.parseEther('100'))
+      await alpacaToken.lock(aliceAddress, ethers.utils.parseEther('100'))
       // Advance 50 blocks to reach holdStartBlock
       await TimeHelpers.advanceBlockTo(nowBlock + 50)
       await stronkAlpacaAsAlice.prepareHodl()
@@ -166,10 +170,26 @@ describe("StronkAlpaca and StronkAlpacaRelayer", () => {
 
   context('when alice want to hodl StronkAlpaca after hodlableEndBlock', async () => {
     it('should not allow to do so when block.number exceeds hodlableEndBlock', async () => {
+      const aliceAddress = await alice.getAddress()
+      //100 alpaca to alice and then lock with 100
+      await alpacaToken.mint(aliceAddress, ethers.utils.parseEther('100'))
+      await alpacaToken.lock(aliceAddress, ethers.utils.parseEther('100'))
+      //Advance block to not be able to hodl
       await TimeHelpers.advanceBlockTo(nowBlock + 100)
       await expect(stronkAlpacaAsAlice.prepareHodl())
         .to.be
         .revertedWith('StronkAlpaca::prepareHodl: block.number exceeds hodlableEndBlock')
+    })
+    it(`should not allow to do so before balance of user's lockAlpaca is zero or less than zero`, async () => {
+      const aliceAddress = await alice.getAddress()
+      //100 alpaca to alice and then lock with 0
+      await alpacaToken.mint(aliceAddress, ethers.utils.parseEther('100'))
+      await alpacaToken.lock(aliceAddress, ethers.utils.parseEther('0'))
+      //Advance block to be able to prepareHodl
+      await TimeHelpers.advanceBlockTo(nowBlock + 50)
+      await expect(stronkAlpacaAsAlice.prepareHodl())
+      .to.be.
+      revertedWith(`StronkAlpaca::preparehodl: user's lockAlpaca must be greater than zero`)
     })
   })
 
@@ -184,6 +204,9 @@ describe("StronkAlpaca and StronkAlpacaRelayer", () => {
   context('when the relayer is created (prepareHodl)', async() => {
     it('should allow transferAllAlpaca to be called by only StronkAlpaca contract', async () => {
       const aliceAddress = await alice.getAddress()
+      //100 alpaca to alice and then lock.
+      await alpacaToken.mint(aliceAddress, ethers.utils.parseEther('100'))
+      await alpacaToken.lock(aliceAddress, ethers.utils.parseEther('100'))
       // Advance 50 blocks to reach holdStartBlock
       await TimeHelpers.advanceBlockTo(nowBlock + 50)
       await stronkAlpacaAsAlice.prepareHodl()
@@ -285,13 +308,5 @@ describe("StronkAlpaca and StronkAlpacaRelayer", () => {
         .to.be
         .revertedWith('StronkAlpaca::unhodl: block.number have not reach lockEndBlock')
     })
-
-    it(`should not allow to do so before balance of user's sAlpaca is zero or less than zero`, async () => {
-      await TimeHelpers.advanceBlockTo(nowBlock + 500)
-      await expect(stronkAlpacaAsAlice.unhodl())
-      .to.be.
-      revertedWith(`StronkAlpaca::unhodl: user's sAlpaca must be greater than zero`)
-    })
-
   })
 })
