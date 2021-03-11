@@ -91,13 +91,13 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
 
   /// @dev Require that the caller must be an EOA account to avoid flash loans.
   modifier onlyEOA() {
-    require(msg.sender == tx.origin, "PancakeswapWorker::initialize:: not eoa");
+    require(msg.sender == tx.origin, "PancakeswapWorker::onlyEOA:: not eoa");
     _;
   }
 
   /// @dev Require that the caller must be the operator (the bank).
   modifier onlyOperator() {
-    require(msg.sender == operator, "PancakeswapWorker::initialize:: not operator");
+    require(msg.sender == operator, "PancakeswapWorker::onlyOperator:: not operator");
     _;
   }
 
@@ -161,7 +161,7 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
     _removeShare(id);
     // 2. Perform the worker strategy; sending LP tokens + BaseToken; expecting LP tokens + BaseToken.
     (address strat, bytes memory ext) = abi.decode(data, (address, bytes));
-    require(okStrats[strat], "PancakeswapWorker::initialize:: unapproved work strategy");
+    require(okStrats[strat], "PancakeswapWorker::work:: unapproved work strategy");
     lpToken.transfer(strat, lpToken.balanceOf(address(this)));
     baseToken.safeTransfer(strat, baseToken.myBalance());
     IStrategy(strat).execute(user, debt, ext);
@@ -177,7 +177,7 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
   /// @param rOut The amount of asset in reserve for output.
   function getMktSellAmount(uint256 aIn, uint256 rIn, uint256 rOut) public pure returns (uint256) {
     if (aIn == 0) return 0;
-    require(rIn > 0 && rOut > 0, "PancakeswapWorker::initialize:: bad reserve values");
+    require(rIn > 0 && rOut > 0, "PancakeswapWorker::getMktSellAmount:: bad reserve values");
     uint256 aInWithFee = aIn.mul(998);
     uint256 numerator = aInWithFee.mul(rOut);
     uint256 denominator = rIn.mul(1000).add(aInWithFee);

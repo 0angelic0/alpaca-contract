@@ -14,12 +14,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   Check all variables below before execute the deployment script
   */
 
-  const WORKER_ADDR = '0x336ce685b3DD5c47E52Af3ee407B9d134A2fdea5';
-  const STRATEGY_ADDR = '0x4194bFDFA67A8a04d0EB3Dc802716fE744C46282';
+  const WORKER_ADDR = '0xF3ECC0e5c238C7082fC59e682104DEA2f49A3787';
+  const STRATEGY_ADDR = '0xA4047bdA5288BC718E4a3De68781dA4D7e801e82';
   const IS_ENABLE = true;
 
   const TIMELOCK = '0x771F70042ebb6d2Cfc29b7BF9f3caf9F959385B8';
-  const EXACT_ETA = '';
+  const EXACT_ETA = '1615447380';
 
 
 
