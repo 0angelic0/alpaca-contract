@@ -9,7 +9,7 @@ import "./StronkAlpacaRelayer.sol";
 import "../utils/SafeToken.sol";
 
 // StrongHodl is a smart contract for ALPACA time-locking by asking user to lock ALPACA for a period of time.
-contract StronkAlpaca is IStronkAlpaca, ERC20("Stronk Alpaca", "sALPACA"), Ownable, ReentrancyGuard {
+contract StronkAlpaca is IStronkAlpaca, ERC20("Stronk Alpaca", "sALPACA"), ReentrancyGuard {
   using SafeMath for uint256;
   using SafeERC20 for IERC20;
 
