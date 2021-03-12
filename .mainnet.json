@@ -85,7 +85,7 @@
   },
   "Vaults": [{
     "name": "Interest Bearing BNB",
-    "symbol": "ibBNB",
+    "symbol": "ibWBNB",
     "address": "0xd7D069493685A581d27824Fc46EdA46B7EfC0063",
     "debtToken": "0x5138133f0671071D8b8F1C4c180881bfCfe22CeC",
     "config": "0x53dbb71303ad0F9AFa184B8f7147F9f12Bb5Dc01",
