@@ -275,6 +275,7 @@ contract FairLaunch is IFairLaunch, Ownable {
     user.amount = user.amount.sub(_amount);
     user.rewardDebt = user.amount.mul(pool.accAlpacaPerShare).div(1e12);
     user.bonusDebt = user.amount.mul(pool.accAlpacaPerShareTilBonusEnd).div(1e12);
+    user.fundedBy = address(0);
     if (pool.stakeToken != address(0)) {
       IERC20(pool.stakeToken).safeTransfer(address(msg.sender), _amount);
     }

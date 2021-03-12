@@ -108,7 +108,7 @@ contract StrategyAddTwoSidesOptimal is ReentrancyGuardUpgradeSafe, IStrategy {
     address[] memory path = new address[](2);
     (path[0], path[1]) = isReversed ? (farmingToken, baseToken) : (baseToken, farmingToken);
     // 5. Swap according to path
-    router.swapExactTokensForTokens(swapAmt, 0, path, address(this), now);
+    if (swapAmt > 0) router.swapExactTokensForTokens(swapAmt, 0, path, address(this), now);
     // 6. Mint more LP tokens and return all LP tokens to the sender.
     (,, uint256 moreLPAmount) = router.addLiquidity(
       baseToken, farmingToken, baseToken.myBalance(), farmingToken.myBalance(), 0, 0, address(this), now
