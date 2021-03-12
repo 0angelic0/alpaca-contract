@@ -219,8 +219,10 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
   /// @dev _fairLaunchWithdraw
   function _fairLaunchWithdraw(uint256 id) internal {
     if (positions[id].debtShare > 0) {
-      IFairLaunch(config.getFairLaunchAddr()).withdraw(positions[id].owner, fairLaunchPoolId, positions[id].debtShare);
-      IDebtToken(debtToken).burn(address(this), positions[id].debtShare);
+      // Note: Do this way because we don't want to fail open, close, kill position
+      // if cannot withdraw from FairLaunch somehow
+      (bool success, ) = config.getFairLaunchAddr().call(abi.encodeWithSelector(0xb5c5f672, positions[id].owner, fairLaunchPoolId, positions[id].debtShare));
+      if(success) IDebtToken(debtToken).burn(address(this), positions[id].debtShare);
     }
   }
 
