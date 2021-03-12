@@ -67,6 +67,10 @@
     "BTCB": "0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c",
     "ETH": "0x2170ed0880ac9a755fd29b2688956bd959f933f8"
   },
+  "LpTokens": {
+    "ALPACA-WBNB": "",
+    "sALPACA-ALPACA": ""
+  },
   "SharedStrategies": {
     "StrategyAddBaseTokenOnly": "0xBBd3464C571db4315bebeE098381b687c8269314",
     "StrategyLiquidate": "0xe2880836faf7FaDF094418F9E9DdDe3d132243F1"

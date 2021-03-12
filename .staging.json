@@ -55,6 +55,10 @@
       }]
     }
   },
+  "LpTokens": {
+    "ALPACA-WBNB": "",
+    "sALPACA-ALPACA": ""
+  },
   "Tokens": {
     "WBNB": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
     "ALPACA": "0xE2369E20A5e27543f65D2c680684FDCA23c284c9",
