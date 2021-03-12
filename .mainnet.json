@@ -68,6 +68,7 @@
     "ETH": "0x2170ed0880ac9a755fd29b2688956bd959f933f8"
   },
   "LpTokens": {
+    "ALPACA-WBNB": "0xf3ce6aac24980e6b657926dfc79502ae414d3083",
     "sALPACA-ALPACA": "0x3Ee4de968E47877F432226d6a9A0DAD6EAc6001b"
   },
   "SharedStrategies": {
