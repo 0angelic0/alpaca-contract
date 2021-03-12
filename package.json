@@ -1,6 +1,6 @@
 {
   "name": "@alpaca-finance/alpaca-contract",
-  "version": "1.0.0",
+  "version": "1.0.8",
   "scripts": {
     "compile5": "hardhat typechain --config hardhat.config.5.ts",
     "compile6": "hardhat typechain --config hardhat.config.ts",
@@ -65,8 +65,7 @@
     "coverage": "hardhat coverage",
     "ganache": "ganache-cli",
     "solhint": "./node_modules/.bin/solhint -f table contracts/**/*.sol",
-    "prettier:solidity": "./node_modules/.bin/prettier --write contracts/**/*.sol",
-    "prepublishOnly": "yarn run compile"
+    "prettier:solidity": "./node_modules/.bin/prettier --write contracts/**/*.sol"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.1",

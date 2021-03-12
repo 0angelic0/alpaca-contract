@@ -11,7 +11,7 @@
       "id": 1,
       "stakingToken": "ibWBNB",
       "address": "0x6883D1297721F4584077fe7471c396538DC5dcbC",
-      "allocPoint": 100
+      "allocPoint": 200
     }, {
       "id": 2,
       "stakingToken": "debtibBUSD",
@@ -21,12 +21,17 @@
       "id": 3,
       "stakingToken": "ibBUSD",
       "address": "0x947fFd3352136aC34eC67895E4fd392de18157DF",
-      "allocPoint": 100
+      "allocPoint": 200
     }, {
       "id": 4,
       "stakingToken": "ALPACA-WBNB LP",
       "address": "0x8aD889FE2eDA1B7CB3a8C09FFB7246571564b379",
-      "allocPoint": 300
+      "allocPoint": 100
+    }, {
+      "id": 5,
+      "stakingToken": "sALPACA",
+      "address": "0x588245DE5E45ecF463565ebD944BBD7975670fAC",
+      "allocPoint": 100
     }]
   },
   "Exchanges": {
@@ -60,6 +65,7 @@
   "Tokens": {
     "WBNB": "0x0421b6CE68C71708CD18652aF5123fc2573DBCCC",
     "ALPACA": "0xd84605b66bD0Cec5693c727b8208e25504326fb1",
+    "sALPACA": "0x588245DE5E45ecF463565ebD944BBD7975670fAC",
     "BUSD": "0x1f1F4D015A3CE748b838f058930dea311F3b69AE",
     "CAKE": "0x82897976C5336dfe40feC5aD0F2a77bF88E87127",
     "SYRUP": "0x655dEe1fB07f51EE19dd1EA8F7C6fDedc2BF9E08",
