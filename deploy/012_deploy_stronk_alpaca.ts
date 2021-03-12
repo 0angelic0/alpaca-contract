@@ -14,15 +14,14 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   Check all variables below before execute the deployment script
   */
 
-  const ALPACA_TOKEN_ADDR = '0xd84605b66bD0Cec5693c727b8208e25504326fb1';
-  const HODLABLE_START_BLOCK = '7000001'; // hodl can be called after this block
-  const HODLABLE_END_BLOCK = '7019000'; // hodl can be called until this block
-  const LOCK_END_BLOCK = '7022000'; // unhodl can be called after this block
-  /**
-   * HODLABLE_START_BLOCK = Thu Mar 11 2021 17:50:20 UTC
-   * HODLABLE_END_BLOCK = Fri Mar 12 2021 09:40:41 UTC
-   * LOCK_END_BLOCK = Fri Mar 12 2021 12:10:32 UTC
-   */
+  const ALPACA_TOKEN_ADDR = '0x8F0528cE5eF7B51152A59745bEfDD91D97091d2F';
+  const HODLABLE_START_BLOCK = '5666000'
+  const HODLABLE_END_BLOCK = '6150000'; // hodl can be called until this block
+  const LOCK_END_BLOCK = '9122000'; // unhodl can be called after this block
+
+  // HODLABLE_START_BLOCK = Sun Mar 14 2021 13:19:26 GMT+0700
+  // HODLABLE_END_BLOCK = Wed Mar 31 2021 08:39:29 GMT+0700
+  // LOCK_END_BLOCK = Mon Jul 12 2021 13:19:44 GMT+0700
 
 
 
