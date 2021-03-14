@@ -99,6 +99,7 @@ describe('Vault - Pancake', () => {
   let baseTokenAsAlice: MockERC20;
   let baseTokenAsBob: MockERC20;
 
+  let fairLaunchAsAlice: FairLaunch;
   let fairLaunchAsBob: FairLaunch;
 
   let lpAsAlice: UniswapV2Pair;
@@ -306,6 +307,7 @@ describe('Vault - Pancake', () => {
     lpAsAlice = UniswapV2Pair__factory.connect(lp.address, alice);
     lpAsBob = UniswapV2Pair__factory.connect(lp.address, bob);
 
+    fairLaunchAsAlice = FairLaunch__factory.connect(fairLaunch.address, alice);
     fairLaunchAsBob = FairLaunch__factory.connect(fairLaunch.address, bob);
 
     pancakeMasterChefAsAlice = PancakeMasterChef__factory.connect(masterChef.address, alice);
@@ -393,12 +395,12 @@ describe('Vault - Pancake', () => {
         ),
       );
     });
-  
+
     it('should not allow to open a position with debt less than MIN_DEBT_SIZE', async () => {
       // Deployer deposits 3 BTOKEN to the bank
       await baseToken.approve(vault.address, ethers.utils.parseEther('3'));
       await vault.deposit(ethers.utils.parseEther('3'));
-  
+
       // Alice cannot take 0.3 debt because it is too small
       await baseTokenAsAlice.approve(vault.address, ethers.utils.parseEther('0.3'));
       await expect(
@@ -674,6 +676,111 @@ describe('Vault - Pancake', () => {
         (await vault.totalToken()).toString(),
       );
   
+      // Alice creates a new position again
+      await baseTokenAsAlice.approve(vault.address, ethers.utils.parseEther('1'));
+      await vaultAsAlice.work(
+        0,
+        pancakeswapWorker.address,
+        ethers.utils.parseEther('1'),
+        ethers.utils.parseEther('1'),
+        '0',
+        ethers.utils.defaultAbiCoder.encode(
+          ['address', 'bytes'],
+          [addStrat.address, ethers.utils.defaultAbiCoder.encode(
+            ['address', 'address', 'uint256'],
+            [baseToken.address, quoteToken.address, '0'])
+          ]
+        )
+      )
+  
+      // She can close position
+      await vaultAsAlice.work(
+        2,
+        pancakeswapWorker.address,
+        '0',
+        '0',
+        '115792089237316195423570985008687907853269984665640564039457584007913129639935',
+        ethers.utils.defaultAbiCoder.encode(
+          ['address', 'bytes'],
+          [liqStrat.address, ethers.utils.defaultAbiCoder.encode(
+            ['address','address', 'uint256'],
+            [baseToken.address, quoteToken.address, '0'])
+          ]
+        )
+      );
+    }).timeout(50000);
+
+    it('should be able to liquidate bad position even if user emergencyWithdraw', async () => {
+      // Deployer deposits 3 BTOKEN to the bank
+      const deposit = ethers.utils.parseEther('3');
+      await baseToken.approve(vault.address, deposit);
+      await vault.deposit(deposit);
+
+      // Now Alice can take 1 BTOKEN loan + 1 BTOKEN of her to create a new position
+      const loan = ethers.utils.parseEther('1');
+      await baseTokenAsAlice.approve(vault.address, ethers.utils.parseEther('1'));
+      await vaultAsAlice.work(
+        0,
+        pancakeswapWorker.address,
+        ethers.utils.parseEther('1'),
+        loan,
+        '0',
+        ethers.utils.defaultAbiCoder.encode(
+          ['address', 'bytes'],
+          [addStrat.address, ethers.utils.defaultAbiCoder.encode(
+            ['address', 'address', 'uint256'],
+            [baseToken.address, quoteToken.address, '0'])
+          ]
+        ),
+      );
+
+      await TimeHelpers.increase(TimeHelpers.duration.days(ethers.BigNumber.from('1')));
+      await pancakeswapWorkerAsEve.reinvest();
+      await vault.deposit(0); // Random action to trigger interest computation
+
+      await TimeHelpers.increase(TimeHelpers.duration.days(ethers.BigNumber.from('1')));
+      await TimeHelpers.increase(TimeHelpers.duration.days(ethers.BigNumber.from('1')));
+
+      await vault.deposit(0); // Random action to trigger interest computation
+      const interest = ethers.utils.parseEther('0.3'); //30% interest rate
+      const reservePool = interest.mul(RESERVE_POOL_BPS).div('10000');
+      AssertHelpers.assertAlmostEqual(
+        (deposit
+          .add(interest.sub(reservePool))
+          .add(interest.sub(reservePool).mul(13).div(10))
+          .add(interest.sub(reservePool).mul(13).div(10))).toString(),
+        (await vault.totalToken()).toString()
+      );
+
+      // Alice emergencyWithdraw from FairLaunch
+      await fairLaunchAsAlice.emergencyWithdraw(0);
+
+      const eveBefore = await baseToken.balanceOf(await eve.getAddress());
+
+      // Now you can liquidate because of the insane interest rate
+      await vaultAsEve.kill('1');
+
+      expect(await baseToken.balanceOf(await eve.getAddress())).to.be.bignumber.gt(eveBefore);
+      AssertHelpers.assertAlmostEqual(
+        deposit
+          .add(interest)
+          .add(interest.mul(13).div(10))
+          .add(interest.mul(13).div(10)).toString(),
+        (await baseToken.balanceOf(vault.address)).toString(),
+      );
+      expect(await vault.vaultDebtVal()).to.be.bignumber.eq(ethers.utils.parseEther('0'));
+      AssertHelpers.assertAlmostEqual(
+        reservePool.add(reservePool.mul(13).div(10)).add(reservePool.mul(13).div(10)).toString(),
+        (await vault.reservePool()).toString(),
+      );
+      AssertHelpers.assertAlmostEqual(
+        deposit
+          .add(interest.sub(reservePool))
+          .add(interest.sub(reservePool).mul(13).div(10))
+          .add(interest.sub(reservePool).mul(13).div(10)).toString(),
+        (await vault.totalToken()).toString(),
+      );
+
       // Alice creates a new position again
       await baseTokenAsAlice.approve(vault.address, ethers.utils.parseEther('1'));
       await vaultAsAlice.work(
