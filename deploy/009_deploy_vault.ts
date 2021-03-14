@@ -23,6 +23,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const NAME = 'Interest Bearing BUSD'
   const SYMBOL = 'ibBUSD';
   const WNATIVE_RELAYER_ADDR = '0x01EBAC2f65eC3cE064EDcf05f9fAd9B8D9a419Ee';
+  const TIMELOCK = '';
 
 
 
@@ -34,7 +35,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     "DebtToken",
     (await ethers.getSigners())[0]
   )) as DebtToken__factory;
-  const debtToken = await DebtToken.deploy(`debt${SYMBOL}`, `debt${SYMBOL}`);
+  const debtToken = await upgrades.deployProxy(DebtToken, [
+    `debt${SYMBOL}_V2`, `debt${SYMBOL}_V2`, TIMELOCK]);
   await debtToken.deployed();
   console.log(`>> Deployed at ${debtToken.address}`);
 

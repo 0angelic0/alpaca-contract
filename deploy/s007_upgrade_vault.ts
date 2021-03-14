@@ -23,6 +23,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const TIMELOCK = '0x771F70042ebb6d2Cfc29b7BF9f3caf9F959385B8';
   const EXACT_ETA = '1615442700';
 
+  const NEW_DEBT_TOKEN = '';
+  const DEBT_PID = '';
+
 
 
 
@@ -55,6 +58,16 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   console.log(`>> Generate executeTransaction:`);
   console.log(`await timelock.executeTransaction('${PROXY_ADMIN}', '0', 'upgrade(address,address)', ethers.utils.defaultAbiCoder.encode(['address','address'], ['${TO_BE_UPGRADE_VAULT}','${newImpl}']), ${EXACT_ETA})`);
   console.log("✅ Done");
+
+  if (NEW_DEBT_TOKEN !== '') {
+    console.log(`>> Queue tx on Timelock to updateDebtToken on the Vault`);
+    await timelock.queueTransaction(TO_BE_UPGRADE_VAULT, '0', 'updateDebtToken(address,uint256)', ethers.utils.defaultAbiCoder.encode(['address','uint256'], [NEW_DEBT_TOKEN, DEBT_PID]), EXACT_ETA);
+    console.log("✅ Done");
+
+    console.log(`>> Generate executeTransaction:`);
+    console.log(`await timelock.executeTransaction('${TO_BE_UPGRADE_VAULT}', '0', 'updateDebtToken(address,uint256)', ethers.utils.defaultAbiCoder.encode(['address','uint256'], ['${NEW_DEBT_TOKEN}', ${DEBT_PID}]), ${EXACT_ETA})`);
+    console.log("✅ Done");
+  }
 };
 
 export default func;
