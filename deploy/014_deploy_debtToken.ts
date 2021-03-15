@@ -14,12 +14,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   ░░░╚═╝░░░╚═╝░░╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚══╝╚═╝╚═╝░░╚══╝░╚═════╝░
   Check all variables below before execute the deployment script
   */
-  const VAULT = '';
+  const VAULT = '0x947fFd3352136aC34eC67895E4fd392de18157DF';
   const SYMBOL = 'IbBUSD';
-  const TIMELOCK = '';
-  const FAIR_LAUNCH = '';
-  const ALLOC_POINT = '';
-  const EXACT_ETA = '';
+  const TIMELOCK = '0x771F70042ebb6d2Cfc29b7BF9f3caf9F959385B8';
+  const FAIR_LAUNCH = '0x31402C656f48F09284755d7B97Ffd40Ea372D531';
+  const ALLOC_POINT = '100';
+  const EXACT_ETA = '1615776300';
 
 
 
@@ -47,7 +47,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   console.log("✅ Done");
 
   console.log(">> Generate timelock executeTransaction")
-  console.log(`timelock.executeTransaction('${FAIR_LAUNCH}', '0', 'addPool(uint256,address,bool)', ethers.utils.defaultAbiCoder.encode(['uint256','address','bool'], [${ALLOC_POINT}, '${debtToken.address}', false]), ${EXACT_ETA})`);
+  console.log(`await timelock.executeTransaction('${FAIR_LAUNCH}', '0', 'addPool(uint256,address,bool)', ethers.utils.defaultAbiCoder.encode(['uint256','address','bool'], [${ALLOC_POINT}, '${debtToken.address}', false]), ${EXACT_ETA})`);
   console.log("✅ Done")
 }
 
