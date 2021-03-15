@@ -91,8 +91,8 @@ contract IbTokenRouter is OwnableUpgradeSafe {
 
     // reset approval
     IERC20(ibToken).approve(router, 0);
-    IERC20(token).approve(router, 0);
     IERC20(alpaca).approve(router, 0);
+    IERC20(token).approve(ibToken, 0);
 
     require(amountToken >= amountTokenMin, "IbTokenRouter: require more token than amountTokenMin");
   }
