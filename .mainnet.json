@@ -9,9 +9,9 @@
       "allocPoint": 0
     }, {
       "id": 1,
-      "stakingToken": "ibBNB",
+      "stakingToken": "ibWBNB",
       "address": "0xd7D069493685A581d27824Fc46EdA46B7EfC0063",
-      "allocPoint": 100
+      "allocPoint": 200
     }, {
       "id": 2,
       "stakingToken": "debtibBUSD",
@@ -21,12 +21,17 @@
       "id": 3,
       "stakingToken": "ibBUSD",
       "address": "0x7C9e73d4C71dae564d41F78d56439bB4ba87592f",
-      "allocPoint": 100
+      "allocPoint": 200
     }, {
       "id": 4,
       "stakingToken": "ALPACA-WBNB LP",
       "address": "0xf3ce6aac24980e6b657926dfc79502ae414d3083",
-      "allocPoint": 300
+      "allocPoint": 100
+    }, {
+      "id": 5,
+      "stakingToken": "sALPACA",
+      "address": "0x6F695Bd5FFD25149176629f8491A5099426Ce7a7",
+      "allocPoint": 84
     }]
   },
   "Exchanges": {
@@ -85,7 +90,7 @@
   },
   "Vaults": [{
     "name": "Interest Bearing BNB",
-    "symbol": "ibBNB",
+    "symbol": "ibWBNB",
     "address": "0xd7D069493685A581d27824Fc46EdA46B7EfC0063",
     "debtToken": "0x5138133f0671071D8b8F1C4c180881bfCfe22CeC",
     "config": "0x53dbb71303ad0F9AFa184B8f7147F9f12Bb5Dc01",
