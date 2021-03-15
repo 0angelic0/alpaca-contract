@@ -206,7 +206,9 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
     SafeToken.safeTransferFrom(targetedToken, positions[POSITION_ID].owner, msg.sender, amount);
   }
 
-  /// @dev _fairLaunchDeposit
+  /// @dev Mint & deposit debtToken on behalf of farmers
+  /// @param id The ID of the position
+  /// @param amount The amount of debt that the position holds
   function _fairLaunchDeposit(uint256 id, uint256 amount) internal {
     if (amount > 0) {
       IDebtToken(debtToken).mint(address(this), positions[id].debtShare);
@@ -214,11 +216,12 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
     }
   }
 
-  /// @dev _fairLaunchWithdraw
+  /// @dev Withdraw & burn debtToken on behalf of farmers
+  /// @param id The ID of the position
   function _fairLaunchWithdraw(uint256 id) internal {
     if (positions[id].debtShare > 0) {
       // Note: Do this way because we don't want to fail open, close, or kill position
-      // if cannot withdraw from FairLaunch somehow
+      // if cannot withdraw from FairLaunch somehow. 0xb5c5f672 is a signature of withdraw(address,uint256,uint256)
       (bool success, ) = config.getFairLaunchAddr().call(abi.encodeWithSelector(0xb5c5f672, positions[id].owner, fairLaunchPoolId, positions[id].debtShare));
       if(success) IDebtToken(debtToken).burn(address(this), positions[id].debtShare);
     }
