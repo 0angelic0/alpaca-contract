@@ -106,22 +106,13 @@ contract FairLaunchV2 is Ownable {
     return false;
   }
 
-  /// @notice Withdraw dummyToken from FLV1. This will make FLV1 stop mintting ALPACA
-  /// This function is needed if we need FLV3.
-  function withdrawMasterPool(address to) public onlyOwner {
-    require(totalAllocPoint == 0, "FairLaunchV2::withdrawMasterPool:: totalAllocPoint not zero");
-    FAIR_LAUNCH_V1.withdraw(
-      address(this), MASTER_PID, FAIR_LAUNCH_V1.userInfo(MASTER_PID, address(this)).amount);
-    dummyToken.safeTransfer(to, dummyToken.balanceOf(address(this)));
-  }
-
   /// @notice Add a new lp to the pool. Can only be called by the owner.
   /// DO NOT add the same LP token more than once. Rewards will be messed up if you do.
   /// @param allocPoint AP of the new pool
   /// @param _stakeToken address of the LP token
   /// @param _locker address of the reward Contract
   function addPool(uint256 allocPoint, IERC20 _stakeToken, ILocker _locker, uint256 _startBlock) public onlyOwner {
-    require(!isDuplicatedPool(_stakeToken), "FairLaunchV2::add:: stakeToken dup");
+    require(!isDuplicatedPool(_stakeToken), "FairLaunchV2::addPool:: stakeToken dup");
 
     uint256 lastRewardBlock = block.number > _startBlock ? block.number : _startBlock;
     totalAllocPoint = totalAllocPoint.add(allocPoint);
@@ -284,9 +275,10 @@ contract FairLaunchV2 is Ownable {
 
   /// @notice Withdraw without caring about rewards. EMERGENCY ONLY.
   /// @param pid The index of the pool. See `poolInfo`.
-  /// @param to Receiver of the lp tokens.
+  /// @param to Receiver of the staking tokens.
   function emergencyWithdraw(uint256 pid, address to) public {
     UserInfo storage user = userInfo[pid][msg.sender];
+    require(user.fundedBy == msg.sender, "FairLaunchV2::emergencyWithdraw:: only funder");
     uint256 amount = user.amount;
     user.amount = 0;
     user.rewardDebt = 0;

@@ -6,7 +6,7 @@
       "id": 0,
       "stakingToken": "debtibBNB",
       "address": "0x8E2c554cAbD0Fee5f47c0E0130fD44aE8e3E08e1",
-      "allocPoint": 200
+      "allocPoint": 0
     }, {
       "id": 1,
       "stakingToken": "ibWBNB",
@@ -16,7 +16,7 @@
       "id": 2,
       "stakingToken": "debtibBUSD",
       "address": "0x74d54930061E27199CCA8F1E03e69429Bb5bBb0A",
-      "allocPoint": 100
+      "allocPoint": 0
     }, {
       "id": 3,
       "stakingToken": "ibBUSD",
@@ -31,6 +31,16 @@
       "id": 5,
       "stakingToken": "sALPACA",
       "address": "0x588245DE5E45ecF463565ebD944BBD7975670fAC",
+      "allocPoint": 100
+    }, {
+      "pId": 6,
+      "name": "debtIbBNB V2",
+      "address": "0x6BE2302320dE946f085DC2609879535C62eFFe0f",
+      "allocPoint": 200
+    }, {
+      "pId": 7,
+      "name": "debtIbBUSD V2",
+      "address": "0xC99Ef61C130fa468123a33E3F4DA43597376956D",
       "allocPoint": 100
     }]
   },
@@ -55,7 +65,7 @@
         "pId": 4,
         "name": "USDT-BUSD LP",
         "address": "0xc5275aB32368b08754A0C64aCC67bf4EfA5EA62E"
-      },{
+      }, {
         "pId": 5,
         "name": "WBNB-BUSD LP",
         "address": "0x0Fa143CD1C4466fb6fE8Fe5D2c66Da40E272B7fE"
@@ -93,7 +103,7 @@
     "name": "Interest Bearing WBNB",
     "symbol": "ibWBNB",
     "address": "0x6883D1297721F4584077fe7471c396538DC5dcbC",
-    "debtToken": "0x8E2c554cAbD0Fee5f47c0E0130fD44aE8e3E08e1",
+    "debtToken": "0x6BE2302320dE946f085DC2609879535C62eFFe0f",
     "config": "0x0901fcc2814348Fa4DFc866376f7A952c1963D9A",
     "StrategyAddTwoSidesOptimal": "0x5389B49D32E43A62351d73659aC13DA48F6E1190",
     "workers": [{
@@ -128,7 +138,7 @@
     "name": "Interest Bearing BUSD",
     "symbol": "ibBUSD",
     "address": "0x947fFd3352136aC34eC67895E4fd392de18157DF",
-    "debtToken": "0x74d54930061E27199CCA8F1E03e69429Bb5bBb0A",
+    "debtToken": "0xC99Ef61C130fa468123a33E3F4DA43597376956D",
     "config": "0x950e8137B8c0d403DCBeAb41AF1160a56862ba5a",
     "StrategyAddTwoSidesOptimal": "0xA4047bdA5288BC718E4a3De68781dA4D7e801e82",
     "workers": [{

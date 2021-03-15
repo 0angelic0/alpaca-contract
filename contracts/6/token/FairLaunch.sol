@@ -307,6 +307,7 @@ contract FairLaunch is IFairLaunch, Ownable {
   function emergencyWithdraw(uint256 _pid) public {
     PoolInfo storage pool = poolInfo[_pid];
     UserInfo storage user = userInfo[_pid][msg.sender];
+    require(user.fundedBy == msg.sender, "only funder");
     IERC20(pool.stakeToken).safeTransfer(address(msg.sender), user.amount);
     emit EmergencyWithdraw(msg.sender, _pid, user.amount);
     user.amount = 0;
