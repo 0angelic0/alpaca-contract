@@ -260,6 +260,12 @@ describe('IbTokenRouter', () => {
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
+
+    // expect approval to be reset
+    expect(await lp.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await govToken.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await vault.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await wbtc.allowance(ibTokenRouter.address, vault.address)).to.be.bignumber.eq('0');
   });
 
   it('should revert when add liquidity to ibWBTC-ALPACA with too little WBTC', async () => {
@@ -274,6 +280,12 @@ describe('IbTokenRouter', () => {
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
+
+    // expect approval to be reset
+    expect(await lp.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await govToken.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await vault.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await wbtc.allowance(ibTokenRouter.address, vault.address)).to.be.bignumber.eq('0');
   });
 
   it('should revert when add liquidity to ibWBTC-ALPACA with too little ALPACA', async () => {
@@ -288,6 +300,12 @@ describe('IbTokenRouter', () => {
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
+
+    // expect approval to be reset
+    expect(await lp.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await govToken.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await vault.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await wbtc.allowance(ibTokenRouter.address, vault.address)).to.be.bignumber.eq('0');
   });
 
   it('should be able to add liquidity with excess WBTC and get dust WBTC back', async () => {
@@ -313,6 +331,12 @@ describe('IbTokenRouter', () => {
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
+
+    // expect approval to be reset
+    expect(await lp.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await govToken.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await vault.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await wbtc.allowance(ibTokenRouter.address, vault.address)).to.be.bignumber.eq('0');
   });
 
   it('should be able to add liquidity with excess ALPACA and get dust ALPACA back', async () => {
@@ -340,6 +364,12 @@ describe('IbTokenRouter', () => {
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
+
+    // expect approval to be reset
+    expect(await lp.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await govToken.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await vault.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await wbtc.allowance(ibTokenRouter.address, vault.address)).to.be.bignumber.eq('0');
   });
 
   it('should be able to add liquidity optimally with only ibWBTC', async () => {
@@ -361,6 +391,12 @@ describe('IbTokenRouter', () => {
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
+
+    // expect approval to be reset
+    expect(await lp.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await govToken.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await vault.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await wbtc.allowance(ibTokenRouter.address, vault.address)).to.be.bignumber.eq('0');
   });
 
   it('should be able to add liquidity optimally with only ALPACA', async () => {
@@ -382,6 +418,12 @@ describe('IbTokenRouter', () => {
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
+
+    // expect approval to be reset
+    expect(await lp.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await govToken.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await vault.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await wbtc.allowance(ibTokenRouter.address, vault.address)).to.be.bignumber.eq('0');
   });
 
   it('should be able to add liquidity optimally with more ibWBTC than required', async () => {
@@ -410,6 +452,12 @@ describe('IbTokenRouter', () => {
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
+
+    // expect approval to be reset
+    expect(await lp.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await govToken.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await vault.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await wbtc.allowance(ibTokenRouter.address, vault.address)).to.be.bignumber.eq('0');
   });
 
   it('should be able to add liquidity optimally with more ALPACA than required', async () => {
@@ -438,6 +486,12 @@ describe('IbTokenRouter', () => {
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
+
+    // expect approval to be reset
+    expect(await lp.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await govToken.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await vault.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await wbtc.allowance(ibTokenRouter.address, vault.address)).to.be.bignumber.eq('0');
   });
 
   it('should revert when add liquidity optimally with less lpToken than minumum specified', async () => {
@@ -463,6 +517,12 @@ describe('IbTokenRouter', () => {
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
+
+    // expect approval to be reset
+    expect(await lp.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await govToken.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await vault.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await wbtc.allowance(ibTokenRouter.address, vault.address)).to.be.bignumber.eq('0');
   });
 
   it('should be able to add liquidity optimally with only WBTC', async () => {
@@ -485,6 +545,12 @@ describe('IbTokenRouter', () => {
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
+
+    // expect approval to be reset
+    expect(await lp.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await govToken.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await vault.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await wbtc.allowance(ibTokenRouter.address, vault.address)).to.be.bignumber.eq('0');
   });
 
   it('should be able to add liquidity optimally with more WBTC than required', async () => {
@@ -514,6 +580,12 @@ describe('IbTokenRouter', () => {
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
+
+    // expect approval to be reset
+    expect(await lp.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await govToken.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await vault.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await wbtc.allowance(ibTokenRouter.address, vault.address)).to.be.bignumber.eq('0');
   });
 
   it('should be able to add liquidity optimally with less WBTC than required', async () => {
@@ -543,6 +615,12 @@ describe('IbTokenRouter', () => {
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
+
+    // expect approval to be reset
+    expect(await lp.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await govToken.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await vault.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await wbtc.allowance(ibTokenRouter.address, vault.address)).to.be.bignumber.eq('0');
   });
 
   it('should revert when add liquidity optimally WBTC with less lpToken than minumum specified', async () => {
@@ -573,6 +651,12 @@ describe('IbTokenRouter', () => {
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
+
+    // expect approval to be reset
+    expect(await lp.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await govToken.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await vault.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await wbtc.allowance(ibTokenRouter.address, vault.address)).to.be.bignumber.eq('0');
   });
 
   it('should be able to remove liquidity and get WBTC and ALPACA back', async () => {
@@ -605,6 +689,12 @@ describe('IbTokenRouter', () => {
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
+
+    // expect approval to be reset
+    expect(await lp.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await govToken.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await vault.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await wbtc.allowance(ibTokenRouter.address, vault.address)).to.be.bignumber.eq('0');
   });
 
   it('should revert when remove liquidity and receive too little WBTC', async () => {
@@ -630,6 +720,12 @@ describe('IbTokenRouter', () => {
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
+
+    // expect approval to be reset
+    expect(await lp.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await govToken.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await vault.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await wbtc.allowance(ibTokenRouter.address, vault.address)).to.be.bignumber.eq('0');
   });
 
   it('should revert when remove liquidity and receive too little ALPACA', async () => {
@@ -657,6 +753,12 @@ describe('IbTokenRouter', () => {
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
+
+    // expect approval to be reset
+    expect(await lp.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await govToken.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await vault.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await wbtc.allowance(ibTokenRouter.address, vault.address)).to.be.bignumber.eq('0');
   });
 
   it('should be able to remove liquidity (all ALPACA) and get only ALPACA back', async () => {
@@ -689,6 +791,12 @@ describe('IbTokenRouter', () => {
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
+
+    // expect approval to be reset
+    expect(await lp.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await govToken.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await vault.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await wbtc.allowance(ibTokenRouter.address, vault.address)).to.be.bignumber.eq('0');
   });
 
   it('should revert when remove liquidity (all ALPACA) and receive too little ALPACA', async () => {
@@ -714,6 +822,12 @@ describe('IbTokenRouter', () => {
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
+
+    // expect approval to be reset
+    expect(await lp.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await govToken.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await vault.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await wbtc.allowance(ibTokenRouter.address, vault.address)).to.be.bignumber.eq('0');
   });
 
   it('should be able to swap exact WBTC for ALPACA', async () => {
@@ -735,6 +849,12 @@ describe('IbTokenRouter', () => {
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
+
+    // expect approval to be reset
+    expect(await lp.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await govToken.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await vault.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await wbtc.allowance(ibTokenRouter.address, vault.address)).to.be.bignumber.eq('0');
   });
 
   it('should revert when swap exact WBTC for ALPACA and receive too little ALPACA', async () => {
@@ -749,6 +869,12 @@ describe('IbTokenRouter', () => {
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
+
+    // expect approval to be reset
+    expect(await lp.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await govToken.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await vault.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await wbtc.allowance(ibTokenRouter.address, vault.address)).to.be.bignumber.eq('0');
   });
 
   it('should be able to swap ALPACA for exact WBTC', async () => {
@@ -773,6 +899,12 @@ describe('IbTokenRouter', () => {
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
+
+    // expect approval to be reset
+    expect(await lp.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await govToken.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await vault.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await wbtc.allowance(ibTokenRouter.address, vault.address)).to.be.bignumber.eq('0');
   });
 
   it('should revert when swap ALPACA for exact WBTC given too little ALPACA given', async () => {
@@ -789,6 +921,12 @@ describe('IbTokenRouter', () => {
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
+
+    // expect approval to be reset
+    expect(await lp.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await govToken.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await vault.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await wbtc.allowance(ibTokenRouter.address, vault.address)).to.be.bignumber.eq('0');
   });
 
   it('should be able to swap exact ALPACA for WBTC', async () => {
@@ -810,6 +948,12 @@ describe('IbTokenRouter', () => {
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
+
+    // expect approval to be reset
+    expect(await lp.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await govToken.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await vault.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await wbtc.allowance(ibTokenRouter.address, vault.address)).to.be.bignumber.eq('0');
   });
 
   it('should revert when swap exact ALPACA for WBTC and receive too little WBTC given', async () => {
@@ -825,6 +969,12 @@ describe('IbTokenRouter', () => {
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
+
+    // expect approval to be reset
+    expect(await lp.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await govToken.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await vault.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await wbtc.allowance(ibTokenRouter.address, vault.address)).to.be.bignumber.eq('0');
   });
 
   it('should be able to swap WBTC for exact ALPACA with dust WBTC back', async () => {
@@ -847,6 +997,12 @@ describe('IbTokenRouter', () => {
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
+
+    // expect approval to be reset
+    expect(await lp.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await govToken.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await vault.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await wbtc.allowance(ibTokenRouter.address, vault.address)).to.be.bignumber.eq('0');
   });
 
   it('should be able to swap WBTC for exact ALPACA with no dust WBTC back', async () => {
@@ -869,6 +1025,12 @@ describe('IbTokenRouter', () => {
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
+
+    // expect approval to be reset
+    expect(await lp.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await govToken.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await vault.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await wbtc.allowance(ibTokenRouter.address, vault.address)).to.be.bignumber.eq('0');
   });
 
   it('should revert when swap WBTC for exact ALPACA given too little WBTC', async () => {
@@ -882,5 +1044,11 @@ describe('IbTokenRouter', () => {
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
+
+    // expect approval to be reset
+    expect(await lp.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await govToken.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await vault.allowance(ibTokenRouter.address, router.address)).to.be.bignumber.eq('0');
+    expect(await wbtc.allowance(ibTokenRouter.address, vault.address)).to.be.bignumber.eq('0');
   });
 });

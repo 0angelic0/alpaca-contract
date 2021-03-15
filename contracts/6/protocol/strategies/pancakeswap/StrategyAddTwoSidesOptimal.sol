@@ -79,7 +79,7 @@ contract StrategyAddTwoSidesOptimal is ReentrancyGuardUpgradeSafe, IStrategy {
     return numerator.div(denominator);
   }
 
-  /// @dev Execute worker strategy. Take LP tokens + ETH. Return LP tokens + ETH.
+  /// @dev Execute worker strategy. Take BaseToken + FarmingToken. Return LP tokens.
   /// @param data Extra calldata information passed along to this strategy.
   function execute(address user, uint256, /* debt */ bytes calldata data) external override payable nonReentrant
   {

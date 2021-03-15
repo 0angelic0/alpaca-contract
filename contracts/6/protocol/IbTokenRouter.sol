@@ -29,14 +29,6 @@ contract IbTokenRouter is OwnableUpgradeSafe {
     alpaca = _alpaca;
     address factory = IUniswapV2Router02(router).factory();
     lpToken = UniswapV2Library.pairFor(factory, ibToken, alpaca);
-    // approve router to move all assets under this contract
-    IUniswapV2Pair(lpToken).approve(router, uint256(-1)); // 100% trust in the router
-    IERC20(ibToken).approve(router, uint256(-1)); // 100% trust in the router
-    IERC20(token).approve(router, uint256(-1)); // 100% trust in the router
-    IERC20(alpaca).approve(router, uint256(-1)); // 100% trust in the router
-
-    // approve bank to move token under this contract
-    IERC20(token).approve(ibToken, uint256(-1)); // 100% tust in Bank
   }
 
   // **** Token-ibToken function ****
@@ -46,7 +38,7 @@ contract IbTokenRouter is OwnableUpgradeSafe {
     return totalToken == 0 ? amountToken : amountToken.mul(IERC20(ibToken).totalSupply()).add(totalToken).sub(1).div(totalToken);
   }
 
-  // Provide liquidity for the ibToken-Token Pool.
+  // Provide liquidity for the Alpaca-ibToken Pool.
   // 1. Receive Token and Alpaca from caller.
   // 2. Mint ibToken based on the given token amount.
   // 3. Provide liquidity to the pool.
@@ -64,6 +56,11 @@ contract IbTokenRouter is OwnableUpgradeSafe {
     uint256 amountToken,
     uint256 liquidity
   ) {
+    // set approval
+    IERC20(ibToken).approve(router, uint256(-1));
+    IERC20(alpaca).approve(router, uint256(-1));
+    IERC20(token).approve(ibToken, uint256(-1));
+
     if (amountTokenDesired > 0) {
       SafeToken.safeTransferFrom(token, msg.sender, address(this), amountTokenDesired);
     }
@@ -87,10 +84,16 @@ contract IbTokenRouter is OwnableUpgradeSafe {
       SafeToken.safeTransfer(alpaca, msg.sender, amountAlpacaDesired.sub(amountAlpaca));
     }
     IVault(ibToken).withdraw(amountIbTokenDesired.sub(amountIbToken));
-    amountToken = amountTokenDesired - IERC20(token).balanceOf(address(this));
+    amountToken = amountTokenDesired.sub(IERC20(token).balanceOf(address(this)));
     if (amountToken > 0) {
       SafeToken.safeTransfer(token, msg.sender, IERC20(token).balanceOf(address(this)));
     }
+
+    // reset approval
+    IERC20(ibToken).approve(router, 0);
+    IERC20(alpaca).approve(router, 0);
+    IERC20(token).approve(ibToken, 0);
+
     require(amountToken >= amountTokenMin, "IbTokenRouter: require more token than amountTokenMin");
   }
 
@@ -156,6 +159,10 @@ contract IbTokenRouter is OwnableUpgradeSafe {
   returns (
     uint256 liquidity
   ) {
+    // set approval
+    IERC20(ibToken).approve(router, uint256(-1));
+    IERC20(alpaca).approve(router, uint256(-1));
+
     if (amountIbTokenDesired > 0) {
       SafeToken.safeTransferFrom(ibToken, msg.sender, address(this), amountIbTokenDesired);
     }
@@ -190,6 +197,11 @@ contract IbTokenRouter is OwnableUpgradeSafe {
     if (dustIbToken > 0) {
       SafeToken.safeTransfer(ibToken, msg.sender, dustIbToken);
     }
+
+    // reset approval
+    IERC20(ibToken).approve(router, 0);
+    IERC20(alpaca).approve(router, 0);
+
     require(liquidity >= amountLPMin, "IbTokenRouter: receive less lpToken than amountLPMin");
   }
 
@@ -206,6 +218,11 @@ contract IbTokenRouter is OwnableUpgradeSafe {
   returns (
     uint256 liquidity
   ) {
+    // set approval
+    IERC20(ibToken).approve(router, uint256(-1));
+    IERC20(alpaca).approve(router, uint256(-1));
+    IERC20(token).approve(ibToken, uint256(-1));
+
     if (amountTokenDesired > 0) {
       SafeToken.safeTransferFrom(token, msg.sender, address(this), amountTokenDesired);
     }
@@ -242,6 +259,12 @@ contract IbTokenRouter is OwnableUpgradeSafe {
     if (dustIbToken > 0) {
       SafeToken.safeTransfer(ibToken, msg.sender, dustIbToken);
     }
+
+    // reset approval
+    IERC20(ibToken).approve(router, 0);
+    IERC20(alpaca).approve(router, 0);
+    IERC20(token).approve(ibToken, 0);
+
     require(liquidity >= amountLPMin, "IbTokenRouter: receive less lpToken than amountLPMin");
   }
 
@@ -256,6 +279,12 @@ contract IbTokenRouter is OwnableUpgradeSafe {
     address to,
     uint256 deadline
   ) public returns (uint256 amountAlpaca, uint256 amountToken) {
+    // set approval
+    IERC20(ibToken).approve(router, uint256(-1));
+    IERC20(alpaca).approve(router, uint256(-1));
+    IERC20(token).approve(ibToken, uint256(-1));
+    IERC20(lpToken).approve(router, uint256(-1));
+
     SafeToken.safeTransferFrom(lpToken, msg.sender, address(this), liquidity);
     uint256 amountIbToken;
     (amountAlpaca, amountIbToken) = IUniswapV2Router02(router).removeLiquidity(
@@ -273,6 +302,13 @@ contract IbTokenRouter is OwnableUpgradeSafe {
     if (amountToken > 0) {
       SafeToken.safeTransfer(token, msg.sender, IERC20(token).balanceOf(address(this)));
     }
+
+    // reset approval
+    IERC20(ibToken).approve(router, 0);
+    IERC20(alpaca).approve(router, 0);
+    IERC20(token).approve(ibToken, 0);
+    IERC20(lpToken).approve(router, 0);
+
     require(amountToken >= amountTokenMin, "IbTokenRouter: receive less Token than amountTokenmin");
   }
 
@@ -287,6 +323,11 @@ contract IbTokenRouter is OwnableUpgradeSafe {
     address to,
     uint256 deadline
   ) public returns (uint256 amountAlpaca) {
+    // set approval
+    IERC20(ibToken).approve(router, uint256(-1));
+    IERC20(alpaca).approve(router, uint256(-1));
+    IERC20(lpToken).approve(router, uint256(-1));
+
     SafeToken.safeTransferFrom(lpToken, msg.sender, address(this), liquidity);
     (, uint256 removeAmountIbToken) = IUniswapV2Router02(router).removeLiquidity(
       alpaca,
@@ -302,6 +343,12 @@ contract IbTokenRouter is OwnableUpgradeSafe {
     path[1] = alpaca;
     IUniswapV2Router02(router).swapExactTokensForTokens(removeAmountIbToken, 0, path, to, deadline);
     SafeToken.safeTransfer(alpaca, to, IERC20(alpaca).balanceOf(address(this)));
+
+    // reset approval
+    IERC20(ibToken).approve(router, 0);
+    IERC20(alpaca).approve(router, 0);
+    IERC20(lpToken).approve(router, 0);
+
     require(amountAlpaca >= amountAlpacaMin, "IbTokenRouter: receive less Alpaca than amountAlpacaMin");
   }
 
@@ -315,6 +362,12 @@ contract IbTokenRouter is OwnableUpgradeSafe {
     address to,
     uint256 deadline
   ) external returns (uint256[] memory amounts) {
+    // set approval
+    IERC20(ibToken).approve(router, uint256(-1));
+    IERC20(alpaca).approve(router, uint256(-1));
+    IERC20(token).approve(ibToken, uint256(-1));
+    IERC20(lpToken).approve(router, uint256(-1));
+
     // logic
     SafeToken.safeTransferFrom(token, msg.sender, address(this), amountExactTokenIn);
     IVault(ibToken).deposit(amountExactTokenIn);
@@ -325,6 +378,12 @@ contract IbTokenRouter is OwnableUpgradeSafe {
     amounts = new uint256[](2);
     amounts[0] = amountExactTokenIn;
     amounts[1] = swapAmounts[1];
+
+    // reset approval
+    IERC20(ibToken).approve(router, 0);
+    IERC20(alpaca).approve(router, 0);
+    IERC20(token).approve(ibToken, 0);
+    IERC20(lpToken).approve(router, 0);
   }
 
   // Swap Alpaca for exact amount of Token
@@ -337,6 +396,12 @@ contract IbTokenRouter is OwnableUpgradeSafe {
     address to,
     uint256 deadline
   ) external returns (uint256[] memory amounts) {
+    // set approval
+    IERC20(ibToken).approve(router, uint256(-1));
+    IERC20(alpaca).approve(router, uint256(-1));
+    IERC20(token).approve(ibToken, uint256(-1));
+    IERC20(lpToken).approve(router, uint256(-1));
+
     SafeToken.safeTransferFrom(alpaca, msg.sender, address(this), amountAlpacaIn);
     address[] memory path = new address[](2);
     path[0] = alpaca;
@@ -351,6 +416,12 @@ contract IbTokenRouter is OwnableUpgradeSafe {
     if (amountAlpacaIn > amounts[0]) {
       SafeToken.safeTransfer(alpaca, msg.sender, amountAlpacaIn.sub(amounts[0]));
     }
+
+    // reset approval
+    IERC20(ibToken).approve(router, 0);
+    IERC20(alpaca).approve(router, 0);
+    IERC20(token).approve(ibToken, 0);
+    IERC20(lpToken).approve(router, 0);
   }
 
   // Swap exact amount of Alpaca for Token
@@ -363,6 +434,12 @@ contract IbTokenRouter is OwnableUpgradeSafe {
     address to,
     uint256 deadline
   ) external returns (uint256[] memory amounts) {
+    // set approval
+    IERC20(ibToken).approve(router, uint256(-1));
+    IERC20(alpaca).approve(router, uint256(-1));
+    IERC20(token).approve(ibToken, uint256(-1));
+    IERC20(lpToken).approve(router, uint256(-1));
+
     SafeToken.safeTransferFrom(alpaca, msg.sender, address(this), exactAlpacaIn);
     address[] memory path = new address[](2);
     path[0] = alpaca;
@@ -373,6 +450,13 @@ contract IbTokenRouter is OwnableUpgradeSafe {
     amounts[0] = swapAmounts[0];
     amounts[1] = IERC20(token).balanceOf(address(this));
     SafeToken.safeTransfer(token, to, amounts[1]);
+
+    // reset approval
+    IERC20(ibToken).approve(router, 0);
+    IERC20(alpaca).approve(router, 0);
+    IERC20(token).approve(ibToken, 0);
+    IERC20(lpToken).approve(router, 0);
+
     require(amounts[1] >= amountTokenOutMin, "IbTokenRouter: receive less Token than amountTokenmin");
   }
 
@@ -386,6 +470,12 @@ contract IbTokenRouter is OwnableUpgradeSafe {
     address to,
     uint256 deadline
   ) external returns (uint256[] memory amounts) {
+    // set approval
+    IERC20(ibToken).approve(router, uint256(-1));
+    IERC20(alpaca).approve(router, uint256(-1));
+    IERC20(token).approve(ibToken, uint256(-1));
+    IERC20(lpToken).approve(router, uint256(-1));
+
     SafeToken.safeTransferFrom(token, msg.sender, address(this), amountTokenIn);
     IVault(ibToken).deposit(amountTokenIn);
     uint256 amountIbTokenInMax = IERC20(ibToken).balanceOf(address(this));
@@ -400,8 +490,14 @@ contract IbTokenRouter is OwnableUpgradeSafe {
     if (amountIbTokenInMax > swapAmounts[0]) {
       IVault(ibToken).withdraw(amountIbTokenInMax.sub(swapAmounts[0]));
       amounts[0] = amountTokenIn - address(this).balance;
-      SafeToken.safeTransfer(token, to, IERC20(token).balanceOf(address(this)));
+      SafeToken.safeTransfer(token, msg.sender, IERC20(token).balanceOf(address(this)));
     }
+
+    // reset approval
+    IERC20(ibToken).approve(router, 0);
+    IERC20(alpaca).approve(router, 0);
+    IERC20(token).approve(ibToken, 0);
+    IERC20(lpToken).approve(router, 0);
   }
 
 }
