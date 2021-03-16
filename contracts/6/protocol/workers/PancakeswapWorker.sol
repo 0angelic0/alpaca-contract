@@ -81,10 +81,6 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
     okStrats[address(liqStrat)] = true;
     reinvestBountyBps = _reinvestBountyBps;
     maxReinvestBountyBps = 500;
-    lpToken.approve(address(_masterChef), uint256(-1)); // 100% trust in the staking pool
-    lpToken.approve(address(router), uint256(-1)); // 100% trust in the router
-    quoteToken.safeApprove(address(router), uint256(-1)); // 100% trust in the router
-    cake.safeApprove(address(router), uint256(-1)); // 100% trust in the router
 
     require(reinvestBountyBps <= maxReinvestBountyBps, "PancakeswapWorker::initialize:: reinvestBountyBps exceeded maxReinvestBountyBps");
   }
@@ -119,14 +115,17 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
 
   /// @dev Re-invest whatever this worker has earned back to staked LP tokens.
   function reinvest() public override onlyEOA nonReentrant {
-    // 1. Withdraw all the rewards.
+    // 1. Approve tokens
+    cake.safeApprove(address(router), uint256(-1));
+    address(lpToken).safeApprove(address(masterChef), uint256(-1));
+    // 2. Withdraw all the rewards.
     masterChef.withdraw(pid, 0);
     uint256 reward = cake.balanceOf(address(this));
     if (reward == 0) return;
-    // 2. Send the reward bounty to the caller.
+    // 3. Send the reward bounty to the caller.
     uint256 bounty = reward.mul(reinvestBountyBps) / 10000;
     if (bounty > 0) cake.safeTransfer(msg.sender, bounty);
-    // 3. Convert all the remaining rewards to BaseToken via Native for liquidity.
+    // 4. Convert all the remaining rewards to BaseToken via Native for liquidity.
     address[] memory path;
     if (baseToken == wNative) {
       path = new address[](2);
@@ -139,11 +138,14 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
       path[2] = address(baseToken);
     }
     router.swapExactTokensForTokens(reward.sub(bounty), 0, path, address(this), now);
-    // 4. Use add Token strategy to convert all BaseToken to LP tokens.
+    // 5. Use add Token strategy to convert all BaseToken to LP tokens.
     baseToken.safeTransfer(address(addStrat), baseToken.myBalance());
     addStrat.execute(address(0), 0, abi.encode(baseToken, quoteToken, 0));
-    // 5. Mint more LP tokens and stake them for more rewards.
+    // 6. Mint more LP tokens and stake them for more rewards.
     masterChef.deposit(pid, lpToken.balanceOf(address(this)));
+    // 7. Reset approve
+    cake.safeApprove(address(router), 0);
+    address(lpToken).safeApprove(address(masterChef), 0);
     emit Reinvest(msg.sender, reward, bounty);
   }
 
@@ -219,10 +221,17 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
   function _addShare(uint256 id) internal {
     uint256 balance = lpToken.balanceOf(address(this));
     if (balance > 0) {
+      // 1. Approve token to be spend by masterChef
+      address(lpToken).safeApprove(address(masterChef), uint256(-1));
+      // 2. Convert balance to share
       uint256 share = balanceToShare(balance);
+      // 3. Deposit balance to PancakeMasterChef
       masterChef.deposit(pid, balance);
+      // 4. Update shares
       shares[id] = shares[id].add(share);
       totalShare = totalShare.add(share);
+      // 5. Reset approve token
+      address(lpToken).safeApprove(address(masterChef), 0);
       emit AddShare(id, share);
     }
   }
