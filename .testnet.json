@@ -33,13 +33,13 @@
       "address": "0x588245DE5E45ecF463565ebD944BBD7975670fAC",
       "allocPoint": 100
     }, {
-      "pId": 6,
-      "name": "debtIbBNB V2",
+      "id": 6,
+      "stakingToken": "debtIbBNB V2",
       "address": "0x6BE2302320dE946f085DC2609879535C62eFFe0f",
       "allocPoint": 200
     }, {
-      "pId": 7,
-      "name": "debtIbBUSD V2",
+      "id": 7,
+      "stakingToken": "debtIbBUSD V2",
       "address": "0xC99Ef61C130fa468123a33E3F4DA43597376956D",
       "allocPoint": 100
     }]
