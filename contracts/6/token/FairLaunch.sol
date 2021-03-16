@@ -143,11 +143,9 @@ contract FairLaunch is IFairLaunch, Ownable {
   function setPool(
     uint256 _pid,
     uint256 _allocPoint,
-    bool _withUpdate
+    bool /* _withUpdate */
   ) public override onlyOwner {
-    if (_withUpdate) {
-      massUpdatePools();
-    }
+    massUpdatePools();
     totalAllocPoint = totalAllocPoint.sub(poolInfo[_pid].allocPoint).add(_allocPoint);
     poolInfo[_pid].allocPoint = _allocPoint;
   }
@@ -275,7 +273,7 @@ contract FairLaunch is IFairLaunch, Ownable {
     user.amount = user.amount.sub(_amount);
     user.rewardDebt = user.amount.mul(pool.accAlpacaPerShare).div(1e12);
     user.bonusDebt = user.amount.mul(pool.accAlpacaPerShareTilBonusEnd).div(1e12);
-    user.fundedBy = address(0);
+    if (user.amount == 0) user.fundedBy = address(0);
     if (pool.stakeToken != address(0)) {
       IERC20(pool.stakeToken).safeTransfer(address(msg.sender), _amount);
     }
@@ -312,6 +310,7 @@ contract FairLaunch is IFairLaunch, Ownable {
     emit EmergencyWithdraw(msg.sender, _pid, user.amount);
     user.amount = 0;
     user.rewardDebt = 0;
+    user.fundedBy = address(0);
   }
 
     // Safe alpaca transfer function, just in case if rounding error causes pool to not have enough ALPACAs.
