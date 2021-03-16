@@ -757,7 +757,7 @@ describe('Vault - Pancake', () => {
       );
 
       // Alice emergencyWithdraw from FairLaunch
-      await expect(fairLaunchAsAlice.emergencyWithdraw(0)).to.be.revertedWith('debtToken::transfer:: unapproved holder on to');
+      await expect(fairLaunchAsAlice.emergencyWithdraw(0)).to.be.revertedWith('only funder');
 
       const eveBefore = await baseToken.balanceOf(await eve.getAddress());
 

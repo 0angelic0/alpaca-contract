@@ -195,9 +195,9 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
       SafeToken.safeTransfer(token, config.getWNativeRelayer(), amount);
       WNativeRelayer(uint160(config.getWNativeRelayer())).withdraw(amount);
       SafeToken.safeTransferETH(msg.sender, amount);
-      return;
+    } else {
+      SafeToken.safeTransfer(token, msg.sender, amount);
     }
-    SafeToken.safeTransfer(token, msg.sender, amount);
     require(totalSupply() > 1e17, "Vault::withdraw:: no tiny shares");
   }
 
@@ -211,7 +211,7 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
   /// @param amount The amount of debt that the position holds
   function _fairLaunchDeposit(uint256 id, uint256 amount) internal {
     if (amount > 0) {
-      IDebtToken(debtToken).mint(address(this), positions[id].debtShare);
+      IDebtToken(debtToken).mint(address(this), amount);
       IFairLaunch(config.getFairLaunchAddr()).deposit(positions[id].owner, fairLaunchPoolId, amount);
     }
   }

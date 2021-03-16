@@ -8,6 +8,7 @@ import {
   AlpacaToken__factory,
   ConfigurableInterestVaultConfig,
   ConfigurableInterestVaultConfig__factory,
+  DebtToken,
   DebtToken__factory,
   FairLaunch,
   FairLaunch__factory,
@@ -236,7 +237,8 @@ describe("Timelock", () => {
       "DebtToken",
       deployer
     )) as DebtToken__factory;
-    const debtToken = await DebtToken.deploy('debtibWBTC', 'debtibWBTC');
+    const debtToken = await upgrades.deployProxy(DebtToken, [
+      'debtibBTOKEN_V2', 'debtibBTOKEN_V2', (await deployer.getAddress())]) as DebtToken;
     await debtToken.deployed();
 
     const Vault = (await ethers.getContractFactory(

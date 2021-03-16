@@ -135,6 +135,7 @@ contract FairLaunchV2 is Ownable {
   /// @param _locker Address of the rewarder delegate.
   /// @param overwrite True if _locker should be `set`. Otherwise `_locker` is ignored.
   function setPool(uint256 _pid, uint256 _allocPoint, ILocker _locker, bool overwrite) public onlyOwner {
+    updatePool(_pid);
     totalAllocPoint = totalAllocPoint.sub(poolInfo[_pid].allocPoint).add(_allocPoint);
     poolInfo[_pid].allocPoint = _allocPoint;
     if (overwrite) { lockers[_pid] = _locker; }
@@ -229,10 +230,10 @@ contract FairLaunchV2 is Ownable {
 
     user.rewardDebt = user.rewardDebt.sub(amount.mul(pool.accAlpacaPerShare) / ACC_ALPACA_PRECISION);
     user.amount = user.amount.sub(amount);
-    user.fundedBy = address(0);
+    if (user.amount == 0) user.fundedBy = address(0);
 
     // Interactions
-    stakeTokens[pid].safeTransfer(_for, amount);
+    stakeTokens[pid].safeTransfer(msg.sender, amount);
 
     emit Withdraw(msg.sender, pid, amount, _for);
   }
@@ -282,6 +283,7 @@ contract FairLaunchV2 is Ownable {
     uint256 amount = user.amount;
     user.amount = 0;
     user.rewardDebt = 0;
+    user.fundedBy = address(0);
     // Note: transfer can fail or succeed if `amount` is zero.
     stakeTokens[pid].safeTransfer(to, amount);
     emit EmergencyWithdraw(msg.sender, pid, amount, to);

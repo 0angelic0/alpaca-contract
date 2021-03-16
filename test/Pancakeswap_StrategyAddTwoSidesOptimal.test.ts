@@ -8,6 +8,7 @@ import {
   AlpacaToken__factory,
   CakeToken,
   CakeToken__factory,
+  DebtToken,
   DebtToken__factory,
   FairLaunch,
   FairLaunch__factory,
@@ -211,7 +212,8 @@ describe('Pancakeswap - StrategyAddTwoSidesOptimal', () => {
       "DebtToken",
       deployer
     )) as DebtToken__factory;
-    const debtToken = await DebtToken.deploy('debtibWBTC', 'debtibWBTC');
+    const debtToken = await upgrades.deployProxy(DebtToken, [
+      'debtibBTOKEN_V2', 'debtibBTOKEN_V2', (await deployer.getAddress())]) as DebtToken;
     await debtToken.deployed();
 
     const Vault = (await ethers.getContractFactory(
@@ -227,6 +229,7 @@ describe('Pancakeswap - StrategyAddTwoSidesOptimal', () => {
 
     // Transfer ownership to vault
     await debtToken.transferOwnership(vault.address);
+    await vault.updateDebtToken(debtToken.address, 0);
 
     // Set add FairLaunch poool and set fairLaunchPoolId for Vault
     await fairLaunch.addPool(1, (await vault.debtToken()), false);

@@ -190,7 +190,7 @@ describe("FairLaunchV2", () => {
       expect(await fairLaunchV2.poolLength()).to.eq(stakingTokens.length);
 
       await expect(fairLaunchV2.addPool(1, stakingTokens[0].address, ADDRESS0, 0))
-        .to.be.revertedWith("FairLaunchV2::add:: stakeToken dup");
+        .to.be.revertedWith("FairLaunchV2::addPool:: stakeToken dup");
     });
   });
 
@@ -251,7 +251,8 @@ describe("FairLaunchV2", () => {
       await fairLaunchV2.init(fairLaunchLink.address);
 
       // 1. Mint STOKEN0 for staking
-      await stoken0AsDeployer.mint((await alice.getAddress()), ethers.utils.parseEther('400'));
+      await stoken0AsDeployer.mint(await alice.getAddress(), ethers.utils.parseEther('400'));
+      await stoken0AsDeployer.mint(await bob.getAddress(), ethers.utils.parseEther('100'));
 
       // 2. Add STOKEN0 to the fairLaunch pool
       await fairLaunchV2AsDeployer.addPool(1, stakingTokens[0].address, ADDRESS0, 0);
@@ -276,6 +277,92 @@ describe("FairLaunchV2", () => {
       await stoken0AsBob.approve(fairLaunchV2.address, ethers.utils.parseEther('100'));
       await fairLaunchV2AsBob.deposit(await bob.getAddress(), 0, ethers.utils.parseEther('100'));
     });
+
+    it('should revert when funder partially withdraw the funds, then user try to withdraw funds', async () => {
+      // add dummyToken to fairLaunchV1
+      await fairLaunch.addPool(0, stakingTokens[0].address, false);
+      await fairLaunch.addPool(1, fairLaunchLink.address, false);
+
+      // mint fairLaunchLink token for deployer
+      await fairLaunchLink.mint(await deployer.getAddress(), ethers.utils.parseEther('1'));
+
+      // Initialized fairLaunchV2
+      await fairLaunchLink.approve(fairLaunchV2.address, ethers.utils.parseEther('1'));
+      await fairLaunchV2.init(fairLaunchLink.address);
+
+      // 1. Mint STOKEN0 for staking
+      await stoken0AsDeployer.mint((await alice.getAddress()), ethers.utils.parseEther('400'));
+      await stoken0AsDeployer.mint((await dev.getAddress()), ethers.utils.parseEther('100'));
+
+      // 2. Add STOKEN0 to the fairLaunch pool
+      await fairLaunchV2AsDeployer.addPool(1, stakingTokens[0].address, ADDRESS0, 0);
+
+      // 3. Deposit STOKEN0 to the STOKEN0 pool
+      await stoken0AsAlice.approve(fairLaunchV2.address, ethers.utils.parseEther('100'));
+      await fairLaunchV2AsAlice.deposit((await bob.getAddress()), 0, ethers.utils.parseEther('100'));
+
+      // 4. Alice withdraw some from FLV2
+      await fairLaunchV2AsAlice.withdraw(await bob.getAddress(), 0, ethers.utils.parseEther("50"));
+
+      // 5. Expect to be revert with Bob try to withdraw the funds
+      await expect(fairLaunchV2AsBob.withdraw((await bob.getAddress()), 0, ethers.utils.parseEther('1'))).to.be.revertedWith('FairLaunchV2::withdraw:: only funder');
+    });
+
+    it('should give the correct withdraw amount back to funder if funder withdraw', async() => {
+      // add dummyToken to fairLaunchV1
+      await fairLaunch.addPool(0, stakingTokens[0].address, false);
+      await fairLaunch.addPool(1, fairLaunchLink.address, false);
+
+      // mint fairLaunchLink token for deployer
+      await fairLaunchLink.mint(await deployer.getAddress(), ethers.utils.parseEther('1'));
+
+      // Initialized fairLaunchV2
+      await fairLaunchLink.approve(fairLaunchV2.address, ethers.utils.parseEther('1'));
+      await fairLaunchV2.init(fairLaunchLink.address);
+
+      // 1. Mint STOKEN0 for staking
+      await stoken0AsDeployer.mint((await alice.getAddress()), ethers.utils.parseEther('400'));
+      await stoken0AsDeployer.mint((await dev.getAddress()), ethers.utils.parseEther('100'));
+
+      // 2. Add STOKEN0 to the fairLaunch pool
+      await fairLaunchV2AsDeployer.addPool(1, stakingTokens[0].address, ADDRESS0, 0);
+
+      // 3. Deposit STOKEN0 to the STOKEN0 pool
+      await stoken0AsAlice.approve(fairLaunchV2.address, ethers.utils.parseEther('100'));
+      await fairLaunchV2AsAlice.deposit((await bob.getAddress()), 0, ethers.utils.parseEther('100'));
+
+      // 4. Alice withdraw some from FLV2
+      await fairLaunchV2AsAlice.withdraw(await bob.getAddress(), 0, ethers.utils.parseEther("50"));
+
+      // 5. Expect to Alice STOKEN0 will be 400-100+50=350
+      expect(await stoken0AsBob.balanceOf(await alice.getAddress())).to.be.bignumber.eq(ethers.utils.parseEther('350'));
+    });
+
+    it('should revert when non funder try to emergencyWithdraw from FLV2', async () => {
+      // add dummyToken to fairLaunchV1
+      await fairLaunch.addPool(0, stakingTokens[0].address, false);
+      await fairLaunch.addPool(1, fairLaunchLink.address, false);
+
+      // mint fairLaunchLink token for deployer
+      await fairLaunchLink.mint(await deployer.getAddress(), ethers.utils.parseEther('1'));
+
+      // Initialized fairLaunchV2
+      await fairLaunchLink.approve(fairLaunchV2.address, ethers.utils.parseEther('1'));
+      await fairLaunchV2.init(fairLaunchLink.address);
+
+      // 1. Mint STOKEN0 for staking
+      await stoken0AsDeployer.mint((await alice.getAddress()), ethers.utils.parseEther('400'));
+      await stoken0AsDeployer.mint((await dev.getAddress()), ethers.utils.parseEther('100'));
+
+      // 2. Add STOKEN0 to the fairLaunch pool
+      await fairLaunchV2AsDeployer.addPool(1, stakingTokens[0].address, ADDRESS0, 0);
+
+      // 3. Deposit STOKEN0 to the STOKEN0 pool
+      await stoken0AsAlice.approve(fairLaunchV2.address, ethers.utils.parseEther('100'));
+      await fairLaunchV2AsAlice.deposit((await bob.getAddress()), 0, ethers.utils.parseEther('100'));
+
+      await expect(fairLaunchV2AsBob.emergencyWithdraw(0, await bob.getAddress())).to.be.revertedWith('FairLaunchV2::emergencyWithdraw:: only funder')
+    })
 
     it('should revert when 2 accounts try to fund the same user', async () => {
       // add dummyToken to fairLaunchV1
@@ -723,8 +810,6 @@ describe("FairLaunchV2", () => {
 
       // 19. Trigger random update pool to make 1 more block mine
       await fairLaunchV2AsAlice.massUpdatePools([0]);
-
-      console.log(await alpacaToken.balanceOf(fairLaunchV2.address))
 
       // 20. Now Alice and Bob should get some ALPACAs
       // Check pendingAlpaca for Alice & Bob
