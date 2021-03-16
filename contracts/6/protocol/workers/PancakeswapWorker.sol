@@ -117,7 +117,7 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
   function reinvest() public override onlyEOA nonReentrant {
     // 1. Approve tokens
     cake.safeApprove(address(router), uint256(-1));
-    lpToken.approve(address(masterChef), uint256(-1));
+    address(lpToken).safeApprove(address(masterChef), uint256(-1));
     // 2. Withdraw all the rewards.
     masterChef.withdraw(pid, 0);
     uint256 reward = cake.balanceOf(address(this));
@@ -145,7 +145,7 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
     masterChef.deposit(pid, lpToken.balanceOf(address(this)));
     // 7. Reset approve
     cake.safeApprove(address(router), 0);
-    lpToken.approve(address(masterChef), 0);
+    address(lpToken).safeApprove(address(masterChef), 0);
     emit Reinvest(msg.sender, reward, bounty);
   }
 
@@ -222,7 +222,7 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
     uint256 balance = lpToken.balanceOf(address(this));
     if (balance > 0) {
       // 1. Approve token to be spend by masterChef
-      lpToken.approve(address(masterChef), uint256(-1));
+      address(lpToken).safeApprove(address(masterChef), uint256(-1));
       // 2. Convert balance to share
       uint256 share = balanceToShare(balance);
       // 3. Deposit balance to PancakeMasterChef
@@ -231,7 +231,7 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
       shares[id] = shares[id].add(share);
       totalShare = totalShare.add(share);
       // 5. Reset approve token
-      lpToken.approve(address(masterChef), 0);
+      address(lpToken).safeApprove(address(masterChef), 0);
       emit AddShare(id, share);
     }
   }
