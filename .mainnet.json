@@ -77,11 +77,11 @@
     "sALPACA-ALPACA": "0x3Ee4de968E47877F432226d6a9A0DAD6EAc6001b"
   },
   "SharedStrategies": {
-    "StrategyAddBaseTokenOnly": "0xBBd3464C571db4315bebeE098381b687c8269314",
-    "StrategyLiquidate": "0xe2880836faf7FaDF094418F9E9DdDe3d132243F1"
+    "StrategyAddBaseTokenOnly": "0x1DBa79e73a7Ea9749fc28B921bc9431D09BEf2B5",
+    "StrategyLiquidate": "0xc7c025aA69F4b525E3F9f5186b524492ee1C86bB"
   },
   "SharedConfig": {
-    "TripleSlopeModel": "0x607Ed45D4837e93158CD39aAfd292340Ed5F5D9F",
+    "TripleSlopeModel": "0xb17e305AF95E6a4345Ff743Bc394a0929cc31725",
     "WNativeRelayer": "0xE1D2CA01bc88F325fF7266DD2165944f3CAf0D3D",
     "WorkerConfig": "0xADaBC5FC5da42c85A84e66096460C769a151A8F8"
   },
