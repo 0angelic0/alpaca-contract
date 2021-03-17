@@ -92,7 +92,7 @@
     "StrategyLiquidate": "0xC949fc7A2ecF161BAAeA16190D9676E48B902896"
   },
   "SharedConfig": {
-    "TripleSlopeModel": "0xAf35eac61ADb72ca435aa5e12E32AD7b62a8c9DA",
+    "TripleSlopeModel": "0xEE9A636C8dB153B301553a87b2B90aEAA17Da287",
     "WNativeRelayer": "0x01EBAC2f65eC3cE064EDcf05f9fAd9B8D9a419Ee",
     "WorkerConfig": "0xAB5AD8e7248C9b28e114723E8A43FbB0bFa98483"
   },

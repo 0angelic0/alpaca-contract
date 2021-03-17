@@ -14,17 +14,17 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   Check all variables below before execute the deployment script
   */
 
-  const VAULT_CONFIG = '';
-  const MIN_DEBT_SIZE = '';
-  const RESERVE_POOL_BPS = '';
-  const KILL_PRIZE_BPS = '';
-  const INTEREST_MODEL = '';
-  const WBNB = '';
-  const WNATIVE_RELAYER = '';
-  const FAIRLAUNCH = '';
+  const VAULT_CONFIG = '0x950e8137B8c0d403DCBeAb41AF1160a56862ba5a';
+  const MIN_DEBT_SIZE = ethers.utils.parseEther('400');
+  const RESERVE_POOL_BPS = '1000';
+  const KILL_PRIZE_BPS = '500';
+  const INTEREST_MODEL = '0xEE9A636C8dB153B301553a87b2B90aEAA17Da287';
+  const WBNB = '0x0421b6CE68C71708CD18652aF5123fc2573DBCCC';
+  const WNATIVE_RELAYER = '0x01EBAC2f65eC3cE064EDcf05f9fAd9B8D9a419Ee';
+  const FAIRLAUNCH = '0x31402C656f48F09284755d7B97Ffd40Ea372D531';
 
-  const TIMELOCK = '0x2D5408f2287BF9F9B05404794459a846651D0a59';
-  const EXACT_ETA = '1615789200';
+  const TIMELOCK = '0x771F70042ebb6d2Cfc29b7BF9f3caf9F959385B8';
+  const EXACT_ETA = '1615952700';
 
 
 
