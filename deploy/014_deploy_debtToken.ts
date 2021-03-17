@@ -43,11 +43,11 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   console.log("✅ Done");
 
   console.log(">> Queue Transaction to add pool through Timelock");
-  await timelock.queueTransaction(FAIR_LAUNCH, '0', 'addPool(uint256,address,bool)', ethers.utils.defaultAbiCoder.encode(['uint256','address','bool'], [ALLOC_POINT, debtToken.address, false]), EXACT_ETA);
+  await timelock.queueTransaction(FAIR_LAUNCH, '0', 'addPool(uint256,address,bool)', ethers.utils.defaultAbiCoder.encode(['uint256','address','bool'], [ALLOC_POINT, debtToken.address, true]), EXACT_ETA);
   console.log("✅ Done");
 
   console.log(">> Generate timelock executeTransaction")
-  console.log(`await timelock.executeTransaction('${FAIR_LAUNCH}', '0', 'addPool(uint256,address,bool)', ethers.utils.defaultAbiCoder.encode(['uint256','address','bool'], [${ALLOC_POINT}, '${debtToken.address}', false]), ${EXACT_ETA})`);
+  console.log(`await timelock.executeTransaction('${FAIR_LAUNCH}', '0', 'addPool(uint256,address,bool)', ethers.utils.defaultAbiCoder.encode(['uint256','address','bool'], [${ALLOC_POINT}, '${debtToken.address}', true]), ${EXACT_ETA})`);
   console.log("✅ Done")
 }
 
