@@ -33,15 +33,21 @@ describe("TripleSlopeModel", () => {
     TestHelpers.assertAlmostEqual(interestPerYear.toString(), ethers.utils.parseEther('10').toString())
   });
 
-  it('should returns 10% APY when utlization 89%', async () => {
+  it('should returns 10% APY when utilization 89%', async () => {
     const interestPerSec = await tripleSlopeModel.getInterestRate('89','11')
     const interestPerYear = interestPerSec.mul(60).mul(60).mul(24).mul(365)
     TestHelpers.assertAlmostEqual(interestPerYear.toString(), ethers.utils.parseEther('10').toString())
   });
 
-  it('should returns ~35% APY when utlization 95%', async () => {
+  it('should returns ~35% APY when utilization 95%', async () => {
     const interestPerSec = await tripleSlopeModel.getInterestRate('95','5')
     const interestPerYear = interestPerSec.mul(60).mul(60).mul(24).mul(365)
     TestHelpers.assertAlmostEqual(interestPerYear.toString(), ethers.utils.parseEther('35').toString())
   });
+
+  it('should returns ~60% APY when utilization 99%', async () => {
+    const interestPerSec = await tripleSlopeModel.getInterestRate('99','1')
+    const interestPerYear = interestPerSec.mul(60).mul(60).mul(24).mul(365)
+    TestHelpers.assertAlmostEqual(interestPerYear.toString(), ethers.utils.parseEther('60').toString())
+  })
 });
