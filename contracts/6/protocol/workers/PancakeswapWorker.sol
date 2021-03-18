@@ -47,6 +47,7 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
   IStrategy public liqStrat;
   uint256 public reinvestBountyBps;
   uint256 public maxReinvestBountyBps;
+  mapping(address => bool) public okReinvestors;
 
   function initialize(
     address _operator,
@@ -91,9 +92,15 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
     _;
   }
 
-  /// @dev Require that the caller must be the operator (the bank).
+  /// @dev Require that the caller must be the operator.
   modifier onlyOperator() {
     require(msg.sender == operator, "PancakeswapWorker::onlyOperator:: not operator");
+    _;
+  }
+
+  //// @dev Require that the caller must be ok reinvestor.
+  modifier onlyReinvestor() {
+    require(okReinvestors[msg.sender], "PancakeswapWorker::onlyReinvestor:: not reinvestor");
     _;
   }
 
@@ -114,7 +121,7 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
   }
 
   /// @dev Re-invest whatever this worker has earned back to staked LP tokens.
-  function reinvest() public override onlyEOA nonReentrant {
+  function reinvest() public override onlyEOA onlyReinvestor nonReentrant {
     // 1. Approve tokens
     cake.safeApprove(address(router), uint256(-1));
     address(lpToken).safeApprove(address(masterChef), uint256(-1));
@@ -269,6 +276,16 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
     uint256 len = strats.length;
     for (uint256 idx = 0; idx < len; idx++) {
       okStrats[strats[idx]] = isOk;
+    }
+  }
+
+  /// @dev Set the given address's to be reinvestor.
+  /// @param reinvestors The reinvest bot addresses.
+  /// @param isOk Whether to approve or unapprove the given strategies.
+  function setReinvestorOk(address[] calldata reinvestors, bool isOk) external override onlyOwner {
+    uint256 len = reinvestors.length;
+    for (uint256 idx = 0; idx < len; idx++) {
+      okReinvestors[reinvestors[idx]] = isOk;
     }
   }
 
