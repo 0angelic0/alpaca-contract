@@ -656,6 +656,7 @@ describe('Vault - Pancake', () => {
       );
   
       const eveBefore = await baseToken.balanceOf(await eve.getAddress());
+      const aliceAlpacaBefore = await alpacaToken.balanceOf(await alice.getAddress());
   
       // Now you can liquidate because of the insane interest rate
       await vaultAsEve.kill('1');
@@ -680,7 +681,9 @@ describe('Vault - Pancake', () => {
           .add(interest.sub(reservePool).mul(13).div(10)).toString(),
         (await vault.totalToken()).toString(),
       );
-  
+      expect(await baseToken.balanceOf(await eve.getAddress())).to.be.bignumber.gt(eveBefore);
+      expect(await alpacaToken.balanceOf(await alice.getAddress())).to.be.bignumber.gt(aliceAlpacaBefore);
+
       // Alice creates a new position again
       await baseTokenAsAlice.approve(vault.address, ethers.utils.parseEther('1'));
       await vaultAsAlice.work(
