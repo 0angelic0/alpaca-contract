@@ -19,6 +19,9 @@ interface IWorker {
   /// @dev SetStretegy that be able to executed by the worker.
   function setStrategyOk(address[] calldata strats, bool isOk) external;
 
+  /// @dev Set address that can be reinvest
+  function setReinvestorOk(address[] calldata reinvestor, bool isOk) external;
+
   function lpToken() external view returns (IUniswapV2Pair);
 
 }
