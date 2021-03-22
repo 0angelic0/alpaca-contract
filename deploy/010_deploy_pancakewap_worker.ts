@@ -2,6 +2,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { DeployFunction } from 'hardhat-deploy/types';
 import { ethers, upgrades } from 'hardhat';
 import {
+  PancakeswapWorker,
   PancakeswapWorker__factory,
   Timelock__factory,
 } from '../typechain';
@@ -19,6 +20,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const VAULT_CONFIG_ADDR = '0x950e8137B8c0d403DCBeAb41AF1160a56862ba5a';
   const WORKER_CONFIG_ADDR = '0xAB5AD8e7248C9b28e114723E8A43FbB0bFa98483';
+
+  const REINVEST_BOT = '';
   
   const WORKER_NAME = "WBNB-BUSD PancakeswapWorker"
   const POOL_ID = 5;
@@ -55,9 +58,13 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       PANCAKESWAP_ROUTER_ADDR, POOL_ID, ADD_STRAT_ADDR,
       LIQ_STRAT_ADDR, REINVEST_BOUNTY_BPS
     ],
-  );
+  ) as PancakeswapWorker;
   await pancakeswapWorker.deployed();
   console.log(`>> Deployed at ${pancakeswapWorker.address}`);
+
+  console.log(`>> Adding REINVEST_BOT`);
+  await pancakeswapWorker.setReinvestorOk([REINVEST_BOT], true);
+  console.log("✅ Done");
 
   const timelock = Timelock__factory.connect(TIMELOCK, (await ethers.getSigners())[0]);
 
