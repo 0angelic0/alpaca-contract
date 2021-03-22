@@ -54,6 +54,7 @@
     "deploy:testnet:s008": "hardhat --network testnet deploy --no-compile --reset --tags AddWorkerStrategy",
     "deploy:testnet:s009": "hardhat --network testnet deploy --no-compile --reset --tags TimelockChangeAdminProxy",
     "deploy:testnet:s010": "hardhat --network testnet deploy --no-compile --reset --tags TimelockSetParamsVaultConfig",
+    "deploy:testnet:s011": "hardhat --network testnet deploy --no-compile --reset --tags TimelockUpdateWorkerWorkerConfigParams",
     "mainnet": "hardhat console --no-compile --network mainnet",
     "test:fairlaunch": "hardhat test --no-compile ./test/FairLaunch.test.ts",
     "test:fairlaunchv2": "hardhat test --no-compile ./test/FairLaunchV2.test.ts",
