@@ -659,8 +659,9 @@ describe('Vault - Pancake', () => {
       const aliceAlpacaBefore = await alpacaToken.balanceOf(await alice.getAddress());
   
       // Now you can liquidate because of the insane interest rate
-      await vaultAsEve.kill('1');
-  
+      await expect(vaultAsEve.kill('1'))
+        .to.emit(vaultAsEve, 'Kill')  
+
       expect(await baseToken.balanceOf(await eve.getAddress())).to.be.bignumber.gt(eveBefore);
       AssertHelpers.assertAlmostEqual(
         deposit
@@ -766,7 +767,8 @@ describe('Vault - Pancake', () => {
       const eveBefore = await baseToken.balanceOf(await eve.getAddress());
 
       // Now you can liquidate because of the insane interest rate
-      await vaultAsEve.kill('1');
+      await expect(vaultAsEve.kill('1'))
+        .to.emit(vaultAsEve, 'Kill')
 
       expect(await baseToken.balanceOf(await eve.getAddress())).to.be.bignumber.gt(eveBefore);
       AssertHelpers.assertAlmostEqual(
@@ -882,9 +884,12 @@ describe('Vault - Pancake', () => {
   
       // Alice liquidates Bob position#1
       let aliceBefore = await baseToken.balanceOf(await alice.getAddress());
-      await vaultAsAlice.kill(1);
+
+      await expect(vaultAsEve.kill('1'))
+        .to.emit(vaultAsEve, 'Kill')
+
       let aliceAfter = await baseToken.balanceOf(await alice.getAddress());
-  
+
       // Bank balance is increase by liquidation
       AssertHelpers.assertAlmostEqual(
         ethers.utils.parseEther('10.002702699312215556').toString(),
@@ -982,10 +987,12 @@ describe('Vault - Pancake', () => {
         await deployer.getAddress(),
         FOREVER
       );
-  
+
       // Now you can liquidate because of the price fluctuation
       const eveBefore = await baseToken.balanceOf(await eve.getAddress());
-      await vaultAsEve.kill('1');
+      await expect(vaultAsEve.kill('1'))
+        .to.emit(vaultAsEve, 'Kill')
+
       expect(await baseToken.balanceOf(await eve.getAddress())).to.be.bignumber.gt(eveBefore);
     });
   
@@ -1262,7 +1269,7 @@ describe('Vault - Pancake', () => {
         FOREVER
       );
       await expect(vaultAsEve.kill('1')).to.be.revertedWith("can't liquidate");
-  
+
       // Price swing 30%
       // Existing token on the pool = 0.11785113019775793 + 0.016829279312591913 = 0.13468040951034985
       // Add more token to the pool equals to
@@ -1274,13 +1281,14 @@ describe('Vault - Pancake', () => {
         await deployer.getAddress(),
         FOREVER
       );
-  
+
       // Now you can liquidate because of the price fluctuation
       const eveBefore = await baseToken.balanceOf(await eve.getAddress());
-      await vaultAsEve.kill('1');
+      await expect(vaultAsEve.kill('1'))
+        .to.emit(vaultAsEve, 'Kill')
       expect(await baseToken.balanceOf(await eve.getAddress())).to.be.bignumber.gt(eveBefore);
     });
-  
+
     it('should close position correctly when user holds multiple positions', async () => {
       // Set Bank's debt interests to 0% per year
       await simpleVaultConfig.setParams(

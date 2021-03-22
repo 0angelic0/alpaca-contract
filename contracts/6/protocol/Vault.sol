@@ -25,7 +25,7 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
   event AddDebt(uint256 indexed id, uint256 debtShare);
   event RemoveDebt(uint256 indexed id, uint256 debtShare);
   event Work(uint256 indexed id, uint256 loan);
-  event Kill(uint256 indexed id, address indexed killer, uint256 prize, uint256 left);
+  event Kill(uint256 indexed id, address indexed killer, address owner, uint256 posVal, uint256 debt, uint256 prize, uint256 left);
 
   /// @dev Flags for manage execution scope
   uint private constant _NOT_ENTERED = 1;
@@ -335,7 +335,7 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
         SafeToken.safeTransfer(token, pos.owner, left);
       }
     }
-    emit Kill(id, msg.sender, prize, left);
+    emit Kill(id, msg.sender, pos.owner, health, debt, prize, left);
   }
 
   /// @dev Internal function to add the given debt value to the given position.
