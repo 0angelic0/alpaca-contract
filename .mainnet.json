@@ -99,38 +99,29 @@
       "name": "CAKE-WBNB PancakeswapWorker",
       "address": "",
       "config": "",
-      "baseToken": "",
-      "quoteToken": "",
-      "masterChef": "",
-      "strategies": [{
+      "strategies": {
         "StrategyAddTwoSidesOptimal": "",
         "StrategyAddAllBaseToken": "",
         "StrategyLiquidate": ""
-      }]
+      }
     }, {
       "name": "BTCB-WBNB PancakeswapWorker",
       "address": "",
       "config": "",
-      "baseToken": "",
-      "quoteToken": "",
-      "masterChef": "",
-      "strategies": [{
+      "strategies": {
         "StrategyAddTwoSidesOptimal": "",
         "StrategyAddAllBaseToken": "",
         "StrategyLiquidate": ""
-      }]
+      }
     }, {
       "name": "ETH-WBNB PancakeswapWorker",
       "address": "",
       "config": "",
-      "baseToken": "",
-      "quoteToken": "",
-      "masterChef": "",
-      "strategies": [{
+      "strategies": {
         "StrategyAddTwoSidesOptimal": "",
         "StrategyAddAllBaseToken": "",
         "StrategyLiquidate": ""
-      }]
+      }
     }]
   }, {
     "name": "Interest Bearing BUSD",
@@ -143,26 +134,20 @@
       "name": "USDT-BUSD PancakeswapWorker",
       "address": "",
       "config": "",
-      "baseToken": "",
-      "quoteToken": "",
-      "masterChef": "",
-      "strategies": [{
+      "strategies": {
         "StrategyAddTwoSidesOptimal": "",
         "StrategyAddAllBaseToken": "",
         "StrategyLiquidate": ""
-      }]
+      }
     }, {
       "name": "WBNB-BUSD PancakeswapWorker",
       "address": "",
       "config": "",
-      "baseToken": "",
-      "quoteToken": "",
-      "masterChef": "",
-      "strategies": [{
+      "strategies": {
         "StrategyAddTwoSidesOptimal": "",
         "StrategyAddAllBaseToken": "",
         "StrategyLiquidate": ""
-      }]
+      }
     }]
   }]
 }
