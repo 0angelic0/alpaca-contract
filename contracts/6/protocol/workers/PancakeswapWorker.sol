@@ -34,7 +34,7 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
   IUniswapV2Pair public override lpToken;
   address public wNative;
   address public baseToken;
-  address public quoteToken;
+  address public farmingToken;
   address public cake;
   address public operator;
   uint256 public pid;
@@ -68,13 +68,13 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
     masterChef = _masterChef;
     router = _router;
     factory = IUniswapV2Factory(_router.factory());
-    // Get lpToken and quoteToken from MasterChef pool
+    // Get lpToken and farmingToken from MasterChef pool
     pid = _pid;
     (IERC20 _lpToken, , , ) = masterChef.poolInfo(_pid);
     lpToken = IUniswapV2Pair(address(_lpToken));
     address token0 = lpToken.token0();
     address token1 = lpToken.token1();
-    quoteToken = token0 == baseToken ? token1 : token0;
+    farmingToken = token0 == baseToken ? token1 : token0;
     cake = address(masterChef.cake());
     addStrat = _addStrat;
     liqStrat = _liqStrat;
@@ -147,7 +147,7 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
     router.swapExactTokensForTokens(reward.sub(bounty), 0, path, address(this), now);
     // 5. Use add Token strategy to convert all BaseToken to LP tokens.
     baseToken.safeTransfer(address(addStrat), baseToken.myBalance());
-    addStrat.execute(address(0), 0, abi.encode(baseToken, quoteToken, 0));
+    addStrat.execute(address(0), 0, abi.encode(baseToken, farmingToken, 0));
     // 6. Mint more LP tokens and stake them for more rewards.
     masterChef.deposit(pid, lpToken.balanceOf(address(this)));
     // 7. Reset approve
@@ -199,15 +199,15 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
     // 1. Get the position's LP balance and LP total supply.
     uint256 lpBalance = shareToBalance(shares[id]);
     uint256 lpSupply = lpToken.totalSupply(); // Ignore pending mintFee as it is insignificant
-    // 2. Get the pool's total supply of BaseToken and QuoteToken.
+    // 2. Get the pool's total supply of BaseToken and FarmingToken.
     (uint256 r0, uint256 r1,) = lpToken.getReserves();
-    (uint256 totalBaseToken, uint256 totalQuoteToken) = lpToken.token0() == baseToken ? (r0, r1) : (r1, r0);
+    (uint256 totalBaseToken, uint256 totalFarmingToken) = lpToken.token0() == baseToken ? (r0, r1) : (r1, r0);
     // 3. Convert the position's LP tokens to the underlying assets.
     uint256 userBaseToken = lpBalance.mul(totalBaseToken).div(lpSupply);
-    uint256 userQuoteToken = lpBalance.mul(totalQuoteToken).div(lpSupply);
-    // 4. Convert all QuoteToken to BaseToken and return total BaseToken.
+    uint256 userFarmingToken = lpBalance.mul(totalFarmingToken).div(lpSupply);
+    // 4. Convert all FarmingToken to BaseToken and return total BaseToken.
     return getMktSellAmount(
-      userQuoteToken, totalQuoteToken.sub(userQuoteToken), totalBaseToken.sub(userBaseToken)
+      userFarmingToken, totalFarmingToken.sub(userFarmingToken), totalBaseToken.sub(userBaseToken)
     ).add(userBaseToken);
   }
 
@@ -217,7 +217,7 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
     // 1. Convert the position back to LP tokens and use liquidate strategy.
     _removeShare(id);
     lpToken.transfer(address(liqStrat), lpToken.balanceOf(address(this)));
-    liqStrat.execute(address(0), 0, abi.encode(baseToken, quoteToken, 0));
+    liqStrat.execute(address(0), 0, abi.encode(baseToken, farmingToken, 0));
     // 2. Return all available BaseToken back to the operator.
     uint256 wad = baseToken.myBalance();
     baseToken.safeTransfer(msg.sender, wad);
