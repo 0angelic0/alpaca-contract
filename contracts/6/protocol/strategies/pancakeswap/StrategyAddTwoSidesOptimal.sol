@@ -5,10 +5,10 @@ import "@openzeppelin/contracts-ethereum-package/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol";
 
-import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
-import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol";
+import "@pancakeswap-libs/pancake-swap-core/contracts/interfaces/IPancakeFactory.sol";
+import "@pancakeswap-libs/pancake-swap-core/contracts/interfaces/IPancakePair.sol";
 
-import "../../apis/uniswap/IUniswapV2Router02.sol";
+import "../../apis/pancake/IPancakeRouter02.sol";
 import "../../interfaces/IStrategy.sol";
 import "../../interfaces/IVault.sol";
 import "../../../utils/SafeToken.sol";
@@ -18,16 +18,16 @@ contract StrategyAddTwoSidesOptimal is ReentrancyGuardUpgradeSafe, IStrategy {
   using SafeToken for address;
   using SafeMath for uint256;
 
-  IUniswapV2Factory public factory;
-  IUniswapV2Router02 public router;
+  IPancakeFactory public factory;
+  IPancakeRouter02 public router;
   IVault public vault;
 
   /// @dev Create a new add two-side optimal strategy instance.
   /// @param _router The Uniswap router smart contract.
-  function initialize(IUniswapV2Router02 _router, IVault _vault) public initializer {
+  function initialize(IPancakeRouter02 _router, IVault _vault) public initializer {
     ReentrancyGuardUpgradeSafe.__ReentrancyGuard_init();
 
-    factory = IUniswapV2Factory(_router.factory());
+    factory = IPancakeFactory(_router.factory());
     router = _router;
     vault = _vault;
   }
@@ -81,7 +81,7 @@ contract StrategyAddTwoSidesOptimal is ReentrancyGuardUpgradeSafe, IStrategy {
 
   /// @dev Execute worker strategy. Take BaseToken + FarmingToken. Return LP tokens.
   /// @param data Extra calldata information passed along to this strategy.
-  function execute(address user, uint256, /* debt */ bytes calldata data) external override payable nonReentrant
+  function execute(address /* user */, uint256, /* debt */ bytes calldata data) external override payable nonReentrant
   {
     // 1. Find out what farming token we are dealing with.
     (
@@ -90,7 +90,7 @@ contract StrategyAddTwoSidesOptimal is ReentrancyGuardUpgradeSafe, IStrategy {
         uint256 farmingTokenAmount,
         uint256 minLPAmount
     ) = abi.decode(data, (address, address, uint256, uint256));
-    IUniswapV2Pair lpToken = IUniswapV2Pair(factory.getPair(farmingToken, baseToken));
+    IPancakePair lpToken = IPancakePair(factory.getPair(farmingToken, baseToken));
     // 2. Approve router to do their stuffs
     baseToken.safeApprove(address(router), uint256(-1));
     farmingToken.safeApprove(address(router), uint256(-1));
@@ -115,14 +115,7 @@ contract StrategyAddTwoSidesOptimal is ReentrancyGuardUpgradeSafe, IStrategy {
     );
     require(moreLPAmount >= minLPAmount, "StrategyAddTwoSidesOptimal::execute:: insufficient LP tokens received");
     lpToken.transfer(msg.sender, lpToken.balanceOf(address(this)));
-    // 7. Return leftover back to user
-    if (baseToken.myBalance() > 0) {
-      baseToken.safeTransfer(user, baseToken.myBalance());
-    }
-    if (farmingToken.myBalance() > 0) {
-      farmingToken.safeTransfer(user, farmingToken.myBalance());
-    }
-    // 8. Reset approve to 0 for safety reason
+    // 7. Reset approve to 0 for safety reason
     farmingToken.safeApprove(address(router), 0);
     baseToken.safeApprove(address(router), 0);
   }

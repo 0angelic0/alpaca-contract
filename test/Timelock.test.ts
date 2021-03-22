@@ -23,12 +23,6 @@ import {
   StrategyLiquidate,
   Timelock,
   Timelock__factory,
-  UniswapV2Factory,
-  UniswapV2Factory__factory,
-  UniswapV2Pair,
-  UniswapV2Pair__factory,
-  UniswapV2Router02,
-  UniswapV2Router02__factory,
   WorkerConfig,
   WorkerConfig__factory,
   Vault,
@@ -43,6 +37,12 @@ import {
   PancakeMasterChef__factory,
   SyrupBar__factory,
   SyrupBar,
+  PancakeFactory,
+  PancakeRouter,
+  PancakePair,
+  PancakeFactory__factory,
+  PancakeRouter__factory,
+  PancakePair__factory,
 } from "../typechain";
 import * as TimeHelpers from "./helpers/time"
 
@@ -68,10 +68,10 @@ describe("Timelock", () => {
   let timelock: Timelock;
 
   /// Uniswap-related instance(s)
-  let factory: UniswapV2Factory;
-  let weth: WETH;
-  let router: UniswapV2Router02;
-  let lp: UniswapV2Pair;
+  let factory: PancakeFactory;
+  let wbnb: WETH;
+  let router: PancakeRouter;
+  let lp: PancakePair;
 
   /// Token-related instance(s)
   let quoteToken: MockERC20;
@@ -121,25 +121,25 @@ describe("Timelock", () => {
     [deployer, admin, alice, bob] = await ethers.getSigners();
 
     // Setup Uniswap
-    const UniswapV2Factory = (await ethers.getContractFactory(
-      "UniswapV2Factory",
+    const PancakeFactory = (await ethers.getContractFactory(
+      "PancakeFactory",
       deployer
-    )) as UniswapV2Factory__factory;
-    factory = await UniswapV2Factory.deploy((await deployer.getAddress()));
+    )) as PancakeFactory__factory;
+    factory = await PancakeFactory.deploy((await deployer.getAddress()));
     await factory.deployed();
 
-    const WETH = (await ethers.getContractFactory(
+    const WBNB = (await ethers.getContractFactory(
       "WETH",
       deployer
     )) as WETH__factory;
-    weth = await WETH.deploy();
+    wbnb = await WBNB.deploy();
     await factory.deployed();
 
-    const UniswapV2Router02 = (await ethers.getContractFactory(
-      "UniswapV2Router02",
+    const PancakeRouter = (await ethers.getContractFactory(
+      "PancakeRouter",
       deployer
-    )) as UniswapV2Router02__factory;
-    router = await UniswapV2Router02.deploy(factory.address, weth.address);
+    )) as PancakeRouter__factory;
+    router = await PancakeRouter.deploy(factory.address, wbnb.address);
     await router.deployed();
 
     /// Setup token stuffs
@@ -175,7 +175,7 @@ describe("Timelock", () => {
 
     /// Setup BTOKEN-FTOKEN pair on Pancakeswap
     await factory.createPair(baseToken.address, quoteToken.address);
-    lp = UniswapV2Pair__factory.connect(await factory.getPair(quoteToken.address, baseToken.address), deployer);
+    lp = PancakePair__factory.connect(await factory.getPair(quoteToken.address, baseToken.address), deployer);
     await lp.deployed();
 
     /// Setup Strategy
@@ -220,7 +220,7 @@ describe("Timelock", () => {
       deployer
     )) as SimpleVaultConfig__factory;
     simpleVaultConfig = await upgrades.deployProxy(SimpleVaultConfig, [
-      MIN_DEBT_SIZE, INTEREST_RATE, RESERVE_POOL_BPS, KILL_PRIZE_BPS, weth.address, ADDRESS0, fairLaunch.address
+      MIN_DEBT_SIZE, INTEREST_RATE, RESERVE_POOL_BPS, KILL_PRIZE_BPS, wbnb.address, ADDRESS0, fairLaunch.address
     ]) as SimpleVaultConfig;
     await simpleVaultConfig.deployed();
 
@@ -334,7 +334,7 @@ describe("Timelock", () => {
         fairLaunchAsAlice.setBonus(10000, 1000, 1000)
       ).to.be.revertedWith('Ownable: caller is not the owner');
       await expect(
-        fairLaunchAsAlice.addPool(1, weth.address, false)
+        fairLaunchAsAlice.addPool(1, wbnb.address, false)
       ).to.be.revertedWith('Ownable: caller is not the owner');
       await expect(
         fairLaunchAsAlice.setPool(1, 1, false)

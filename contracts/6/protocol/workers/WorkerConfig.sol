@@ -50,7 +50,7 @@ contract WorkerConfig is OwnableUpgradeSafe, IWorkerConfig {
 
   /// @dev Return whether the given worker is stable, presumably not under manipulation.
   function isStable(address worker) public view returns (bool) {
-    IUniswapV2Pair lp = IWorker(worker).lpToken();
+    IPancakePair lp = IWorker(worker).lpToken();
     address token0 = lp.token0();
     address token1 = lp.token1();
     // 1. Check that reserves and balances are consistent (within 1%)

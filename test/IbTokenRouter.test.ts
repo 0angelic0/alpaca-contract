@@ -14,14 +14,14 @@ import {
   IbTokenRouter__factory,
   MockERC20,
   MockERC20__factory,
+  PancakeFactory,
+  PancakeFactory__factory,
+  PancakePair,
+  PancakePair__factory,
+  PancakeRouter,
+  PancakeRouter__factory,
   SimpleVaultConfig,
   SimpleVaultConfig__factory,
-  UniswapV2Factory,
-  UniswapV2Factory__factory,
-  UniswapV2Pair,
-  UniswapV2Pair__factory,
-  UniswapV2Router02,
-  UniswapV2Router02__factory,
   Vault,
   Vault__factory,
   WETH,
@@ -46,14 +46,14 @@ describe('IbTokenRouter', () => {
   const FOREVER = 20000000000;
 
   // Contract instances
-  let factory: UniswapV2Factory;
-  let router: UniswapV2Router02;
-  let lp: UniswapV2Pair;
+  let factory: PancakeFactory;
+  let router: PancakeRouter;
+  let lp: PancakePair;
 
   let fairLaunch: FairLaunch;
   let alpacaToken: AlpacaToken;
 
-  let weth: WETH;
+  let wbnb: WETH;
   let govToken: MockERC20;
   let wbtc: MockERC20;
 
@@ -64,8 +64,8 @@ describe('IbTokenRouter', () => {
   let vault: Vault;
 
   // Contract Signer
-  let lpAsDeployer: UniswapV2Pair;
-  let lpAsAlice: UniswapV2Pair;
+  let lpAsDeployer: PancakePair;
+  let lpAsAlice: PancakePair;
 
   let ibTokenRouterAsDeployer: IbTokenRouter;
   let ibTokenRouterAsAlice: IbTokenRouter;
@@ -91,26 +91,26 @@ describe('IbTokenRouter', () => {
   beforeEach(async () => {
     [deployer, alice, bob, dev] = await ethers.getSigners();
 
-    // Setup Uniswap
-    const UniswapV2Factory = (await ethers.getContractFactory(
-      "UniswapV2Factory",
+    // Setup Pancakeswap
+    const PancakeFactory = (await ethers.getContractFactory(
+      "PancakeFactory",
       deployer
-    )) as UniswapV2Factory__factory;
-    factory = await UniswapV2Factory.deploy((await deployer.getAddress()));
+    )) as PancakeFactory__factory;
+    factory = await PancakeFactory.deploy((await deployer.getAddress()));
     await factory.deployed();
 
-    const WETH = (await ethers.getContractFactory(
+    const WBNB = (await ethers.getContractFactory(
       "WETH",
       deployer
     )) as WETH__factory;
-    weth = await WETH.deploy();
-    await factory.deployed();
+    wbnb = await WBNB.deploy();
+    await wbnb.deployed();
 
-    const UniswapV2Router02 = (await ethers.getContractFactory(
-      "UniswapV2Router02",
+    const PancakeRouter = (await ethers.getContractFactory(
+      "PancakeRouter",
       deployer
-    )) as UniswapV2Router02__factory;
-    router = await UniswapV2Router02.deploy(factory.address, weth.address);
+    )) as PancakeRouter__factory;
+    router = await PancakeRouter.deploy(factory.address, wbnb.address);
     await router.deployed();
 
     // Mock ERC20s components
@@ -155,7 +155,7 @@ describe('IbTokenRouter', () => {
       "WNativeRelayer",
       deployer
     )) as WNativeRelayer__factory;
-    wNativeRelayer = await WNativeRelayer.deploy(weth.address);
+    wNativeRelayer = await WNativeRelayer.deploy(wbnb.address);
     await wNativeRelayer.deployed();
 
     const SimpleVaultConfig = (await ethers.getContractFactory(
@@ -164,7 +164,7 @@ describe('IbTokenRouter', () => {
     )) as SimpleVaultConfig__factory;
     config = await upgrades.deployProxy(SimpleVaultConfig, [
       MIN_DEBT_SIZE, INTEREST_RATE, RESERVE_POOL_BPS, KILL_PRIZE_BPS,
-      weth.address, wNativeRelayer.address, fairLaunch.address
+      wbnb.address, wNativeRelayer.address, fairLaunch.address
     ]) as SimpleVaultConfig;
     await config.deployed();
 
@@ -191,8 +191,8 @@ describe('IbTokenRouter', () => {
     govTokenAsDeployer = MockERC20__factory.connect(govToken.address, deployer);
     govTokenAsAlice = MockERC20__factory.connect(govToken.address, alice);
 
-    wethAsDeployer = WETH__factory.connect(weth.address, deployer);
-    wethAsAlice = WETH__factory.connect(weth.address, alice);
+    wethAsDeployer = WETH__factory.connect(wbnb.address, deployer);
+    wethAsAlice = WETH__factory.connect(wbnb.address, alice);
 
     wbtcAsDeployer = MockERC20__factory.connect(wbtc.address, deployer);
     wbtcAsAlice = MockERC20__factory.connect(wbtc.address, alice);
@@ -222,7 +222,7 @@ describe('IbTokenRouter', () => {
 
     // Create ibToken-Alpaca pair
     await factory.createPair(vault.address, govToken.address);
-    lp = await UniswapV2Pair__factory.connect(
+    lp = PancakePair__factory.connect(
       await factory.getPair(govToken.address, vault.address), deployer);
 
     const IbTokenRouter = (await ethers.getContractFactory(
@@ -233,8 +233,8 @@ describe('IbTokenRouter', () => {
       IbTokenRouter, [router.address, wbtc.address, vault.address, govToken.address]) as IbTokenRouter;
 
     // Assign contract signer
-    lpAsDeployer = UniswapV2Pair__factory.connect(lp.address, deployer);
-    lpAsAlice = UniswapV2Pair__factory.connect(lp.address, alice);
+    lpAsDeployer = PancakePair__factory.connect(lp.address, deployer);
+    lpAsAlice = PancakePair__factory.connect(lp.address, alice);
 
     ibTokenRouterAsDeployer = IbTokenRouter__factory.connect(ibTokenRouter.address, deployer);
     ibTokenRouterAsAlice = IbTokenRouter__factory.connect(ibTokenRouter.address, alice);
@@ -296,7 +296,7 @@ describe('IbTokenRouter', () => {
       ibTokenRouterAsAlice.addLiquidityToken(
         ethers.utils.parseEther('1'), 0, ethers.utils.parseEther('100'),
         ethers.utils.parseEther('1000'), await alice.getAddress(), FOREVER)
-    ).to.be.revertedWith('UniswapV2Router: INSUFFICIENT_A_AMOUNT');
+    ).to.be.revertedWith('PancakeRouter: INSUFFICIENT_A_AMOUNT');
     expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
@@ -384,7 +384,7 @@ describe('IbTokenRouter', () => {
     await ibTokenRouterAsAlice.addLiquidityTwoSidesOptimal(
       ethers.utils.parseEther('5'), 0, 0, await alice.getAddress(), FOREVER);
 
-    expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('24.645637300749018211'));
+    expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('24.670357097439839692'));
     AssertHelpers.assertAlmostEqual(
       (await vault.balanceOf(await alice.getAddress())).toString(),
       aliceIbWBTCBalanceBefore.sub(ethers.utils.parseEther('5')).toString()
@@ -411,7 +411,7 @@ describe('IbTokenRouter', () => {
     await ibTokenRouterAsAlice.addLiquidityTwoSidesOptimal(
       0, ethers.utils.parseEther('50'), 0, await alice.getAddress(), FOREVER);
 
-    expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('2.491884026939823270'));
+    expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('2.494383409113283473'));
     AssertHelpers.assertAlmostEqual(
       (await govToken.balanceOf(await alice.getAddress())).toString(),
       aliceALPACABalanceBefore.sub(ethers.utils.parseEther('50')).toString()
@@ -441,7 +441,7 @@ describe('IbTokenRouter', () => {
     await ibTokenRouterAsAlice.addLiquidityTwoSidesOptimal(
       ethers.utils.parseEther('5'), ethers.utils.parseEther('50'), 0, await alice.getAddress(), FOREVER);
 
-    expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('27.209068544894071126'));
+    expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('27.231344441127665977'));
     AssertHelpers.assertAlmostEqual(
       (await govToken.balanceOf(await alice.getAddress())).toString(),
       aliceALPACABalanceBefore.sub(ethers.utils.parseEther('50')).toString()
@@ -475,7 +475,7 @@ describe('IbTokenRouter', () => {
     await ibTokenRouterAsAlice.addLiquidityTwoSidesOptimal(
       ethers.utils.parseEther('0.1'), ethers.utils.parseEther('50'), 0, await alice.getAddress(), FOREVER);
 
-    expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('2.994005970089653299'));
+    expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('2.996005976077707108'));
     AssertHelpers.assertAlmostEqual(
       (await govToken.balanceOf(await alice.getAddress())).toString(),
       aliceALPACABalanceBefore.sub(ethers.utils.parseEther('50')).toString()
@@ -538,7 +538,7 @@ describe('IbTokenRouter', () => {
     await ibTokenRouterAsAlice.addLiquidityTwoSidesOptimalToken(
       ethers.utils.parseEther('5'), 0, 0, await alice.getAddress(), FOREVER);
 
-    expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('23.586451455805211287'));
+    expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('23.610108879532197459'));
     AssertHelpers.assertAlmostEqual(
       (await wbtc.balanceOf(await alice.getAddress())).toString(),
       aliceWBTCBalanceBefore.sub(ethers.utils.parseEther('5')).toString()
@@ -569,7 +569,7 @@ describe('IbTokenRouter', () => {
     await ibTokenRouterAsAlice.addLiquidityTwoSidesOptimalToken(
       ethers.utils.parseEther('5'), ethers.utils.parseEther('50'), 0, await alice.getAddress(), FOREVER);
 
-    expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('26.147238039580407956'));
+    expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('26.168448910231942973'));
     AssertHelpers.assertAlmostEqual(
       (await govToken.balanceOf(await alice.getAddress())).toString(),
       aliceALPACABalanceBefore.sub(ethers.utils.parseEther('50')).toString(),
@@ -604,7 +604,7 @@ describe('IbTokenRouter', () => {
     await ibTokenRouterAsAlice.addLiquidityTwoSidesOptimalToken(
       ethers.utils.parseEther('0.1'), ethers.utils.parseEther('50'), 0, await alice.getAddress(), FOREVER);
 
-    expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('2.972179777202932144'));
+    expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('2.974201500410627734'));
     AssertHelpers.assertAlmostEqual(
       (await govToken.balanceOf(await alice.getAddress())).toString(),
       aliceALPACABalanceBefore.sub(ethers.utils.parseEther('50')).toString(),
@@ -750,7 +750,7 @@ describe('IbTokenRouter', () => {
       ibTokenRouterAsAlice.removeLiquidityToken(
         aliceLPBalanceBefore, ethers.utils.parseEther('1000'), 0, await alice.getAddress(), FOREVER
       )
-    ).to.be.revertedWith('UniswapV2Router: INSUFFICIENT_A_AMOUNT');
+    ).to.be.revertedWith('PancakeRouter: INSUFFICIENT_A_AMOUNT');
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
@@ -777,13 +777,13 @@ describe('IbTokenRouter', () => {
 
     // Deposit 1 WBTC, yield 0.95652173913043478 ibWBTC
     // Add liquidity with 0.95652173913043478 ibWBTC and 95.65217391304347800 ALPACA
-    // So, removeLiquidityAllAlpha should get slightly less than 2*95.65217391304347800 = 191.304348 ALPACA (190.116529919717225111)
+    // So, removeLiquidityAllAlpha should get slightly less than 2*95.65217391304347800 = 191.21 ALPACA (190.210382595723081026)
     await lpAsAlice.approve(ibTokenRouter.address, aliceLPBalanceBefore);
     await ibTokenRouterAsAlice.removeLiquidityAllAlpaca(aliceLPBalanceBefore, 0, await alice.getAddress(), FOREVER);
 
     expect(await lpAsAlice.balanceOf(await alice.getAddress())).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await govToken.balanceOf(await alice.getAddress())).to.be.bignumber.equal(
-      aliceALPACABalanceBefore.add(ethers.utils.parseEther('190.116529919717225111'))
+      aliceALPACABalanceBefore.add(ethers.utils.parseEther('190.210382595723081026'))
     );
     AssertHelpers.assertAlmostEqual(
       (await wbtc.balanceOf(await alice.getAddress())).toString(),
@@ -846,7 +846,7 @@ describe('IbTokenRouter', () => {
       (await wbtc.balanceOf(await alice.getAddress())).toString(),
       aliceWBTCBalanceBefore.sub(ethers.utils.parseEther('1')).toString(),
     );
-    expect(await govToken.balanceOf(await alice.getAddress())).to.be.bignumber.equal(aliceBalanceBefore.add(ethers.utils.parseEther('94.464356006673746911')));
+    expect(await govToken.balanceOf(await alice.getAddress())).to.be.bignumber.equal(aliceBalanceBefore.add(ethers.utils.parseEther('94.558208682679602826')));
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await wbtc.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
@@ -865,7 +865,7 @@ describe('IbTokenRouter', () => {
       ibTokenRouterAsAlice.swapExactTokenForAlpaca(
         ethers.utils.parseEther('1'), ethers.utils.parseEther('1000'), await alice.getAddress(), FOREVER
       )
-    ).to.be.revertedWith('UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT');
+    ).to.be.revertedWith('PancakeRouter: INSUFFICIENT_OUTPUT_AMOUNT');
 
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
@@ -885,7 +885,7 @@ describe('IbTokenRouter', () => {
     const aliceALPACABalanceBefore = await govToken.balanceOf(await alice.getAddress());
 
     // 0.9 WBTC, yield 0.860869565 ibWBTC
-    // so should use slightly more than 86.08 ALPACA (87.095775529377361165)
+    // so should use slightly more than 86.08 ALPACA (87.008505213215660403)
     await ibTokenRouterAsAlice.swapAlpacaForExactToken(
       ethers.utils.parseEther('100'), ethers.utils.parseEther('0.9'), await alice.getAddress(), FOREVER
     );
@@ -895,7 +895,7 @@ describe('IbTokenRouter', () => {
       aliceWBTCBalanceBefore.add(ethers.utils.parseEther('0.9')).toString(),
     );
     expect(await govToken.balanceOf(await alice.getAddress())).to.be.bignumber.equal(
-      aliceALPACABalanceBefore.sub(ethers.utils.parseEther('87.095775529377361165'))
+      aliceALPACABalanceBefore.sub(ethers.utils.parseEther('87.008505213215660403'))
     );
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
@@ -917,7 +917,7 @@ describe('IbTokenRouter', () => {
       ibTokenRouterAsAlice.swapAlpacaForExactToken(
         ethers.utils.parseEther('1'), ethers.utils.parseEther('0.9'), await alice.getAddress(), FOREVER
       )
-    ).to.be.revertedWith('UniswapV2Router: EXCESSIVE_INPUT_AMOUNT');
+    ).to.be.revertedWith('PancakeRouter: EXCESSIVE_INPUT_AMOUNT');
 
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
@@ -1040,7 +1040,7 @@ describe('IbTokenRouter', () => {
     await expect(
       ibTokenRouterAsAlice.swapTokenForExactAlpaca(
         ethers.utils.parseEther('0.1'), ethers.utils.parseEther('100'), await alice.getAddress(), FOREVER)
-    ).to.be.revertedWith('UniswapV2Router: EXCESSIVE_INPUT_AMOUNT');
+    ).to.be.revertedWith('PancakeRouter: EXCESSIVE_INPUT_AMOUNT');
 
     expect(await govToken.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));
     expect(await vault.balanceOf(ibTokenRouter.address)).to.be.bignumber.equal(ethers.utils.parseEther('0'));

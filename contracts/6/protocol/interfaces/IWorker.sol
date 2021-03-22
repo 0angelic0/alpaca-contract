@@ -1,7 +1,7 @@
 
 pragma solidity 0.6.6;
 
-import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol";
+import "@pancakeswap-libs/pancake-swap-core/contracts/interfaces/IPancakePair.sol";
 
 interface IWorker {
   /// @dev Work on a (potentially new) position. Optionally send token back to Vault.
@@ -22,6 +22,6 @@ interface IWorker {
   /// @dev Set address that can be reinvest
   function setReinvestorOk(address[] calldata reinvestor, bool isOk) external;
 
-  function lpToken() external view returns (IUniswapV2Pair);
+  function lpToken() external view returns (IPancakePair);
 
 }
