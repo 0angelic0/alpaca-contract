@@ -373,6 +373,7 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
   /// @dev Update debtToken to a new address. Must only be called by owner.
   /// @param _debtToken The new DebtToken
   function updateDebtToken(address _debtToken, uint256 _newPid) external onlyOwner {
+    require(_debtToken != token, "Vault::updateDebtToken:: _debtToken must not be the same as token");
     address[] memory okHolders = new address[](2);
     okHolders[0] = address(this);
     okHolders[1] = config.getFairLaunchAddr();
