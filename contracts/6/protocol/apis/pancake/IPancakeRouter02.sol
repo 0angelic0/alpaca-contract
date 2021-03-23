@@ -1,6 +1,6 @@
 pragma solidity >=0.5.0;
 
-interface IUniswapV2Router02 {
+interface IPancakeRouter02 {
   function factory() external pure returns (address);
 
   function WETH() external pure returns (address);

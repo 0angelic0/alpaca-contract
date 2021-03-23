@@ -6,10 +6,10 @@ import "@openzeppelin/contracts-ethereum-package/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol";
 
-import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
-import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol";
+import "@pancakeswap-libs/pancake-swap-core/contracts/interfaces/IPancakeFactory.sol";
+import "@pancakeswap-libs/pancake-swap-core/contracts/interfaces/IPancakePair.sol";
 
-import "../apis/uniswap/IUniswapV2Router02.sol";
+import "../apis/pancake/IPancakeRouter02.sol";
 import "../interfaces/IStrategy.sol";
 import "../interfaces/IWorker.sol";
 import "../interfaces/IPancakeMasterChef.sol";
@@ -29,9 +29,9 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
 
   /// @notice Immutable variables
   IPancakeMasterChef public masterChef;
-  IUniswapV2Factory public factory;
-  IUniswapV2Router02 public router;
-  IUniswapV2Pair public override lpToken;
+  IPancakeFactory public factory;
+  IPancakeRouter02 public router;
+  IPancakePair public override lpToken;
   address public wNative;
   address public baseToken;
   address public farmingToken;
@@ -53,7 +53,7 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
     address _operator,
     address _baseToken,
     IPancakeMasterChef _masterChef,
-    IUniswapV2Router02 _router,
+    IPancakeRouter02 _router,
     uint256 _pid,
     IStrategy _addStrat,
     IStrategy _liqStrat,
@@ -67,11 +67,11 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
     wNative = _router.WETH();
     masterChef = _masterChef;
     router = _router;
-    factory = IUniswapV2Factory(_router.factory());
+    factory = IPancakeFactory(_router.factory());
     // Get lpToken and farmingToken from MasterChef pool
     pid = _pid;
     (IERC20 _lpToken, , , ) = masterChef.poolInfo(_pid);
-    lpToken = IUniswapV2Pair(address(_lpToken));
+    lpToken = IPancakePair(address(_lpToken));
     address token0 = lpToken.token0();
     address token1 = lpToken.token1();
     farmingToken = token0 == baseToken ? token1 : token0;

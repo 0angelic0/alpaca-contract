@@ -16,8 +16,14 @@ import {
   MockERC20__factory,
   MockWBNB,
   MockWBNB__factory,
+  PancakeFactory,
+  PancakeFactory__factory,
   PancakeMasterChef,
   PancakeMasterChef__factory,
+  PancakePair,
+  PancakePair__factory,
+  PancakeRouter,
+  PancakeRouter__factory,
   PancakeswapWorker,
   PancakeswapWorker__factory,
   SimpleVaultConfig,
@@ -28,12 +34,6 @@ import {
   StrategyLiquidate__factory,
   SyrupBar,
   SyrupBar__factory,
-  UniswapV2Factory,
-  UniswapV2Factory__factory,
-  UniswapV2Pair,
-  UniswapV2Pair__factory,
-  UniswapV2Router02,
-  UniswapV2Router02__factory,
   Vault,
   Vault__factory,
   WNativeRelayer,
@@ -59,10 +59,10 @@ describe('Vault - Pancake', () => {
   const KILL_FACTOR = '8000';
 
   /// Uniswap-related instance(s)
-  let factory: UniswapV2Factory;
+  let factory: PancakeFactory;
   let wbnb: MockWBNB;
-  let router: UniswapV2Router02;
-  let lp: UniswapV2Pair;
+  let router: PancakeRouter;
+  let lp: PancakePair;
 
   /// Token-related instance(s)
   let baseToken: MockERC20;
@@ -102,8 +102,8 @@ describe('Vault - Pancake', () => {
   let fairLaunchAsAlice: FairLaunch;
   let fairLaunchAsBob: FairLaunch;
 
-  let lpAsAlice: UniswapV2Pair;
-  let lpAsBob: UniswapV2Pair;
+  let lpAsAlice: PancakePair;
+  let lpAsBob: PancakePair;
 
   let pancakeMasterChefAsAlice: PancakeMasterChef;
   let pancakeMasterChefAsBob: PancakeMasterChef;
@@ -118,11 +118,11 @@ describe('Vault - Pancake', () => {
     [deployer, alice, bob, eve] = await ethers.getSigners();
 
     // Setup Uniswap
-    const UniswapV2Factory = (await ethers.getContractFactory(
-      "UniswapV2Factory",
+    const PancakeFactory = (await ethers.getContractFactory(
+      "PancakeFactory",
       deployer
-    )) as UniswapV2Factory__factory;
-    factory = await UniswapV2Factory.deploy((await deployer.getAddress()));
+    )) as PancakeFactory__factory;
+    factory = await PancakeFactory.deploy((await deployer.getAddress()));
     await factory.deployed();
 
     const WBNB = (await ethers.getContractFactory(
@@ -132,11 +132,11 @@ describe('Vault - Pancake', () => {
     wbnb = await WBNB.deploy();
     await factory.deployed();
 
-    const UniswapV2Router02 = (await ethers.getContractFactory(
-      "UniswapV2Router02",
+    const PancakeRouter = (await ethers.getContractFactory(
+      "PancakeRouter",
       deployer
-    )) as UniswapV2Router02__factory;
-    router = await UniswapV2Router02.deploy(factory.address, wbnb.address);
+    )) as PancakeRouter__factory;
+    router = await PancakeRouter.deploy(factory.address, wbnb.address);
     await router.deployed();
 
     /// Setup token stuffs
@@ -172,7 +172,7 @@ describe('Vault - Pancake', () => {
 
     /// Setup BTOKEN-FTOKEN pair on Pancakeswap
     await factory.createPair(baseToken.address, quoteToken.address);
-    lp = UniswapV2Pair__factory.connect(await factory.getPair(quoteToken.address, baseToken.address), deployer);
+    lp = PancakePair__factory.connect(await factory.getPair(quoteToken.address, baseToken.address), deployer);
     await lp.deployed();
 
     /// Setup strategy
@@ -309,8 +309,8 @@ describe('Vault - Pancake', () => {
     baseTokenAsAlice = MockERC20__factory.connect(baseToken.address, alice);
     baseTokenAsBob = MockERC20__factory.connect(baseToken.address, bob);
 
-    lpAsAlice = UniswapV2Pair__factory.connect(lp.address, alice);
-    lpAsBob = UniswapV2Pair__factory.connect(lp.address, bob);
+    lpAsAlice = PancakePair__factory.connect(lp.address, alice);
+    lpAsBob = PancakePair__factory.connect(lp.address, bob);
 
     fairLaunchAsAlice = FairLaunch__factory.connect(fairLaunch.address, alice);
     fairLaunchAsBob = FairLaunch__factory.connect(fairLaunch.address, bob);
@@ -326,8 +326,8 @@ describe('Vault - Pancake', () => {
   });
 
   context('when worker is initialized', async() => {
-    it('should has FTOKEN as a quoteToken in PancakeswapWorker', async() => {
-      expect(await pancakeswapWorker.quoteToken()).to.be.equal(quoteToken.address);
+    it('should has FTOKEN as a farmingToken in PancakeswapWorker', async() => {
+      expect(await pancakeswapWorker.farmingToken()).to.be.equal(quoteToken.address);
     });
   
     it('should give rewards out when you stake LP tokens', async() => {
@@ -532,7 +532,7 @@ describe('Vault - Pancake', () => {
       );
   
       // Her position should have ~2 NATIVE health (minus some small trading fee)
-      expect(await pancakeswapWorker.health(1)).to.be.bignumber.eq(ethers.utils.parseEther('1.996613842198591431'));
+      expect(await pancakeswapWorker.health(1)).to.be.bignumber.eq(ethers.utils.parseEther('1.998307255271658491'));
   
       // Eve comes and trigger reinvest
       await TimeHelpers.increase(TimeHelpers.duration.days(ethers.BigNumber.from('1')));

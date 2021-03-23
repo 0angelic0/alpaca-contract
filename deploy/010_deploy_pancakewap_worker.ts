@@ -18,6 +18,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   Check all variables below before execute the deployment script
   */
 
+<<<<<<< HEAD
   const VAULT_CONFIG_ADDR = '0x53dbb71303ad0F9AFa184B8f7147F9f12Bb5Dc01';
   const WORKER_CONFIG_ADDR = '0xADaBC5FC5da42c85A84e66096460C769a151A8F8';
 
@@ -38,6 +39,28 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const TIMELOCK = '0x2D5408f2287BF9F9B05404794459a846651D0a59';
   const EXACT_ETA = '1616565600';
+=======
+  const VAULT_CONFIG_ADDR = '0xbC6d2dfe97A557Bd793d07ebB0df3ea80cc990Fc';
+  const WORKER_CONFIG_ADDR = '0x8ae5e14864090E9332Ceb238F7cEa183d7C056a7';
+  
+  const REINVEST_BOT = '0xcf28b4da7d3ed29986831876b74af6e95211d3f9';
+  
+  const WORKER_NAME = "WBNB-BUSD Worker"
+  const POOL_ID = 4;
+  const VAULT_ADDR = '0xe5ed8148fE4915cE857FC648b9BdEF8Bb9491Fa5'
+  const BASE_TOKEN_ADDR = '0x0266693F9Df932aD7dA8a9b44C2129Ce8a87E81f'
+  const MASTER_CHEF_ADDR = '0xbCC50b0B0AFD19Ee83a6E79e6c01D51b16090A0B'
+  const PANCAKESWAP_ROUTER_ADDR = '0xf46A02489B99C5A4a5cC31AA3F9eBD6A501D4B49';
+  const ADD_STRAT_ADDR = '0x5D0c3a0C79fCe9c177D7140e975681447C747D05';
+  const LIQ_STRAT_ADDR = '0x3be48dD0b9AA62560AAF0bff2115cc8617A4BD70';
+  const REINVEST_BOUNTY_BPS = '300';
+  const WORK_FACTOR = '7000';
+  const KILL_FACTOR = '8333';
+  const MAX_PRICE_DIFF = '11000';
+  
+  const TIMELOCK = '0xb3c3aE82358DF7fC0bd98629D5ed91767e45c337';
+  const EXACT_ETA = '1616434200';
+>>>>>>> master
 
 
 
@@ -57,7 +80,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       VAULT_ADDR, BASE_TOKEN_ADDR, MASTER_CHEF_ADDR,
       PANCAKESWAP_ROUTER_ADDR, POOL_ID, ADD_STRAT_ADDR,
       LIQ_STRAT_ADDR, REINVEST_BOUNTY_BPS
-    ],
+    ]
   ) as PancakeswapWorker;
   await pancakeswapWorker.deployed();
   console.log(`>> Deployed at ${pancakeswapWorker.address}`);

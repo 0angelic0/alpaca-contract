@@ -4,10 +4,10 @@ import "@openzeppelin/contracts-ethereum-package/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol";
 
-import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
-import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol";
+import "@pancakeswap-libs/pancake-swap-core/contracts/interfaces/IPancakeFactory.sol";
+import "@pancakeswap-libs/pancake-swap-core/contracts/interfaces/IPancakePair.sol";
 
-import "../../apis/uniswap/IUniswapV2Router02.sol";
+import "../../apis/pancake/IPancakeRouter02.sol";
 import "../../interfaces/IStrategy.sol";
 import "../../../utils/SafeToken.sol";
 
@@ -15,15 +15,15 @@ contract StrategyWithdrawMinimizeTrading is ReentrancyGuardUpgradeSafe, IStrateg
   using SafeToken for address;
   using SafeMath for uint256;
 
-  IUniswapV2Factory public factory;
-  IUniswapV2Router02 public router;
+  IPancakeFactory public factory;
+  IPancakeRouter02 public router;
 
   /// @dev Create a new withdraw minimize trading strategy instance.
   /// @param _router The Uniswap router smart contract.
-  function initialize(IUniswapV2Router02 _router) public initializer {
+  function initialize(IPancakeRouter02 _router) public initializer {
     ReentrancyGuardUpgradeSafe.__ReentrancyGuard_init();
 
-    factory = IUniswapV2Factory(_router.factory());
+    factory = IPancakeFactory(_router.factory());
     router = _router;
   }
 
@@ -39,7 +39,7 @@ contract StrategyWithdrawMinimizeTrading is ReentrancyGuardUpgradeSafe, IStrateg
       address farmingToken,
       uint256 minFarmingToken
     ) = abi.decode(data, (address, address, uint256));
-    IUniswapV2Pair lpToken = IUniswapV2Pair(factory.getPair(farmingToken, baseToken));
+    IPancakePair lpToken = IPancakePair(factory.getPair(farmingToken, baseToken));
     // 2. Approve router to do their stuffs
     lpToken.approve(address(router), uint256(-1));
     farmingToken.safeApprove(address(router), uint256(-1));
@@ -60,7 +60,7 @@ contract StrategyWithdrawMinimizeTrading is ReentrancyGuardUpgradeSafe, IStrateg
     baseToken.safeTransfer(msg.sender, remainingBalance);
     // 6. Return remaining farming tokens to user.
     uint256 remainingFarmingToken = farmingToken.myBalance();
-    require(remainingFarmingToken >= minFarmingToken, "StrategyWithdrawMinimizeTrading::execute:: insufficient quote tokens received");
+    require(remainingFarmingToken >= minFarmingToken, "StrategyWithdrawMinimizeTrading::execute:: insufficient farming tokens received");
     if (remainingFarmingToken > 0) {
       farmingToken.safeTransfer(user, remainingFarmingToken);
     }
