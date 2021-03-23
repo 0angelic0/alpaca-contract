@@ -14,12 +14,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   ░░░╚═╝░░░╚═╝░░╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚══╝╚═╝╚═╝░░╚══╝░╚═════╝░
   Check all variables below before execute the deployment script
   */
-  const VAULT = '0xe5ed8148fE4915cE857FC648b9BdEF8Bb9491Fa5';
+  const VAULT = '0x7C9e73d4C71dae564d41F78d56439bB4ba87592f';
   const SYMBOL = 'IbBUSD';
-  const TIMELOCK = '0xb3c3aE82358DF7fC0bd98629D5ed91767e45c337';
-  const FAIR_LAUNCH = '0xac2fefDaF83285EA016BE3f5f1fb039eb800F43D';
+  const TIMELOCK = '0x2D5408f2287BF9F9B05404794459a846651D0a59';
+  const FAIR_LAUNCH = '0xA625AB01B08ce023B2a342Dbb12a16f2C8489A8F';
   const ALLOC_POINT = '0';
-  const EXACT_ETA = '1616434200';
+  const EXACT_ETA = '1616574600';
 
 
 

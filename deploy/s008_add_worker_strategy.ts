@@ -14,8 +14,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   Check all variables below before execute the deployment script
   */
 
-  const WORKER_ADDR = '0x00d078c7e058bA5106878b9e0CC09Ef1BF510925';
-  const STRATEGY_ADDR = '0x6582A80b6c23BE7ecEC23Ef28E078C1edCf12e6E';
+  const WORKER_ADDR = '0x51782E39A0aF33f542443419c223434Bb4A5a695';
+  const STRATEGY_ADDR = '0xB2dE0A949E5d5db5172d654BF532f473F79a8498';
 
 
 
