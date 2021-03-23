@@ -5,8 +5,8 @@ import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/ERC20.sol
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol";
 
-import "./apis/uniswap/UniswapV2Library.sol";
-import "./apis/uniswap/IUniswapV2Router02.sol";
+import "./apis/pancake/PancakeLibrary.sol";
+import "./apis/pancake/PancakeRouter.sol";
 import "./interfaces/IVault.sol";
 import "../utils/AlpacaMath.sol";
 import "../utils/SafeToken.sol";
@@ -14,21 +14,21 @@ import "../utils/SafeToken.sol";
 contract IbTokenRouter is OwnableUpgradeSafe {
   using SafeMath for uint256;
 
-  address public router;
+  address payable public router;
   address public token;
   address public ibToken;
   address public alpaca;
   address public lpToken;
 
-  function initialize(address _router, address _token, address _ibToken, address _alpaca) public initializer {
+  function initialize(address payable _router, address _token, address _ibToken, address _alpaca) public initializer {
     OwnableUpgradeSafe.__Ownable_init();
 
     router = _router;
     token = _token;
     ibToken = _ibToken;
     alpaca = _alpaca;
-    address factory = IUniswapV2Router02(router).factory();
-    lpToken = UniswapV2Library.pairFor(factory, ibToken, alpaca);
+    address factory = PancakeRouter(router).factory();
+    lpToken = PancakeLibrary.pairFor(factory, ibToken, alpaca);
   }
 
   // **** Token-ibToken function ****
@@ -70,7 +70,7 @@ contract IbTokenRouter is OwnableUpgradeSafe {
     IVault(ibToken).deposit(amountTokenDesired);
     uint256 amountIbTokenDesired = IERC20(ibToken).balanceOf(address(this));
     uint256 amountIbToken;
-    (amountAlpaca, amountIbToken, liquidity) = IUniswapV2Router02(router).addLiquidity(
+    (amountAlpaca, amountIbToken, liquidity) = IPancakeRouter02(router).addLiquidity(
       alpaca,
       ibToken,
       amountAlpacaDesired,
@@ -172,14 +172,14 @@ contract IbTokenRouter is OwnableUpgradeSafe {
     uint256 swapAmt;
     bool isReversed;
     {
-      (uint256 r0, uint256 r1, ) = IUniswapV2Pair(lpToken).getReserves();
-      (uint256 ibTokenReserve, uint256 alpacaReserve) = IUniswapV2Pair(lpToken).token0() == ibToken ? (r0, r1) : (r1, r0);
+      (uint256 r0, uint256 r1, ) = IPancakePair(lpToken).getReserves();
+      (uint256 ibTokenReserve, uint256 alpacaReserve) = IPancakePair(lpToken).token0() == ibToken ? (r0, r1) : (r1, r0);
       (swapAmt, isReversed) = optimalDeposit(amountIbTokenDesired, amountAlpacaDesired, ibTokenReserve, alpacaReserve);
     }
     address[] memory path = new address[](2);
     (path[0], path[1]) = isReversed ? (alpaca, ibToken) : (ibToken, alpaca);
-    IUniswapV2Router02(router).swapExactTokensForTokens(swapAmt, 0, path, address(this), now);
-    (,, liquidity) = IUniswapV2Router02(router).addLiquidity(
+    IPancakeRouter02(router).swapExactTokensForTokens(swapAmt, 0, path, address(this), now);
+    (,, liquidity) = IPancakeRouter02(router).addLiquidity(
       alpaca,
       ibToken,
       IERC20(alpaca).balanceOf(address(this)),
@@ -234,14 +234,14 @@ contract IbTokenRouter is OwnableUpgradeSafe {
     uint256 swapAmt;
     bool isReversed;
     {
-      (uint256 r0, uint256 r1, ) = IUniswapV2Pair(lpToken).getReserves();
-      (uint256 ibTokenReserve, uint256 alpacaReserve) = IUniswapV2Pair(lpToken).token0() == ibToken ? (r0, r1) : (r1, r0);
+      (uint256 r0, uint256 r1, ) = IPancakePair(lpToken).getReserves();
+      (uint256 ibTokenReserve, uint256 alpacaReserve) = IPancakePair(lpToken).token0() == ibToken ? (r0, r1) : (r1, r0);
       (swapAmt, isReversed) = optimalDeposit(amountIbTokenDesired, amountAlpacaDesired, ibTokenReserve, alpacaReserve);
     }
     address[] memory path = new address[](2);
     (path[0], path[1]) = isReversed ? (alpaca, ibToken) : (ibToken, alpaca);
-    IUniswapV2Router02(router).swapExactTokensForTokens(swapAmt, 0, path, address(this), now);
-    (,, liquidity) = IUniswapV2Router02(router).addLiquidity(
+    IPancakeRouter02(router).swapExactTokensForTokens(swapAmt, 0, path, address(this), now);
+    (,, liquidity) = IPancakeRouter02(router).addLiquidity(
       alpaca,
       ibToken,
       IERC20(alpaca).balanceOf(address(this)),
@@ -287,7 +287,7 @@ contract IbTokenRouter is OwnableUpgradeSafe {
 
     SafeToken.safeTransferFrom(lpToken, msg.sender, address(this), liquidity);
     uint256 amountIbToken;
-    (amountAlpaca, amountIbToken) = IUniswapV2Router02(router).removeLiquidity(
+    (amountAlpaca, amountIbToken) = IPancakeRouter02(router).removeLiquidity(
       alpaca,
       ibToken,
       liquidity,
@@ -329,7 +329,7 @@ contract IbTokenRouter is OwnableUpgradeSafe {
     IERC20(lpToken).approve(router, uint256(-1));
 
     SafeToken.safeTransferFrom(lpToken, msg.sender, address(this), liquidity);
-    (, uint256 removeAmountIbToken) = IUniswapV2Router02(router).removeLiquidity(
+    (, uint256 removeAmountIbToken) = IPancakeRouter02(router).removeLiquidity(
       alpaca,
       ibToken,
       liquidity,
@@ -341,7 +341,7 @@ contract IbTokenRouter is OwnableUpgradeSafe {
     address[] memory path = new address[](2);
     path[0] = ibToken;
     path[1] = alpaca;
-    IUniswapV2Router02(router).swapExactTokensForTokens(removeAmountIbToken, 0, path, to, deadline);
+    IPancakeRouter02(router).swapExactTokensForTokens(removeAmountIbToken, 0, path, to, deadline);
     SafeToken.safeTransfer(alpaca, to, IERC20(alpaca).balanceOf(address(this)));
 
     // reset approval
@@ -374,7 +374,7 @@ contract IbTokenRouter is OwnableUpgradeSafe {
     address[] memory path = new address[](2);
     path[0] = ibToken;
     path[1] = alpaca;
-    uint256[] memory swapAmounts = IUniswapV2Router02(router).swapExactTokensForTokens(IERC20(ibToken).balanceOf(address(this)), amountAlpacaOutMin, path, to, deadline);
+    uint256[] memory swapAmounts = IPancakeRouter02(router).swapExactTokensForTokens(IERC20(ibToken).balanceOf(address(this)), amountAlpacaOutMin, path, to, deadline);
     amounts = new uint256[](2);
     amounts[0] = amountExactTokenIn;
     amounts[1] = swapAmounts[1];
@@ -407,7 +407,7 @@ contract IbTokenRouter is OwnableUpgradeSafe {
     path[0] = alpaca;
     path[1] = ibToken;
     IVault(ibToken).withdraw(0);
-    uint256[] memory swapAmounts = IUniswapV2Router02(router).swapTokensForExactTokens(ibTokenForExactToken(exactTokenOut), amountAlpacaIn, path, address(this), deadline);
+    uint256[] memory swapAmounts = IPancakeRouter02(router).swapTokensForExactTokens(ibTokenForExactToken(exactTokenOut), amountAlpacaIn, path, address(this), deadline);
     IVault(ibToken).withdraw(swapAmounts[1]);
     amounts = new uint256[](2);
     amounts[0] = swapAmounts[0];
@@ -444,7 +444,7 @@ contract IbTokenRouter is OwnableUpgradeSafe {
     address[] memory path = new address[](2);
     path[0] = alpaca;
     path[1] = ibToken;
-    uint256[] memory swapAmounts = IUniswapV2Router02(router).swapExactTokensForTokens(exactAlpacaIn, 0, path, address(this), deadline);
+    uint256[] memory swapAmounts = IPancakeRouter02(router).swapExactTokensForTokens(exactAlpacaIn, 0, path, address(this), deadline);
     IVault(ibToken).withdraw(swapAmounts[1]);
     amounts = new uint256[](2);
     amounts[0] = swapAmounts[0];
@@ -482,7 +482,7 @@ contract IbTokenRouter is OwnableUpgradeSafe {
     address[] memory path = new address[](2);
     path[0] = ibToken;
     path[1] = alpaca;
-    uint256[] memory swapAmounts = IUniswapV2Router02(router).swapTokensForExactTokens(exactAlpacaOut, amountIbTokenInMax, path, to, deadline);
+    uint256[] memory swapAmounts = IPancakeRouter02(router).swapTokensForExactTokens(exactAlpacaOut, amountIbTokenInMax, path, to, deadline);
     amounts = new uint256[](2);
     amounts[0] = amountTokenIn;
     amounts[1] = swapAmounts[1];

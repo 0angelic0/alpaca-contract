@@ -18,26 +18,26 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   Check all variables below before execute the deployment script
   */
 
-  const VAULT_CONFIG_ADDR = '0x950e8137B8c0d403DCBeAb41AF1160a56862ba5a';
-  const WORKER_CONFIG_ADDR = '0xAB5AD8e7248C9b28e114723E8A43FbB0bFa98483';
-
-  const REINVEST_BOT = '';
+  const VAULT_CONFIG_ADDR = '0xbC6d2dfe97A557Bd793d07ebB0df3ea80cc990Fc';
+  const WORKER_CONFIG_ADDR = '0x8ae5e14864090E9332Ceb238F7cEa183d7C056a7';
   
-  const WORKER_NAME = "WBNB-BUSD PancakeswapWorker"
-  const POOL_ID = 5;
-  const VAULT_ADDR = '0x947fFd3352136aC34eC67895E4fd392de18157DF'
-  const BASE_TOKEN_ADDR = '0x1f1F4D015A3CE748b838f058930dea311F3b69AE'
-  const MASTER_CHEF_ADDR = '0x3d9248518Cd0B9e3e0427052AAeb8ef9e330B3B1'
-  const PANCAKESWAP_ROUTER_ADDR = '0xEAF62f7bEaC130A36b3770EFd597f7678D7182F3';
-  const ADD_STRAT_ADDR = '0x3Eb784B917804D42d84cE1693A0471Da722c6e50';
-  const LIQ_STRAT_ADDR = '0xC949fc7A2ecF161BAAeA16190D9676E48B902896';
+  const REINVEST_BOT = '0xcf28b4da7d3ed29986831876b74af6e95211d3f9';
+  
+  const WORKER_NAME = "WBNB-BUSD Worker"
+  const POOL_ID = 4;
+  const VAULT_ADDR = '0xe5ed8148fE4915cE857FC648b9BdEF8Bb9491Fa5'
+  const BASE_TOKEN_ADDR = '0x0266693F9Df932aD7dA8a9b44C2129Ce8a87E81f'
+  const MASTER_CHEF_ADDR = '0xbCC50b0B0AFD19Ee83a6E79e6c01D51b16090A0B'
+  const PANCAKESWAP_ROUTER_ADDR = '0xf46A02489B99C5A4a5cC31AA3F9eBD6A501D4B49';
+  const ADD_STRAT_ADDR = '0x5D0c3a0C79fCe9c177D7140e975681447C747D05';
+  const LIQ_STRAT_ADDR = '0x3be48dD0b9AA62560AAF0bff2115cc8617A4BD70';
   const REINVEST_BOUNTY_BPS = '300';
-  const WORK_FACTOR = '6000';
-  const KILL_FACTOR = '8000';
-  const MAX_PRICE_DIFF = '13000';
+  const WORK_FACTOR = '7000';
+  const KILL_FACTOR = '8333';
+  const MAX_PRICE_DIFF = '11000';
   
-  const TIMELOCK = '0x771F70042ebb6d2Cfc29b7BF9f3caf9F959385B8';
-  const EXACT_ETA = '1615368600';
+  const TIMELOCK = '0xb3c3aE82358DF7fC0bd98629D5ed91767e45c337';
+  const EXACT_ETA = '1616434200';
 
 
 
@@ -57,7 +57,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       VAULT_ADDR, BASE_TOKEN_ADDR, MASTER_CHEF_ADDR,
       PANCAKESWAP_ROUTER_ADDR, POOL_ID, ADD_STRAT_ADDR,
       LIQ_STRAT_ADDR, REINVEST_BOUNTY_BPS
-    ],
+    ]
   ) as PancakeswapWorker;
   await pancakeswapWorker.deployed();
   console.log(`>> Deployed at ${pancakeswapWorker.address}`);

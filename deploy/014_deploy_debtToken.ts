@@ -14,12 +14,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   ░░░╚═╝░░░╚═╝░░╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚══╝╚═╝╚═╝░░╚══╝░╚═════╝░
   Check all variables below before execute the deployment script
   */
-  const VAULT = '0x947fFd3352136aC34eC67895E4fd392de18157DF';
+  const VAULT = '0xe5ed8148fE4915cE857FC648b9BdEF8Bb9491Fa5';
   const SYMBOL = 'IbBUSD';
-  const TIMELOCK = '0x771F70042ebb6d2Cfc29b7BF9f3caf9F959385B8';
-  const FAIR_LAUNCH = '0x31402C656f48F09284755d7B97Ffd40Ea372D531';
-  const ALLOC_POINT = '100';
-  const EXACT_ETA = '1615776300';
+  const TIMELOCK = '0xb3c3aE82358DF7fC0bd98629D5ed91767e45c337';
+  const FAIR_LAUNCH = '0xac2fefDaF83285EA016BE3f5f1fb039eb800F43D';
+  const ALLOC_POINT = '0';
+  const EXACT_ETA = '1616434200';
 
 
 
@@ -34,7 +34,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     (await ethers.getSigners())[0]
   )) as DebtToken__factory;
   const debtToken = await upgrades.deployProxy(DebtToken, [
-    `debt${SYMBOL}`, `debt${SYMBOL}`, TIMELOCK]) as DebtToken;
+    `debt${SYMBOL}_V2`, `debt${SYMBOL}_V2`, TIMELOCK]) as DebtToken;
   await debtToken.deployed();
   console.log(`>> Deployed at ${debtToken.address}`);
 
