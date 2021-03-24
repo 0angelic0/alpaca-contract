@@ -157,7 +157,7 @@ describe('Pancakeswap - StrategyWithdrawMinimizeTrading', () => {
             ['address','address', 'uint256'],
             [baseToken.address, farmingToken.address, ethers.utils.parseEther('2')]),
         ),
-      ).to.be.revertedWith('StrategyWithdrawMinimizeTrading::execute:: insufficient quote tokens received')
+      ).to.be.revertedWith('StrategyWithdrawMinimizeTrading::execute:: insufficient farming tokens received')
     });
 
     it('should convert all LP tokens back to BaseToken and FTOKEN, while debt == received BaseToken', async () => {

@@ -325,6 +325,12 @@ describe('Vault - Pancake', () => {
     pancakeswapWorkerAsEve = PancakeswapWorker__factory.connect(pancakeswapWorker.address, eve);
   });
 
+  context('when update Vault\'s params', async() => {
+    it('should revert when new debtToken is token', async() => {
+      await expect(vault.updateDebtToken(baseToken.address, 1)).to.be.revertedWith('Vault::updateDebtToken:: _debtToken must not be the same as token')
+    })
+  })
+
   context('when worker is initialized', async() => {
     it('should has FTOKEN as a farmingToken in PancakeswapWorker', async() => {
       expect(await pancakeswapWorker.farmingToken()).to.be.equal(quoteToken.address);
