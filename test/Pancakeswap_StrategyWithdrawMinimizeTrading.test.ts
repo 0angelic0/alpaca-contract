@@ -3,6 +3,7 @@ import { Signer, BigNumberish, utils, Wallet } from "ethers";
 import chai from "chai";
 import { solidity } from "ethereum-waffle";
 import "@openzeppelin/test-helpers";
+import * as TestHelpers from './helpers/assert'
 import {
   MockERC20,
   MockERC20__factory,
@@ -15,7 +16,8 @@ import {
   StrategyWithdrawMinimizeTrading,
   StrategyWithdrawMinimizeTrading__factory,
   WETH,
-  WETH__factory
+  WETH__factory,
+  WNativeRelayer__factory
 } from "../typechain";
 
 chai.use(solidity);
@@ -28,6 +30,7 @@ describe('Pancakeswap - StrategyWithdrawMinimizeTrading', () => {
   let factory: PancakeFactory;
   let router: PancakeRouter;
   let lp: PancakePair;
+  let baseTokenWbnbLp: PancakePair;
 
   /// Token-related instance(s)
   let wbnb: WETH;
@@ -46,6 +49,8 @@ describe('Pancakeswap - StrategyWithdrawMinimizeTrading', () => {
   let baseTokenAsAlice: MockERC20;
   let baseTokenAsBob: MockERC20;
 
+  let baseTokenWbnbLpAsBob: PancakePair;
+
   let lpAsAlice: PancakePair;
   let lpAsBob: PancakePair;
 
@@ -57,6 +62,9 @@ describe('Pancakeswap - StrategyWithdrawMinimizeTrading', () => {
 
   let stratAsAlice: StrategyWithdrawMinimizeTrading;
   let stratAsBob: StrategyWithdrawMinimizeTrading;
+
+  let wbnbAsAlice: WETH;
+  let wbnbAsBob: WETH;
 
   beforeEach(async () => {
     [deployer, alice, bob] = await ethers.getSigners();
@@ -98,19 +106,36 @@ describe('Pancakeswap - StrategyWithdrawMinimizeTrading', () => {
     await farmingToken.mint(await bob.getAddress(), ethers.utils.parseEther('1'));
 
     await factory.createPair(baseToken.address, farmingToken.address);
+    await factory.createPair(baseToken.address, wbnb.address);
 
     lp = PancakePair__factory.connect(await factory.getPair(farmingToken.address, baseToken.address), deployer);
+    baseTokenWbnbLp = PancakePair__factory.connect(await factory.getPair(wbnb.address, baseToken.address), deployer);
 
+    /// Setup WNativeRelayer
+    const WNativeRelayer = (await ethers.getContractFactory(
+      'WNativeRelayer',
+      deployer
+    )) as WNativeRelayer__factory;
+    const wNativeRelayer = await WNativeRelayer.deploy(wbnb.address);
+    await wNativeRelayer.deployed();
+
+    /// Setup StrategyWithdrawMinimizeTrading
     const StrategyWithdrawMinimizeTrading = (await ethers.getContractFactory(
       "StrategyWithdrawMinimizeTrading",
       deployer
     )) as StrategyWithdrawMinimizeTrading__factory;
-    strat = await upgrades.deployProxy(StrategyWithdrawMinimizeTrading, [router.address]) as StrategyWithdrawMinimizeTrading;
+    strat = await upgrades.deployProxy(
+      StrategyWithdrawMinimizeTrading,
+      [router.address, wbnb.address, wNativeRelayer.address]) as StrategyWithdrawMinimizeTrading;
     await strat.deployed();
+
+    await wNativeRelayer.setCallerOk([strat.address], true);
 
     // Assign contract signer
     baseTokenAsAlice = MockERC20__factory.connect(baseToken.address, alice);
     baseTokenAsBob = MockERC20__factory.connect(baseToken.address, bob);
+
+    baseTokenWbnbLpAsBob = PancakePair__factory.connect(baseTokenWbnbLp.address, bob);
 
     farmingTokenAsAlice = MockERC20__factory.connect(farmingToken.address, alice);
     farmingTokenAsBob = MockERC20__factory.connect(farmingToken.address, bob);
@@ -123,6 +148,9 @@ describe('Pancakeswap - StrategyWithdrawMinimizeTrading', () => {
 
     stratAsAlice = StrategyWithdrawMinimizeTrading__factory.connect(strat.address, alice);
     stratAsBob = StrategyWithdrawMinimizeTrading__factory.connect(strat.address, bob);
+
+    wbnbAsAlice = WETH__factory.connect(wbnb.address, alice);
+    wbnbAsBob = WETH__factory.connect(wbnb.address, bob);
   });
 
   context('It should convert LP tokens and farming token', () => {
@@ -238,5 +266,137 @@ describe('Pancakeswap - StrategyWithdrawMinimizeTrading', () => {
       ).to.be.revertedWith('subtraction overflow')
     });
 
+  });
+
+  context('It should handle properly when the farming token is WBNB', () => {
+    beforeEach(async () => {
+      // Alice wrap BNB
+      await wbnbAsAlice.deposit({ value: ethers.utils.parseEther('0.1') });
+      // Alice adds 0.1 WBNB + 1 BaseToken
+      await baseTokenAsAlice.approve(router.address, ethers.utils.parseEther('1'));
+      await wbnbAsAlice.approve(router.address, ethers.utils.parseEther('0.1'));
+      await routerAsAlice.addLiquidity(
+        baseToken.address, wbnb.address,
+        ethers.utils.parseEther('1'), ethers.utils.parseEther('0.1'), '0', '0', await alice.getAddress(), FOREVER);
+
+      // Bob wrap BNB
+      await wbnbAsBob.deposit({ value: ethers.utils.parseEther('1') });
+      // Bob tries to add 1 WBNB + 1 BaseToken (but obviously can only add 0.1 WBNB)
+      await baseTokenAsBob.approve(router.address, ethers.utils.parseEther('1'));
+      await wbnbAsBob.approve(router.address, ethers.utils.parseEther('1'));
+      await routerAsBob.addLiquidity(
+        baseToken.address, wbnb.address,
+        ethers.utils.parseEther('1'), ethers.utils.parseEther('1'), '0', '0', await bob.getAddress(), FOREVER);
+
+      expect(await wbnb.balanceOf(await bob.getAddress())).to.be.bignumber.eq(ethers.utils.parseEther('0.9'));
+      expect(await baseTokenWbnbLp.balanceOf(await bob.getAddress())).to.be.bignumber.eq(ethers.utils.parseEther('0.316227766016837933'));
+
+      await baseTokenWbnbLpAsBob.transfer(strat.address, ethers.utils.parseEther('0.316227766016837933'));
+    });
+
+    it('should revert, Bob uses withdraw minimize trading strategy to turn LPs back to farming with an unreasonable expectation', async () => {
+      // Bob uses withdraw minimize trading strategy to turn LPs back to farming with an unreasonable expectation
+      await expect(
+        stratAsBob.execute(
+          await bob.getAddress(),
+          ethers.utils.parseEther('1'),
+          ethers.utils.defaultAbiCoder.encode(
+            ['address','address', 'uint256'],
+            [baseToken.address, wbnb.address, ethers.utils.parseEther('2')]),
+        ),
+      ).to.be.revertedWith('StrategyWithdrawMinimizeTrading::execute:: insufficient farming tokens received')
+    });
+
+    it('should convert all LP tokens back to BaseToken and BNB, while debt == received BaseToken', async () => {
+      const bobBaseTokenBefore = await baseToken.balanceOf(await bob.getAddress());
+      const bobBnbBefore = await ethers.provider.getBalance(await bob.getAddress());
+
+      // Bob uses minimize trading strategy to turn LPs back to BaseToken and BNB
+      await stratAsBob.execute(
+        await bob.getAddress(),
+        ethers.utils.parseEther('1'), // debt 1 BaseToken
+        ethers.utils.defaultAbiCoder.encode(
+          ['address','address', 'uint256'],
+          [baseToken.address, wbnb.address, ethers.utils.parseEther('0.001')])
+      );
+
+      const bobBaseTokenAfter = await baseToken.balanceOf(await bob.getAddress());
+      const bobBnbAfter = await ethers.provider.getBalance(await bob.getAddress());
+
+      expect(await baseTokenWbnbLp.balanceOf(strat.address)).to.be.bignumber.eq(ethers.utils.parseEther('0'));
+      expect(await baseTokenWbnbLp.balanceOf(await bob.getAddress())).to.be.bignumber.eq(ethers.utils.parseEther('0'));
+      // Bob still get 1 BTOKEN back due to Bob is a msg.sender
+      expect(bobBaseTokenAfter.sub(bobBaseTokenBefore)).to.be.bignumber.eq(ethers.utils.parseEther('1'));
+      TestHelpers.assertAlmostEqual(
+        ethers.utils.parseEther('1').toString(),
+        bobBnbAfter.sub(bobBnbBefore).toString()
+      );
+    });
+
+    it('should convert all LP tokens back to BaseToken and FTOKEN when debt < received BaseToken', async () => {
+      const bobBtokenBefore = await baseToken.balanceOf(await bob.getAddress());
+      const bobBnbBefore = await ethers.provider.getBalance(await bob.getAddress());
+
+      // Bob uses liquidate strategy to turn LPs back to ETH and farming token
+      await stratAsBob.execute(
+        await bob.getAddress(),
+        ethers.utils.parseEther('0.5'), // debt 0.5 ETH
+        ethers.utils.defaultAbiCoder.encode(
+          ['address', 'address', 'uint256'],
+          [baseToken.address, wbnb.address, ethers.utils.parseEther('0.001')]),
+      );
+
+      const bobBtokenAfter = await baseToken.balanceOf(await bob.getAddress());
+      const bobBnbAfter = await ethers.provider.getBalance(await bob.getAddress());
+
+      expect(await lp.balanceOf(strat.address)).to.be.bignumber.eq(ethers.utils.parseEther('0'));
+      expect(await lp.balanceOf(await bob.getAddress())).to.be.bignumber.eq(ethers.utils.parseEther('0'))
+      // Bob still get 1 BTOKEN back due to Bob is a msg.sender which get .5 debt
+      // and StrategyWithdrawMinimizeTrading returns another .5 BTOKEN
+      expect(bobBtokenAfter.sub(bobBtokenBefore)).to.be.bignumber.eq(ethers.utils.parseEther('1'));
+      TestHelpers.assertAlmostEqual(
+        ethers.utils.parseEther('0.1').toString(),
+        bobBnbAfter.sub(bobBnbBefore).toString()
+      )
+    });
+
+    it('should convert all LP tokens back to BaseToken and BNB (debt > received BaseToken, BNB is enough to cover debt)', async () => {
+      const bobBtokenBefore = await baseToken.balanceOf(await bob.getAddress());
+      const bobBnbBefore = await ethers.provider.getBalance(await bob.getAddress());
+
+      // Bob uses withdraw minimize trading strategy to turn LPs back to BaseToken and BNB
+      await stratAsBob.execute(
+        await bob.getAddress(),
+        ethers.utils.parseEther('1.2'), // debt 1.2 BaseToken
+        ethers.utils.defaultAbiCoder.encode(
+          ['address', 'address', 'uint256'],
+          [baseToken.address, wbnb.address, ethers.utils.parseEther('0.001')]),
+      );
+
+      const bobBtokenAfter = await baseToken.balanceOf(await bob.getAddress());
+      const bobBnbAfter = await ethers.provider.getBalance(await bob.getAddress());
+
+      expect(await lp.balanceOf(strat.address)).to.be.bignumber.eq(ethers.utils.parseEther('0'));
+      expect(await lp.balanceOf(await bob.getAddress())).to.be.bignumber.eq(ethers.utils.parseEther('0'));
+      // Bob still get 1.2 BTOKEN back due to Bob is a msg.sender which get 1 BTOKEN from LP
+      // and 0.2 BTOKEN from swap BNB to BTOKEN
+      expect(bobBtokenAfter.sub(bobBtokenBefore)).to.be.bignumber.eq(ethers.utils.parseEther('1.2'));
+      TestHelpers.assertAlmostEqual(
+        ethers.utils.parseEther('0.07').toString(),
+        bobBnbAfter.sub(bobBnbBefore).toString()
+      )
+    });
+
+    it('should revert when debt > received BaseToken, BNB is not enough to cover the debt', async () => {
+      await expect(
+        stratAsBob.execute(
+          await bob.getAddress(),
+          ethers.utils.parseEther('3'), // debt 3 BTOKEN
+          ethers.utils.defaultAbiCoder.encode(
+            ['address', 'address', 'uint256'],
+            [baseToken.address, wbnb.address, ethers.utils.parseEther('0.001')]),
+        ),
+      ).to.be.revertedWith('subtraction overflow')
+    });
   });
 });
