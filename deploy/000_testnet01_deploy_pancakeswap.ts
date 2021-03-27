@@ -12,7 +12,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const { deployer } = await getNamedAccounts();
 
-  await deploy('UniswapV2Factory', {
+  await deploy('PancakeFactory', {
     from: deployer,
     args: [
       deployer,
@@ -28,10 +28,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     deterministicDeployment: false,
   });
 
-  const factory = await deployments.get('UniswapV2Factory');
+  const factory = await deployments.get('PancakeFactory');
   const wbnb = await deployments.get('WBNB');
 
-  await deploy('UniswapV2Router02', {
+  await deploy('PancakeRouter', {
     from: deployer,
     args: [
       factory.address,

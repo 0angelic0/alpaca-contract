@@ -1,6 +1,6 @@
 {
   "name": "@alpaca-finance/alpaca-contract",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "scripts": {
     "compile5": "hardhat typechain --config hardhat.config.5.ts",
     "compile6": "hardhat typechain --config hardhat.config.ts",
@@ -29,6 +29,8 @@
     "deploy:mainnet:s008": "hardhat --network mainnet deploy --no-compile --reset --tags AddWorkerStrategy",
     "deploy:mainnet:s009": "hardhat --network mainnet deploy --no-compile --reset --tags TimelockChangeAdminProxy",
     "deploy:mainnet:s010": "hardhat --network mainnet deploy --no-compile --reset --tags TimelockSetParamsVaultConfig",
+    "deploy:mainnet:s011": "hardhat --network mainnet deploy --no-compile --reset --tags TimelockUpdateWorkerWorkerConfigParams",
+    "deploy:mainnet:s012": "hardhat --network mainnet deploy --no-compile --reset --tags TimelockUpdateAddStratWorkers",
     "deploy:testnet:000": "hardhat --network testnet deploy --no-compile --reset --tags Testnet",
     "deploy:testnet:001": "hardhat --network testnet deploy --no-compile --reset --tags TimeLock",
     "deploy:testnet:002": "hardhat --network testnet deploy --no-compile --reset --tags FairLaunch",
@@ -54,6 +56,8 @@
     "deploy:testnet:s008": "hardhat --network testnet deploy --no-compile --reset --tags AddWorkerStrategy",
     "deploy:testnet:s009": "hardhat --network testnet deploy --no-compile --reset --tags TimelockChangeAdminProxy",
     "deploy:testnet:s010": "hardhat --network testnet deploy --no-compile --reset --tags TimelockSetParamsVaultConfig",
+    "deploy:testnet:s011": "hardhat --network testnet deploy --no-compile --reset --tags TimelockUpdateWorkerWorkerConfigParams",
+    "deploy:testnet:s012": "hardhat --network testnet deploy --no-compile --reset --tags TimelockUpdateAddStratWorkers",
     "mainnet": "hardhat console --no-compile --network mainnet",
     "test:fairlaunch": "hardhat test --no-compile ./test/FairLaunch.test.ts",
     "test:fairlaunchv2": "hardhat test --no-compile ./test/FairLaunchV2.test.ts",
@@ -79,6 +83,7 @@
     "@nomiclabs/hardhat-ethers": "^2.0.1",
     "@nomiclabs/hardhat-etherscan": "^2.1.1",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "@pancakeswap-libs/pancake-swap-core": "^0.1.0",
     "@typechain/ethers-v5": "^5.0.0",
     "@types/chai": "^4.2.15",
     "@types/mocha": "^8.2.0",

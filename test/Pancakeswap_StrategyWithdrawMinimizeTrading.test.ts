@@ -6,14 +6,14 @@ import "@openzeppelin/test-helpers";
 import {
   MockERC20,
   MockERC20__factory,
+  PancakeFactory,
+  PancakeFactory__factory,
+  PancakePair,
+  PancakePair__factory,
+  PancakeRouter,
+  PancakeRouter__factory,
   StrategyWithdrawMinimizeTrading,
   StrategyWithdrawMinimizeTrading__factory,
-  UniswapV2Factory,
-  UniswapV2Factory__factory,
-  UniswapV2Pair,
-  UniswapV2Pair__factory,
-  UniswapV2Router02,
-  UniswapV2Router02__factory,
   WETH,
   WETH__factory
 } from "../typechain";
@@ -25,14 +25,14 @@ describe('Pancakeswap - StrategyWithdrawMinimizeTrading', () => {
   const FOREVER = '2000000000';
 
   /// Uniswap-related instance(s)
-  let factory: UniswapV2Factory;
-  let router: UniswapV2Router02;
-  let lp: UniswapV2Pair;
+  let factory: PancakeFactory;
+  let router: PancakeRouter;
+  let lp: PancakePair;
 
   /// Token-related instance(s)
-  let weth: WETH;
+  let wbnb: WETH;
   let baseToken: MockERC20;
-  let quoteToken: MockERC20;
+  let farmingToken: MockERC20;
 
   /// Strategy-ralted instance(s)
   let strat: StrategyWithdrawMinimizeTrading;
@@ -46,14 +46,14 @@ describe('Pancakeswap - StrategyWithdrawMinimizeTrading', () => {
   let baseTokenAsAlice: MockERC20;
   let baseTokenAsBob: MockERC20;
 
-  let lpAsAlice: UniswapV2Pair;
-  let lpAsBob: UniswapV2Pair;
+  let lpAsAlice: PancakePair;
+  let lpAsBob: PancakePair;
 
-  let quoteTokenAsAlice: MockERC20;
-  let quoteTokenAsBob: MockERC20;
+  let farmingTokenAsAlice: MockERC20;
+  let farmingTokenAsBob: MockERC20;
 
-  let routerAsAlice: UniswapV2Router02;
-  let routerAsBob: UniswapV2Router02;
+  let routerAsAlice: PancakeRouter;
+  let routerAsBob: PancakeRouter;
 
   let stratAsAlice: StrategyWithdrawMinimizeTrading;
   let stratAsBob: StrategyWithdrawMinimizeTrading;
@@ -61,26 +61,26 @@ describe('Pancakeswap - StrategyWithdrawMinimizeTrading', () => {
   beforeEach(async () => {
     [deployer, alice, bob] = await ethers.getSigners();
 
-    // Setup Uniswap
-    const UniswapV2Factory = (await ethers.getContractFactory(
-      "UniswapV2Factory",
+    // Setup Pancake
+    const PancakeFactory = (await ethers.getContractFactory(
+      "PancakeFactory",
       deployer
-    )) as UniswapV2Factory__factory;
-    factory = await UniswapV2Factory.deploy((await deployer.getAddress()));
+    )) as PancakeFactory__factory;
+    factory = await PancakeFactory.deploy((await deployer.getAddress()));
     await factory.deployed();
 
     const WETH = (await ethers.getContractFactory(
       "WETH",
       deployer
     )) as WETH__factory;
-    weth = await WETH.deploy();
+    wbnb = await WETH.deploy();
     await factory.deployed();
 
-    const UniswapV2Router02 = (await ethers.getContractFactory(
-      "UniswapV2Router02",
+    const PancakeRouter = (await ethers.getContractFactory(
+      "PancakeRouter",
       deployer
-    )) as UniswapV2Router02__factory;
-    router = await UniswapV2Router02.deploy(factory.address, weth.address);
+    )) as PancakeRouter__factory;
+    router = await PancakeRouter.deploy(factory.address, wbnb.address);
     await router.deployed();
 
     /// Setup token stuffs
@@ -92,14 +92,14 @@ describe('Pancakeswap - StrategyWithdrawMinimizeTrading', () => {
     await baseToken.deployed();
     await baseToken.mint(await alice.getAddress(), ethers.utils.parseEther('100'));
     await baseToken.mint(await bob.getAddress(), ethers.utils.parseEther('100'));
-    quoteToken = await upgrades.deployProxy(MockERC20, ['FTOKEN', 'FTOKEN']) as MockERC20;
-    await quoteToken.deployed();
-    await quoteToken.mint(await alice.getAddress(), ethers.utils.parseEther('1'));
-    await quoteToken.mint(await bob.getAddress(), ethers.utils.parseEther('1'));
+    farmingToken = await upgrades.deployProxy(MockERC20, ['FTOKEN', 'FTOKEN']) as MockERC20;
+    await farmingToken.deployed();
+    await farmingToken.mint(await alice.getAddress(), ethers.utils.parseEther('1'));
+    await farmingToken.mint(await bob.getAddress(), ethers.utils.parseEther('1'));
 
-    await factory.createPair(baseToken.address, quoteToken.address);
+    await factory.createPair(baseToken.address, farmingToken.address);
 
-    lp = UniswapV2Pair__factory.connect(await factory.getPair(quoteToken.address, baseToken.address), deployer);
+    lp = PancakePair__factory.connect(await factory.getPair(farmingToken.address, baseToken.address), deployer);
 
     const StrategyWithdrawMinimizeTrading = (await ethers.getContractFactory(
       "StrategyWithdrawMinimizeTrading",
@@ -112,14 +112,14 @@ describe('Pancakeswap - StrategyWithdrawMinimizeTrading', () => {
     baseTokenAsAlice = MockERC20__factory.connect(baseToken.address, alice);
     baseTokenAsBob = MockERC20__factory.connect(baseToken.address, bob);
 
-    quoteTokenAsAlice = MockERC20__factory.connect(quoteToken.address, alice);
-    quoteTokenAsBob = MockERC20__factory.connect(quoteToken.address, bob);
+    farmingTokenAsAlice = MockERC20__factory.connect(farmingToken.address, alice);
+    farmingTokenAsBob = MockERC20__factory.connect(farmingToken.address, bob);
 
-    routerAsAlice = UniswapV2Router02__factory.connect(router.address, alice);
-    routerAsBob = UniswapV2Router02__factory.connect(router.address, bob);
+    routerAsAlice = PancakeRouter__factory.connect(router.address, alice);
+    routerAsBob = PancakeRouter__factory.connect(router.address, bob);
 
-    lpAsAlice = UniswapV2Pair__factory.connect(lp.address, alice);
-    lpAsBob = UniswapV2Pair__factory.connect(lp.address, bob);
+    lpAsAlice = PancakePair__factory.connect(lp.address, alice);
+    lpAsBob = PancakePair__factory.connect(lp.address, bob);
 
     stratAsAlice = StrategyWithdrawMinimizeTrading__factory.connect(strat.address, alice);
     stratAsBob = StrategyWithdrawMinimizeTrading__factory.connect(strat.address, bob);
@@ -129,19 +129,19 @@ describe('Pancakeswap - StrategyWithdrawMinimizeTrading', () => {
     beforeEach(async () => {
       // Alice adds 0.1 FTOKEN + 1 BaseToken
       await baseTokenAsAlice.approve(router.address, ethers.utils.parseEther('1'));
-      await quoteTokenAsAlice.approve(router.address, ethers.utils.parseEther('0.1'));
+      await farmingTokenAsAlice.approve(router.address, ethers.utils.parseEther('0.1'));
       await routerAsAlice.addLiquidity(
-        baseToken.address, quoteToken.address,
+        baseToken.address, farmingToken.address,
         ethers.utils.parseEther('1'), ethers.utils.parseEther('0.1'), '0', '0', await alice.getAddress(), FOREVER);
 
       // Bob tries to add 1 FTOKEN + 1 BaseToken (but obviously can only add 0.1 FTOKEN)
       await baseTokenAsBob.approve(router.address, ethers.utils.parseEther('1'));
-      await quoteTokenAsBob.approve(router.address, ethers.utils.parseEther('1'));
+      await farmingTokenAsBob.approve(router.address, ethers.utils.parseEther('1'));
       await routerAsBob.addLiquidity(
-        baseToken.address, quoteToken.address,
+        baseToken.address, farmingToken.address,
         ethers.utils.parseEther('1'), ethers.utils.parseEther('1'), '0', '0', await bob.getAddress(), FOREVER);
 
-      expect(await quoteToken.balanceOf(await bob.getAddress())).to.be.bignumber.eq(ethers.utils.parseEther('0.9'));
+      expect(await farmingToken.balanceOf(await bob.getAddress())).to.be.bignumber.eq(ethers.utils.parseEther('0.9'));
       expect(await lp.balanceOf(await bob.getAddress())).to.be.bignumber.eq(ethers.utils.parseEther('0.316227766016837933'));
 
       await lpAsBob.transfer(strat.address, ethers.utils.parseEther('0.316227766016837933'));
@@ -155,14 +155,14 @@ describe('Pancakeswap - StrategyWithdrawMinimizeTrading', () => {
           ethers.utils.parseEther('1'),
           ethers.utils.defaultAbiCoder.encode(
             ['address','address', 'uint256'],
-            [baseToken.address, quoteToken.address, ethers.utils.parseEther('2')]),
+            [baseToken.address, farmingToken.address, ethers.utils.parseEther('2')]),
         ),
-      ).to.be.revertedWith('insufficient quote tokens received')
+      ).to.be.revertedWith('StrategyWithdrawMinimizeTrading::execute:: insufficient farming tokens received')
     });
 
     it('should convert all LP tokens back to BaseToken and FTOKEN, while debt == received BaseToken', async () => {
       const bobBaseTokenBefore = await baseToken.balanceOf(await bob.getAddress());
-      const bobFTOKENBefore = await quoteToken.balanceOf(await bob.getAddress());
+      const bobFTOKENBefore = await farmingToken.balanceOf(await bob.getAddress());
 
       // Bob uses minimize trading strategy to turn LPs back to BaseToken and FTOKEN
       await stratAsBob.execute(
@@ -170,11 +170,11 @@ describe('Pancakeswap - StrategyWithdrawMinimizeTrading', () => {
         ethers.utils.parseEther('1'), // debt 1 BaseToken
         ethers.utils.defaultAbiCoder.encode(
           ['address','address', 'uint256'],
-          [baseToken.address, quoteToken.address, ethers.utils.parseEther('0.001')])
+          [baseToken.address, farmingToken.address, ethers.utils.parseEther('0.001')])
       );
 
       const bobBaseTokenAfter = await baseToken.balanceOf(await bob.getAddress());
-      const bobFTOKENAfter = await quoteToken.balanceOf(await bob.getAddress());
+      const bobFTOKENAfter = await farmingToken.balanceOf(await bob.getAddress());
 
       expect(await lp.balanceOf(strat.address)).to.be.bignumber.eq(ethers.utils.parseEther('0'));
       expect(await lp.balanceOf(await bob.getAddress())).to.be.bignumber.eq(ethers.utils.parseEther('0'))
@@ -184,7 +184,7 @@ describe('Pancakeswap - StrategyWithdrawMinimizeTrading', () => {
 
     it('should convert all LP tokens back to BaseToken and FTOKEN when debt < received BaseToken', async () => {
       const bobBtokenBefore = await baseToken.balanceOf(await bob.getAddress());
-      const bobFtokenBefore = await quoteToken.balanceOf(await bob.getAddress());
+      const bobFtokenBefore = await farmingToken.balanceOf(await bob.getAddress());
 
       // Bob uses liquidate strategy to turn LPs back to ETH and farming token
       await stratAsBob.execute(
@@ -192,11 +192,11 @@ describe('Pancakeswap - StrategyWithdrawMinimizeTrading', () => {
         ethers.utils.parseEther('0.5'), // debt 0.5 ETH
         ethers.utils.defaultAbiCoder.encode(
           ['address', 'address', 'uint256'],
-          [baseToken.address, quoteToken.address, ethers.utils.parseEther('0.001')]),
+          [baseToken.address, farmingToken.address, ethers.utils.parseEther('0.001')]),
       );
 
       const bobBtokenAfter = await baseToken.balanceOf(await bob.getAddress());
-      const bobFtokenAfter = await quoteToken.balanceOf(await bob.getAddress());
+      const bobFtokenAfter = await farmingToken.balanceOf(await bob.getAddress());
 
       expect(await lp.balanceOf(strat.address)).to.be.bignumber.eq(ethers.utils.parseEther('0'));
       expect(await lp.balanceOf(await bob.getAddress())).to.be.bignumber.eq(ethers.utils.parseEther('0'))
@@ -206,7 +206,7 @@ describe('Pancakeswap - StrategyWithdrawMinimizeTrading', () => {
 
     it('should convert all LP tokens back to BaseToken and farming token (debt > received BaseToken, farming token is enough to cover debt)', async () => {
       const bobBtokenBefore = await baseToken.balanceOf(await bob.getAddress());
-      const bobFtokenBefore = await quoteToken.balanceOf(await bob.getAddress());
+      const bobFtokenBefore = await farmingToken.balanceOf(await bob.getAddress());
 
       // Bob uses withdraw minimize trading strategy to turn LPs back to BaseToken and farming token
       await stratAsBob.execute(
@@ -214,16 +214,16 @@ describe('Pancakeswap - StrategyWithdrawMinimizeTrading', () => {
         ethers.utils.parseEther('1.2'), // debt 1.2 BaseToken
         ethers.utils.defaultAbiCoder.encode(
           ['address', 'address', 'uint256'],
-          [baseToken.address, quoteToken.address, ethers.utils.parseEther('0.001')]),
+          [baseToken.address, farmingToken.address, ethers.utils.parseEther('0.001')]),
       );
 
       const bobBtokenAfter = await baseToken.balanceOf(await bob.getAddress());
-      const bobFtokenAfter = await quoteToken.balanceOf(await bob.getAddress());
+      const bobFtokenAfter = await farmingToken.balanceOf(await bob.getAddress());
 
       expect(await lp.balanceOf(strat.address)).to.be.bignumber.eq(ethers.utils.parseEther('0'));
       expect(await lp.balanceOf(await bob.getAddress())).to.be.bignumber.eq(ethers.utils.parseEther('0'))
       expect(bobBtokenAfter.sub(bobBtokenBefore)).to.be.bignumber.eq(ethers.utils.parseEther('1.2'));
-      expect(bobFtokenAfter.sub(bobFtokenBefore)).to.be.bignumber.eq(ethers.utils.parseEther('0.074924774322968906')); // 0.1 - 0.025 = 0.075 farming token
+      expect(bobFtokenAfter.sub(bobFtokenBefore)).to.be.bignumber.eq(ethers.utils.parseEther('0.074949899799599198')); // 0.1 - 0.025 = 0.075 farming token
     });
 
     it('should revert when debt > received BaseToken, farming token is not enough to cover the debt', async () => {
@@ -233,7 +233,7 @@ describe('Pancakeswap - StrategyWithdrawMinimizeTrading', () => {
           ethers.utils.parseEther('3'), // debt 2 BaseToken
           ethers.utils.defaultAbiCoder.encode(
             ['address', 'address', 'uint256'],
-            [baseToken.address, quoteToken.address, ethers.utils.parseEther('0.001')]),
+            [baseToken.address, farmingToken.address, ethers.utils.parseEther('0.001')]),
         ),
       ).to.be.revertedWith('subtraction overflow')
     });

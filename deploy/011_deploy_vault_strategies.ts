@@ -14,8 +14,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   Check all variables below before execute the deployment script
   */
 
-  const VAULT_ADDR = '0x947fFd3352136aC34eC67895E4fd392de18157DF';
-  const ROUTER = '0xEAF62f7bEaC130A36b3770EFd597f7678D7182F3';
+  const VAULT_ADDR = '0x7C9e73d4C71dae564d41F78d56439bB4ba87592f';
+  const ROUTER = '0x05fF2B0DB69458A0750badebc4f9e13aDd608C7F';
 
 
 

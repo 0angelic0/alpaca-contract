@@ -1,4 +1,5 @@
 {
+  "ProxyAdmin": "0x5379F32C8D5F663EACb61eeF63F722950294f452",
   "Timelock": "0x2D5408f2287BF9F9B05404794459a846651D0a59",
   "FairLaunch": {
     "address": "0xA625AB01B08ce023B2a342Dbb12a16f2C8489A8F",
@@ -32,6 +33,16 @@
       "stakingToken": "sALPACA",
       "address": "0x6F695Bd5FFD25149176629f8491A5099426Ce7a7",
       "allocPoint": 84
+    }, {
+      "id": 6,
+      "stakingToken": "debtIbBNB V2",
+      "address": "0x6A3487CE84FD83c66B83e598b18412bD1D2A55F9",
+      "allocPoint": 0
+    }, {
+      "id": 7,
+      "stakingToken": "debtIbBUSD V2",
+      "address": "0x02dA7035beD00ae645516bDb0c282A7fD4AA7442",
+      "allocPoint": 0
     }]
   },
   "Exchanges": {
@@ -77,11 +88,11 @@
     "sALPACA-ALPACA": "0x3Ee4de968E47877F432226d6a9A0DAD6EAc6001b"
   },
   "SharedStrategies": {
-    "StrategyAddBaseTokenOnly": "0xBBd3464C571db4315bebeE098381b687c8269314",
-    "StrategyLiquidate": "0xe2880836faf7FaDF094418F9E9DdDe3d132243F1"
+    "StrategyAddBaseTokenOnly": "0x1DBa79e73a7Ea9749fc28B921bc9431D09BEf2B5",
+    "StrategyLiquidate": "0xc7c025aA69F4b525E3F9f5186b524492ee1C86bB"
   },
   "SharedConfig": {
-    "TripleSlopeModel": "0x607Ed45D4837e93158CD39aAfd292340Ed5F5D9F",
+    "TripleSlopeModel": "0xAE9ee567dcbbce85cceA1d1b0cdd595E3C73F1EE",
     "WNativeRelayer": "0xE1D2CA01bc88F325fF7266DD2165944f3CAf0D3D",
     "WorkerConfig": "0xADaBC5FC5da42c85A84e66096460C769a151A8F8"
   },
@@ -92,77 +103,62 @@
     "name": "Interest Bearing BNB",
     "symbol": "ibWBNB",
     "address": "0xd7D069493685A581d27824Fc46EdA46B7EfC0063",
-    "debtToken": "0x5138133f0671071D8b8F1C4c180881bfCfe22CeC",
+    "debtToken": "0x6A3487CE84FD83c66B83e598b18412bD1D2A55F9",
     "config": "0x53dbb71303ad0F9AFa184B8f7147F9f12Bb5Dc01",
-    "StrategyAddTwoSidesOptimal": "",
+    "StrategyAddTwoSidesOptimal": "0xd408E19fD8474DEB0aa917DF123F6eafcFC590eD",
     "workers": [{
       "name": "CAKE-WBNB PancakeswapWorker",
-      "address": "",
-      "config": "",
-      "baseToken": "",
-      "quoteToken": "",
-      "masterChef": "",
-      "strategies": [{
-        "StrategyAddTwoSidesOptimal": "",
-        "StrategyAddAllBaseToken": "",
-        "StrategyLiquidate": ""
-      }]
+      "address": "0x7Af938f0EFDD98Dc513109F6A7E85106D26E16c4",
+      "config": "0xADaBC5FC5da42c85A84e66096460C769a151A8F8",
+      "strategies": {
+        "StrategyAddTwoSidesOptimal": "0xd408E19fD8474DEB0aa917DF123F6eafcFC590eD",
+        "StrategyAddAllBaseToken": "0x1DBa79e73a7Ea9749fc28B921bc9431D09BEf2B5",
+        "StrategyLiquidate": "0xc7c025aA69F4b525E3F9f5186b524492ee1C86bB"
+      }
     }, {
       "name": "BTCB-WBNB PancakeswapWorker",
-      "address": "",
-      "config": "",
-      "baseToken": "",
-      "quoteToken": "",
-      "masterChef": "",
-      "strategies": [{
-        "StrategyAddTwoSidesOptimal": "",
-        "StrategyAddAllBaseToken": "",
-        "StrategyLiquidate": ""
-      }]
+      "address": "0x0aD12Bc160B523E7aBfBe3ABaDceE8F1b6116089",
+      "config": "0xADaBC5FC5da42c85A84e66096460C769a151A8F8",
+      "strategies": {
+        "StrategyAddTwoSidesOptimal": "0xd408E19fD8474DEB0aa917DF123F6eafcFC590eD",
+        "StrategyAddAllBaseToken": "0x1DBa79e73a7Ea9749fc28B921bc9431D09BEf2B5",
+        "StrategyLiquidate": "0xc7c025aA69F4b525E3F9f5186b524492ee1C86bB"
+      }
     }, {
       "name": "ETH-WBNB PancakeswapWorker",
-      "address": "",
-      "config": "",
-      "baseToken": "",
-      "quoteToken": "",
-      "masterChef": "",
-      "strategies": [{
-        "StrategyAddTwoSidesOptimal": "",
-        "StrategyAddAllBaseToken": "",
-        "StrategyLiquidate": ""
-      }]
+      "address": "0x831332f94C4A0092040b28ECe9377AfEfF34B25a",
+      "config": "0xADaBC5FC5da42c85A84e66096460C769a151A8F8",
+      "strategies": {
+        "StrategyAddTwoSidesOptimal": "0xd408E19fD8474DEB0aa917DF123F6eafcFC590eD",
+        "StrategyAddAllBaseToken": "0x1DBa79e73a7Ea9749fc28B921bc9431D09BEf2B5",
+        "StrategyLiquidate": "0xc7c025aA69F4b525E3F9f5186b524492ee1C86bB"
+      }
     }]
   }, {
     "name": "Interest Bearing BUSD",
     "symbol": "ibBUSD",
     "address": "0x7C9e73d4C71dae564d41F78d56439bB4ba87592f",
-    "debtToken": "0xD19D6253D979cCF663869fee30b8e0Ac86029ebd",
+    "debtToken": "0x02dA7035beD00ae645516bDb0c282A7fD4AA7442",
     "config": "0xd7b805E88c5F52EDE71a9b93F7048c8d632DBEd4",
-    "StrategyAddTwoSidesOptimal": "",
+    "StrategyAddTwoSidesOptimal": "0xB2dE0A949E5d5db5172d654BF532f473F79a8498",
     "workers": [{
       "name": "USDT-BUSD PancakeswapWorker",
-      "address": "",
-      "config": "",
-      "baseToken": "",
-      "quoteToken": "",
-      "masterChef": "",
-      "strategies": [{
-        "StrategyAddTwoSidesOptimal": "",
-        "StrategyAddAllBaseToken": "",
-        "StrategyLiquidate": ""
-      }]
+      "address": "0xC5954CA8988988362f60498d5aDEc67BA466492B",
+      "config": "0xADaBC5FC5da42c85A84e66096460C769a151A8F8",
+      "strategies": {
+        "StrategyAddTwoSidesOptimal": "0xB2dE0A949E5d5db5172d654BF532f473F79a8498",
+        "StrategyAddAllBaseToken": "0x1DBa79e73a7Ea9749fc28B921bc9431D09BEf2B5",
+        "StrategyLiquidate": "0xc7c025aA69F4b525E3F9f5186b524492ee1C86bB"
+      }
     }, {
       "name": "WBNB-BUSD PancakeswapWorker",
-      "address": "",
-      "config": "",
-      "baseToken": "",
-      "quoteToken": "",
-      "masterChef": "",
-      "strategies": [{
-        "StrategyAddTwoSidesOptimal": "",
-        "StrategyAddAllBaseToken": "",
-        "StrategyLiquidate": ""
-      }]
+      "address": "0x51782E39A0aF33f542443419c223434Bb4A5a695",
+      "config": "0xADaBC5FC5da42c85A84e66096460C769a151A8F8",
+      "strategies": {
+        "StrategyAddTwoSidesOptimal": "0xB2dE0A949E5d5db5172d654BF532f473F79a8498",
+        "StrategyAddAllBaseToken": "0x1DBa79e73a7Ea9749fc28B921bc9431D09BEf2B5",
+        "StrategyLiquidate": "0xc7c025aA69F4b525E3F9f5186b524492ee1C86bB"
+      }
     }]
   }]
 }

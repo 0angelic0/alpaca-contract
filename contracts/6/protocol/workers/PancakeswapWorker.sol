@@ -6,10 +6,10 @@ import "@openzeppelin/contracts-ethereum-package/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol";
 
-import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
-import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol";
+import "@pancakeswap-libs/pancake-swap-core/contracts/interfaces/IPancakeFactory.sol";
+import "@pancakeswap-libs/pancake-swap-core/contracts/interfaces/IPancakePair.sol";
 
-import "../apis/uniswap/IUniswapV2Router02.sol";
+import "../apis/pancake/IPancakeRouter02.sol";
 import "../interfaces/IStrategy.sol";
 import "../interfaces/IWorker.sol";
 import "../interfaces/IPancakeMasterChef.sol";
@@ -29,12 +29,12 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
 
   /// @notice Immutable variables
   IPancakeMasterChef public masterChef;
-  IUniswapV2Factory public factory;
-  IUniswapV2Router02 public router;
-  IUniswapV2Pair public override lpToken;
+  IPancakeFactory public factory;
+  IPancakeRouter02 public router;
+  IPancakePair public override lpToken;
   address public wNative;
   address public baseToken;
-  address public quoteToken;
+  address public farmingToken;
   address public cake;
   address public operator;
   uint256 public pid;
@@ -47,12 +47,13 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
   IStrategy public liqStrat;
   uint256 public reinvestBountyBps;
   uint256 public maxReinvestBountyBps;
+  mapping(address => bool) public okReinvestors;
 
   function initialize(
     address _operator,
     address _baseToken,
     IPancakeMasterChef _masterChef,
-    IUniswapV2Router02 _router,
+    IPancakeRouter02 _router,
     uint256 _pid,
     IStrategy _addStrat,
     IStrategy _liqStrat,
@@ -66,14 +67,14 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
     wNative = _router.WETH();
     masterChef = _masterChef;
     router = _router;
-    factory = IUniswapV2Factory(_router.factory());
-    // Get lpToken and quoteToken from MasterChef pool
+    factory = IPancakeFactory(_router.factory());
+    // Get lpToken and farmingToken from MasterChef pool
     pid = _pid;
     (IERC20 _lpToken, , , ) = masterChef.poolInfo(_pid);
-    lpToken = IUniswapV2Pair(address(_lpToken));
+    lpToken = IPancakePair(address(_lpToken));
     address token0 = lpToken.token0();
     address token1 = lpToken.token1();
-    quoteToken = token0 == baseToken ? token1 : token0;
+    farmingToken = token0 == baseToken ? token1 : token0;
     cake = address(masterChef.cake());
     addStrat = _addStrat;
     liqStrat = _liqStrat;
@@ -91,9 +92,15 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
     _;
   }
 
-  /// @dev Require that the caller must be the operator (the bank).
+  /// @dev Require that the caller must be the operator.
   modifier onlyOperator() {
     require(msg.sender == operator, "PancakeswapWorker::onlyOperator:: not operator");
+    _;
+  }
+
+  //// @dev Require that the caller must be ok reinvestor.
+  modifier onlyReinvestor() {
+    require(okReinvestors[msg.sender], "PancakeswapWorker::onlyReinvestor:: not reinvestor");
     _;
   }
 
@@ -114,7 +121,7 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
   }
 
   /// @dev Re-invest whatever this worker has earned back to staked LP tokens.
-  function reinvest() public override onlyEOA nonReentrant {
+  function reinvest() public override onlyEOA onlyReinvestor nonReentrant {
     // 1. Approve tokens
     cake.safeApprove(address(router), uint256(-1));
     address(lpToken).safeApprove(address(masterChef), uint256(-1));
@@ -140,7 +147,7 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
     router.swapExactTokensForTokens(reward.sub(bounty), 0, path, address(this), now);
     // 5. Use add Token strategy to convert all BaseToken to LP tokens.
     baseToken.safeTransfer(address(addStrat), baseToken.myBalance());
-    addStrat.execute(address(0), 0, abi.encode(baseToken, quoteToken, 0));
+    addStrat.execute(address(0), 0, abi.encode(baseToken, farmingToken, 0));
     // 6. Mint more LP tokens and stake them for more rewards.
     masterChef.deposit(pid, lpToken.balanceOf(address(this)));
     // 7. Reset approve
@@ -192,15 +199,15 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
     // 1. Get the position's LP balance and LP total supply.
     uint256 lpBalance = shareToBalance(shares[id]);
     uint256 lpSupply = lpToken.totalSupply(); // Ignore pending mintFee as it is insignificant
-    // 2. Get the pool's total supply of BaseToken and QuoteToken.
+    // 2. Get the pool's total supply of BaseToken and FarmingToken.
     (uint256 r0, uint256 r1,) = lpToken.getReserves();
-    (uint256 totalBaseToken, uint256 totalQuoteToken) = lpToken.token0() == baseToken ? (r0, r1) : (r1, r0);
+    (uint256 totalBaseToken, uint256 totalFarmingToken) = lpToken.token0() == baseToken ? (r0, r1) : (r1, r0);
     // 3. Convert the position's LP tokens to the underlying assets.
     uint256 userBaseToken = lpBalance.mul(totalBaseToken).div(lpSupply);
-    uint256 userQuoteToken = lpBalance.mul(totalQuoteToken).div(lpSupply);
-    // 4. Convert all QuoteToken to BaseToken and return total BaseToken.
+    uint256 userFarmingToken = lpBalance.mul(totalFarmingToken).div(lpSupply);
+    // 4. Convert all FarmingToken to BaseToken and return total BaseToken.
     return getMktSellAmount(
-      userQuoteToken, totalQuoteToken.sub(userQuoteToken), totalBaseToken.sub(userBaseToken)
+      userFarmingToken, totalFarmingToken.sub(userFarmingToken), totalBaseToken.sub(userBaseToken)
     ).add(userBaseToken);
   }
 
@@ -210,7 +217,7 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
     // 1. Convert the position back to LP tokens and use liquidate strategy.
     _removeShare(id);
     lpToken.transfer(address(liqStrat), lpToken.balanceOf(address(this)));
-    liqStrat.execute(address(0), 0, abi.encode(baseToken, quoteToken, 0));
+    liqStrat.execute(address(0), 0, abi.encode(baseToken, farmingToken, 0));
     // 2. Return all available BaseToken back to the operator.
     uint256 wad = baseToken.myBalance();
     baseToken.safeTransfer(msg.sender, wad);
@@ -269,6 +276,16 @@ contract PancakeswapWorker is OwnableUpgradeSafe, ReentrancyGuardUpgradeSafe, IW
     uint256 len = strats.length;
     for (uint256 idx = 0; idx < len; idx++) {
       okStrats[strats[idx]] = isOk;
+    }
+  }
+
+  /// @dev Set the given address's to be reinvestor.
+  /// @param reinvestors The reinvest bot addresses.
+  /// @param isOk Whether to approve or unapprove the given strategies.
+  function setReinvestorOk(address[] calldata reinvestors, bool isOk) external override onlyOwner {
+    uint256 len = reinvestors.length;
+    for (uint256 idx = 0; idx < len; idx++) {
+      okReinvestors[reinvestors[idx]] = isOk;
     }
   }
 

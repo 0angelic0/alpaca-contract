@@ -25,7 +25,7 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
   event AddDebt(uint256 indexed id, uint256 debtShare);
   event RemoveDebt(uint256 indexed id, uint256 debtShare);
   event Work(uint256 indexed id, uint256 loan);
-  event Kill(uint256 indexed id, address indexed killer, uint256 prize, uint256 left);
+  event Kill(uint256 indexed id, address indexed killer, address owner, uint256 posVal, uint256 debt, uint256 prize, uint256 left);
 
   /// @dev Flags for manage execution scope
   uint private constant _NOT_ENTERED = 1;
@@ -303,17 +303,19 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
     // 1. Verify that the position is eligible for liquidation.
     Position storage pos = positions[id];
     require(pos.debtShare > 0, "Vault::kill:: no debt");
+    // 2. Distribute ALPACAs in FairLaunch to owner
+    _fairLaunchWithdraw(id);
     uint256 debt = _removeDebt(id);
     uint256 health = IWorker(pos.worker).health(id);
     uint256 killFactor = config.killFactor(pos.worker, debt);
     require(health.mul(killFactor) < debt.mul(10000), "Vault::kill:: can't liquidate");
-    // 2. Perform liquidation and compute the amount of token received.
+    // 3. Perform liquidation and compute the amount of token received.
     uint256 beforeToken = SafeToken.myBalance(token);
     IWorker(pos.worker).liquidate(id);
     uint256 back = SafeToken.myBalance(token).sub(beforeToken);
     uint256 prize = back.mul(config.getKillBps()).div(10000);
     uint256 rest = back.sub(prize);
-    // 3. Clear position debt and return funds to liquidator and position owner.
+    // 4. Clear position debt and return funds to liquidator and position owner.
     if (prize > 0) {
       if (token == config.getWrappedNativeAddr()) {
         SafeToken.safeTransfer(token, config.getWNativeRelayer(), prize);
@@ -333,9 +335,7 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
         SafeToken.safeTransfer(token, pos.owner, left);
       }
     }
-    // 4. Distribute ALPACAs in FairLaunch to owner
-    _fairLaunchWithdraw(id);
-    emit Kill(id, msg.sender, prize, left);
+    emit Kill(id, msg.sender, pos.owner, health, debt, prize, left);
   }
 
   /// @dev Internal function to add the given debt value to the given position.
@@ -373,6 +373,7 @@ contract Vault is IVault, ERC20UpgradeSafe, ReentrancyGuardUpgradeSafe, OwnableU
   /// @dev Update debtToken to a new address. Must only be called by owner.
   /// @param _debtToken The new DebtToken
   function updateDebtToken(address _debtToken, uint256 _newPid) external onlyOwner {
+    require(_debtToken != token, "Vault::updateDebtToken:: _debtToken must not be the same as token");
     address[] memory okHolders = new address[](2);
     okHolders[0] = address(this);
     okHolders[1] = config.getFairLaunchAddr();

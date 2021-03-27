@@ -14,8 +14,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   Check all variables below before execute the deployment script
   */
 
-  const WORKER_ADDR = '0xF3ECC0e5c238C7082fC59e682104DEA2f49A3787';
-  const STRATEGY_ADDR = '0xA4047bdA5288BC718E4a3De68781dA4D7e801e82';
+  const WORKER_ADDR = '0x51782E39A0aF33f542443419c223434Bb4A5a695';
+  const STRATEGY_ADDR = '0xB2dE0A949E5d5db5172d654BF532f473F79a8498';
 
 
 
@@ -31,7 +31,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     WORKER_ADDR, (await ethers.getSigners())[0]);
 
   console.log(">> Setting Strategy for a Worker");
-  worker.setStrategyOk([STRATEGY_ADDR], true);
+  await worker.setStrategyOk([STRATEGY_ADDR], true);
   console.log("✅ Done");
 };
 
