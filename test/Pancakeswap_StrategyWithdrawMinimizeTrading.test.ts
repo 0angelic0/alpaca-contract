@@ -312,12 +312,14 @@ describe('Pancakeswap - StrategyWithdrawMinimizeTrading', () => {
       const bobBnbBefore = await ethers.provider.getBalance(await bob.getAddress());
 
       // Bob uses minimize trading strategy to turn LPs back to BaseToken and BNB
+      // set gasPrice = 0 in order to assert native balance movement easier
       await stratAsBob.execute(
         await bob.getAddress(),
         ethers.utils.parseEther('1'), // debt 1 BaseToken
         ethers.utils.defaultAbiCoder.encode(
           ['address','address', 'uint256'],
-          [baseToken.address, wbnb.address, ethers.utils.parseEther('0.001')])
+          [baseToken.address, wbnb.address, ethers.utils.parseEther('0.001')]),
+        { gasPrice: 0 }
       );
 
       const bobBaseTokenAfter = await baseToken.balanceOf(await bob.getAddress());
@@ -328,7 +330,7 @@ describe('Pancakeswap - StrategyWithdrawMinimizeTrading', () => {
       // Bob still get 1 BTOKEN back due to Bob is a msg.sender
       expect(bobBaseTokenAfter.sub(bobBaseTokenBefore)).to.be.bignumber.eq(ethers.utils.parseEther('1'));
       TestHelpers.assertAlmostEqual(
-        ethers.utils.parseEther('1').toString(),
+        ethers.utils.parseEther('0.1').toString(),
         bobBnbAfter.sub(bobBnbBefore).toString()
       );
     });
@@ -338,12 +340,14 @@ describe('Pancakeswap - StrategyWithdrawMinimizeTrading', () => {
       const bobBnbBefore = await ethers.provider.getBalance(await bob.getAddress());
 
       // Bob uses liquidate strategy to turn LPs back to ETH and farming token
+      // set gasPrice = 0 in order to assert native balance movement easier
       await stratAsBob.execute(
         await bob.getAddress(),
         ethers.utils.parseEther('0.5'), // debt 0.5 ETH
         ethers.utils.defaultAbiCoder.encode(
           ['address', 'address', 'uint256'],
           [baseToken.address, wbnb.address, ethers.utils.parseEther('0.001')]),
+        { gasPrice: 0 }
       );
 
       const bobBtokenAfter = await baseToken.balanceOf(await bob.getAddress());
@@ -365,12 +369,14 @@ describe('Pancakeswap - StrategyWithdrawMinimizeTrading', () => {
       const bobBnbBefore = await ethers.provider.getBalance(await bob.getAddress());
 
       // Bob uses withdraw minimize trading strategy to turn LPs back to BaseToken and BNB
+      // set gasPrice = 0 in order to assert native balance movement easier
       await stratAsBob.execute(
         await bob.getAddress(),
         ethers.utils.parseEther('1.2'), // debt 1.2 BaseToken
         ethers.utils.defaultAbiCoder.encode(
           ['address', 'address', 'uint256'],
           [baseToken.address, wbnb.address, ethers.utils.parseEther('0.001')]),
+        { gasPrice: 0 },
       );
 
       const bobBtokenAfter = await baseToken.balanceOf(await bob.getAddress());
@@ -382,7 +388,7 @@ describe('Pancakeswap - StrategyWithdrawMinimizeTrading', () => {
       // and 0.2 BTOKEN from swap BNB to BTOKEN
       expect(bobBtokenAfter.sub(bobBtokenBefore)).to.be.bignumber.eq(ethers.utils.parseEther('1.2'));
       TestHelpers.assertAlmostEqual(
-        ethers.utils.parseEther('0.07').toString(),
+        ethers.utils.parseEther('0.074949899799599198').toString(),
         bobBnbAfter.sub(bobBnbBefore).toString()
       )
     });
