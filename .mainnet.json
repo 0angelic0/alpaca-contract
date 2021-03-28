@@ -105,6 +105,7 @@
     "address": "0xd7D069493685A581d27824Fc46EdA46B7EfC0063",
     "debtToken": "0x6A3487CE84FD83c66B83e598b18412bD1D2A55F9",
     "config": "0x53dbb71303ad0F9AFa184B8f7147F9f12Bb5Dc01",
+    "tripleSlopeModel": "0xAE9ee567dcbbce85cceA1d1b0cdd595E3C73F1EE",
     "StrategyAddTwoSidesOptimal": "0xd408E19fD8474DEB0aa917DF123F6eafcFC590eD",
     "workers": [{
       "name": "CAKE-WBNB PancakeswapWorker",
@@ -140,6 +141,7 @@
     "address": "0x7C9e73d4C71dae564d41F78d56439bB4ba87592f",
     "debtToken": "0x02dA7035beD00ae645516bDb0c282A7fD4AA7442",
     "config": "0xd7b805E88c5F52EDE71a9b93F7048c8d632DBEd4",
+    "tripleSlopeModel": "0xAE9ee567dcbbce85cceA1d1b0cdd595E3C73F1EE",
     "StrategyAddTwoSidesOptimal": "0xB2dE0A949E5d5db5172d654BF532f473F79a8498",
     "workers": [{
       "name": "USDT-BUSD PancakeswapWorker",

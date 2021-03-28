@@ -891,8 +891,8 @@ describe('Vault - Pancake', () => {
       // Alice liquidates Bob position#1
       let aliceBefore = await baseToken.balanceOf(await alice.getAddress());
 
-      await expect(vaultAsEve.kill('1'))
-        .to.emit(vaultAsEve, 'Kill')
+      await expect(vaultAsAlice.kill('1'))
+        .to.emit(vaultAsAlice, 'Kill')
 
       let aliceAfter = await baseToken.balanceOf(await alice.getAddress());
 
@@ -902,13 +902,13 @@ describe('Vault - Pancake', () => {
         (await baseToken.balanceOf(vault.address)).toString(),
       );
       // Alice is liquidator, Alice should receive 10% Kill prize
-      // BTOKEN back from liquidation 0.003002999235795062, 10% of 0.003002999235795062 is 0.000300299923579506
+      // BTOKEN back from liquidation 0.00300099799424023, 10% of 0.00300099799424023 is 0.000300099799424023
       AssertHelpers.assertAlmostEqual(
-        ethers.utils.parseEther('0.000300299923579506').toString(),
+        ethers.utils.parseEther('0.000300099799424023').toString(),
         aliceAfter.sub(aliceBefore).toString(),
       );
   
-      // Alice withdraws 2 gNATIVE
+      // Alice withdraws 2 BOKTEN
       aliceBefore = await baseToken.balanceOf(await alice.getAddress());
       await vaultAsAlice.withdraw(await vault.balanceOf(await alice.getAddress()));
       aliceAfter = await baseToken.balanceOf(await alice.getAddress());
