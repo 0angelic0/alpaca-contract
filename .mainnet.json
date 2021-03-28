@@ -141,7 +141,7 @@
     "address": "0x7C9e73d4C71dae564d41F78d56439bB4ba87592f",
     "debtToken": "0x02dA7035beD00ae645516bDb0c282A7fD4AA7442",
     "config": "0xd7b805E88c5F52EDE71a9b93F7048c8d632DBEd4",
-    "tripleSlopeModel": "0xAE9ee567dcbbce85cceA1d1b0cdd595E3C73F1EE",
+    "tripleSlopeModel": "0x4eD10EB92c4e92bE4d368433e009646E4ABdAB05",
     "StrategyAddTwoSidesOptimal": "0xB2dE0A949E5d5db5172d654BF532f473F79a8498",
     "workers": [{
       "name": "USDT-BUSD PancakeswapWorker",
