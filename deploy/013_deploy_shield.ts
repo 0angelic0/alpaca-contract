@@ -14,9 +14,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   Check all variables below before execute the deployment script
   */
 
-  const TIMELOCK = ''; // Timelock address
-  const FAIRLAUNCHV1 = ''; // FairLaunchV1 address
-  const TIMELOCK_TRANSFEROWNERSHIP_ETA = ''; // exact eta where ownership's FLV1 need to be transferred to Shield
+  const TIMELOCK = '0x2D5408f2287BF9F9B05404794459a846651D0a59'; // Timelock address
+  const FAIRLAUNCHV1 = '0xA625AB01B08ce023B2a342Dbb12a16f2C8489A8F'; // FairLaunchV1 address
+  const TIMELOCK_TRANSFEROWNERSHIP_ETA = '1617102000'; // exact eta where ownership's FLV1 need to be transferred to Shield
 
 
 
