@@ -1,6 +1,7 @@
 {
   "ProxyAdmin": "0x2c6c09b46d00A88161B7e4AcFaFEc58990548aC2",
   "Timelock": "0xb3c3aE82358DF7fC0bd98629D5ed91767e45c337",
+  "Shield": "0x938350DF8BF3bD81Baae368b72132f1Bd14E7C13",
   "FairLaunch": {
     "address": "0xac2fefDaF83285EA016BE3f5f1fb039eb800F43D",
     "pools": [{
@@ -90,7 +91,8 @@
   },
   "SharedStrategies": {
     "StrategyAddBaseTokenOnly": "0x5D0c3a0C79fCe9c177D7140e975681447C747D05",
-    "StrategyLiquidate": "0x3be48dD0b9AA62560AAF0bff2115cc8617A4BD70"
+    "StrategyLiquidate": "0x3be48dD0b9AA62560AAF0bff2115cc8617A4BD70",
+    "StrategyWithdrawMinimizeTrading": "0x7Db9Be22E449153bb86ABeeF5D6e4C5b72E4F5B8"
   },
   "SharedConfig": {
     "TripleSlopeModel": "0x2Fe7097cf766DfE06f9e2eD3021f8a4bbEf468Dd",
@@ -106,6 +108,7 @@
     "address": "0xf9d32C5E10Dd51511894b360e6bD39D7573450F9",
     "debtToken": "0x2E0384Bc38E250639291D6710EDC3d5034e95996",
     "config": "0x037F4b0d074B83d075EC3B955F69BaB9977bdb05",
+    "tripleSlopeModel": "0x2Fe7097cf766DfE06f9e2eD3021f8a4bbEf468Dd",
     "StrategyAddTwoSidesOptimal": "0x9c79F9eac99Af00A75599625895f5619Da9d19e0",
     "workers": [{
       "name": "CAKE-WBNB PancakeswapWorker",
@@ -114,7 +117,8 @@
       "strategies": {
         "StrategyAddAllBaseToken": "0x5D0c3a0C79fCe9c177D7140e975681447C747D05",
         "StrategyLiquidate": "0x3be48dD0b9AA62560AAF0bff2115cc8617A4BD70",
-        "StrategyAddTwoSidesOptimal": "0x9c79F9eac99Af00A75599625895f5619Da9d19e0"
+        "StrategyAddTwoSidesOptimal": "0x9c79F9eac99Af00A75599625895f5619Da9d19e0",
+        "StrategyWithdrawMinimizeTrading": "0x7Db9Be22E449153bb86ABeeF5D6e4C5b72E4F5B8"
       }
     }, {
       "name": "BTCB-WBNB PancakeswapWorker",
@@ -123,7 +127,8 @@
       "strategies": {
         "StrategyAddAllBaseToken": "0x5D0c3a0C79fCe9c177D7140e975681447C747D05",
         "StrategyLiquidate": "0x3be48dD0b9AA62560AAF0bff2115cc8617A4BD70",
-        "StrategyAddTwoSidesOptimal": "0x9c79F9eac99Af00A75599625895f5619Da9d19e0"
+        "StrategyAddTwoSidesOptimal": "0x9c79F9eac99Af00A75599625895f5619Da9d19e0",
+        "StrategyWithdrawMinimizeTrading": "0x7Db9Be22E449153bb86ABeeF5D6e4C5b72E4F5B8"
       }
     }, {
       "name": "ETH-WBNB PancakeswapWorker",
@@ -132,7 +137,8 @@
       "strategies": {
         "StrategyAddAllBaseToken": "0x5D0c3a0C79fCe9c177D7140e975681447C747D05",
         "StrategyLiquidate": "0x3be48dD0b9AA62560AAF0bff2115cc8617A4BD70",
-        "StrategyAddTwoSidesOptimal": "0x9c79F9eac99Af00A75599625895f5619Da9d19e0"
+        "StrategyAddTwoSidesOptimal": "0x9c79F9eac99Af00A75599625895f5619Da9d19e0",
+        "StrategyWithdrawMinimizeTrading": "0x7Db9Be22E449153bb86ABeeF5D6e4C5b72E4F5B8"
       }
     }]
   }, {
@@ -141,6 +147,7 @@
     "address": "0xe5ed8148fE4915cE857FC648b9BdEF8Bb9491Fa5",
     "debtToken": "0x49974bc28f1920A603aa8dffB3C61b4CD5B26710",
     "config": "0xbC6d2dfe97A557Bd793d07ebB0df3ea80cc990Fc",
+    "tripleSlopeModel": "0x2Fe7097cf766DfE06f9e2eD3021f8a4bbEf468Dd",
     "StrategyAddTwoSidesOptimal": "0x6582A80b6c23BE7ecEC23Ef28E078C1edCf12e6E",
     "workers": [{
       "name": "USDT-BUSD PancakeswapWorker",
@@ -149,7 +156,8 @@
       "strategies": {
         "StrategyAddAllBaseToken": "0x5D0c3a0C79fCe9c177D7140e975681447C747D05",
         "StrategyLiquidate": "0x3be48dD0b9AA62560AAF0bff2115cc8617A4BD70",
-        "StrategyAddTwoSidesOptimal": "0x6582A80b6c23BE7ecEC23Ef28E078C1edCf12e6E"
+        "StrategyAddTwoSidesOptimal": "0x6582A80b6c23BE7ecEC23Ef28E078C1edCf12e6E",
+        "StrategyWithdrawMinimizeTrading": "0x7Db9Be22E449153bb86ABeeF5D6e4C5b72E4F5B8"
       }
     }, {
       "name": "WBNB-BUSD PancakeswapWorker",
@@ -158,7 +166,8 @@
       "strategies": {
         "StrategyAddAllBaseToken": "0x5D0c3a0C79fCe9c177D7140e975681447C747D05",
         "StrategyLiquidate": "0x3be48dD0b9AA62560AAF0bff2115cc8617A4BD70",
-        "StrategyAddTwoSidesOptimal": "0x6582A80b6c23BE7ecEC23Ef28E078C1edCf12e6E"
+        "StrategyAddTwoSidesOptimal": "0x6582A80b6c23BE7ecEC23Ef28E078C1edCf12e6E",
+        "StrategyWithdrawMinimizeTrading": "0x7Db9Be22E449153bb86ABeeF5D6e4C5b72E4F5B8"
       }
     }]
   }]

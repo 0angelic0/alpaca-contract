@@ -356,7 +356,7 @@ describe('IbTokenRouter', () => {
 
     expect(await lp.balanceOf(await alice.getAddress())).to.be.bignumber.above(ethers.utils.parseEther('0'));
     AssertHelpers.assertAlmostEqual(
-      await wbtc.balanceOf(await alice.getAddress()).toString(),
+      (await wbtc.balanceOf(await alice.getAddress())).toString(),
       aliceWBTCBalanceBefore.sub(ethers.utils.parseEther('0.1')).toString()
     );
     expect(await govToken.balanceOf(await alice.getAddress())).to.be.bignumber.equal(
