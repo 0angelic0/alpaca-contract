@@ -27,7 +27,7 @@ describe("TripleSlopeModel", () => {
     TestHelpers.assertAlmostEqual(interestPerYear.toString(), ethers.utils.parseEther('0.06').toString())
   });
 
-  it('should return ~10% APY when utilization 50%', async () => {
+  it('should returns ~10% APY when utilization 50%', async () => {
     const interestPerSec = await tripleSlopeModel.getInterestRate('50','50')
     const interestPerYear = interestPerSec.mul(60).mul(60).mul(24).mul(365)
     TestHelpers.assertAlmostEqual(interestPerYear.toString(), ethers.utils.parseEther('0.10').toString())
@@ -39,27 +39,27 @@ describe("TripleSlopeModel", () => {
     TestHelpers.assertAlmostEqual(interestPerYear.toString(), ethers.utils.parseEther('0.10').toString())
   });
 
-  it('should returns ~85% APY when utilization 95%', async () => {
+  it('should returns ~15% APY when utilization 95%', async () => {
     const interestPerSec = await tripleSlopeModel.getInterestRate('95','5')
     const interestPerYear = interestPerSec.mul(60).mul(60).mul(24).mul(365)
-    TestHelpers.assertAlmostEqual(interestPerYear.toString(), ethers.utils.parseEther('0.80').toString())
+    TestHelpers.assertAlmostEqual(interestPerYear.toString(), ethers.utils.parseEther('0.15').toString())
   });
 
-  it('should returns ~113% APY when utilization 97.5%', async () => {
+  it('should returns ~18% APY when utilization 97.5%', async () => {
     const interestPerSec = await tripleSlopeModel.getInterestRate('975','25')
     const interestPerYear = interestPerSec.mul(60).mul(60).mul(24).mul(365)
-    TestHelpers.assertAlmostEqual(interestPerYear.toString(), ethers.utils.parseEther('1.15').toString())
+    TestHelpers.assertAlmostEqual(interestPerYear.toString(), ethers.utils.parseEther('0.175').toString())
   });
 
-  it('should returns ~150% APY when utilization 99%', async () => {
+  it('should returns ~20% APY when utilization 99%', async () => {
     const interestPerSec = await tripleSlopeModel.getInterestRate('99','1')
     const interestPerYear = interestPerSec.mul(60).mul(60).mul(24).mul(365)
-    TestHelpers.assertAlmostEqual(interestPerYear.toString(), ethers.utils.parseEther('1.36').toString())
+    TestHelpers.assertAlmostEqual(interestPerYear.toString(), ethers.utils.parseEther('0.19').toString())
   });
 
-  it('should returns ~150% APY when utilization 100%', async () => {
+  it('should returns ~20% APY when utilization 100%', async () => {
     const interestPerSec = await tripleSlopeModel.getInterestRate('100','0')
     const interestPerYear = interestPerSec.mul(60).mul(60).mul(24).mul(365)
-    TestHelpers.assertAlmostEqual(interestPerYear.toString(), ethers.utils.parseEther('1.50').toString())
+    TestHelpers.assertAlmostEqual(interestPerYear.toString(), ethers.utils.parseEther('0.20').toString())
   });
 });

@@ -908,7 +908,7 @@ describe('Vault - Pancake', () => {
         aliceAfter.sub(aliceBefore).toString(),
       );
   
-      // Alice withdraws 2 gNATIVE
+      // Alice withdraws 2 BOKTEN
       aliceBefore = await baseToken.balanceOf(await alice.getAddress());
       await vaultAsAlice.withdraw(await vault.balanceOf(await alice.getAddress()));
       aliceAfter = await baseToken.balanceOf(await alice.getAddress());

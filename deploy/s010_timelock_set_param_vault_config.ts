@@ -18,13 +18,13 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const MIN_DEBT_SIZE = ethers.utils.parseEther('400');
   const RESERVE_POOL_BPS = '1000';
   const KILL_PRIZE_BPS = '500';
-  const INTEREST_MODEL = '0xAE9ee567dcbbce85cceA1d1b0cdd595E3C73F1EE';
+  const INTEREST_MODEL = '0x4eD10EB92c4e92bE4d368433e009646E4ABdAB05';
   const WBNB = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c';
   const WNATIVE_RELAYER = '0xE1D2CA01bc88F325fF7266DD2165944f3CAf0D3D';
   const FAIRLAUNCH = '0xA625AB01B08ce023B2a342Dbb12a16f2C8489A8F';
 
   const TIMELOCK = '0x2D5408f2287BF9F9B05404794459a846651D0a59';
-  const EXACT_ETA = '1616151600';
+  const EXACT_ETA = '1617015600';
 
 
 
