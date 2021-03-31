@@ -91,7 +91,8 @@
   },
   "SharedStrategies": {
     "StrategyAddBaseTokenOnly": "0x5D0c3a0C79fCe9c177D7140e975681447C747D05",
-    "StrategyLiquidate": "0x3be48dD0b9AA62560AAF0bff2115cc8617A4BD70"
+    "StrategyLiquidate": "0x3be48dD0b9AA62560AAF0bff2115cc8617A4BD70",
+    "StrategyWithdrawMinimizeTrading": "0x7Db9Be22E449153bb86ABeeF5D6e4C5b72E4F5B8"
   },
   "SharedConfig": {
     "TripleSlopeModel": "0x2Fe7097cf766DfE06f9e2eD3021f8a4bbEf468Dd",
@@ -116,7 +117,8 @@
       "strategies": {
         "StrategyAddAllBaseToken": "0x5D0c3a0C79fCe9c177D7140e975681447C747D05",
         "StrategyLiquidate": "0x3be48dD0b9AA62560AAF0bff2115cc8617A4BD70",
-        "StrategyAddTwoSidesOptimal": "0x9c79F9eac99Af00A75599625895f5619Da9d19e0"
+        "StrategyAddTwoSidesOptimal": "0x9c79F9eac99Af00A75599625895f5619Da9d19e0",
+        "StrategyWithdrawMinimizeTrading": "0x7Db9Be22E449153bb86ABeeF5D6e4C5b72E4F5B8"
       }
     }, {
       "name": "BTCB-WBNB PancakeswapWorker",
@@ -125,7 +127,8 @@
       "strategies": {
         "StrategyAddAllBaseToken": "0x5D0c3a0C79fCe9c177D7140e975681447C747D05",
         "StrategyLiquidate": "0x3be48dD0b9AA62560AAF0bff2115cc8617A4BD70",
-        "StrategyAddTwoSidesOptimal": "0x9c79F9eac99Af00A75599625895f5619Da9d19e0"
+        "StrategyAddTwoSidesOptimal": "0x9c79F9eac99Af00A75599625895f5619Da9d19e0",
+        "StrategyWithdrawMinimizeTrading": "0x7Db9Be22E449153bb86ABeeF5D6e4C5b72E4F5B8"
       }
     }, {
       "name": "ETH-WBNB PancakeswapWorker",
@@ -134,7 +137,8 @@
       "strategies": {
         "StrategyAddAllBaseToken": "0x5D0c3a0C79fCe9c177D7140e975681447C747D05",
         "StrategyLiquidate": "0x3be48dD0b9AA62560AAF0bff2115cc8617A4BD70",
-        "StrategyAddTwoSidesOptimal": "0x9c79F9eac99Af00A75599625895f5619Da9d19e0"
+        "StrategyAddTwoSidesOptimal": "0x9c79F9eac99Af00A75599625895f5619Da9d19e0",
+        "StrategyWithdrawMinimizeTrading": "0x7Db9Be22E449153bb86ABeeF5D6e4C5b72E4F5B8"
       }
     }]
   }, {
@@ -152,7 +156,8 @@
       "strategies": {
         "StrategyAddAllBaseToken": "0x5D0c3a0C79fCe9c177D7140e975681447C747D05",
         "StrategyLiquidate": "0x3be48dD0b9AA62560AAF0bff2115cc8617A4BD70",
-        "StrategyAddTwoSidesOptimal": "0x6582A80b6c23BE7ecEC23Ef28E078C1edCf12e6E"
+        "StrategyAddTwoSidesOptimal": "0x6582A80b6c23BE7ecEC23Ef28E078C1edCf12e6E",
+        "StrategyWithdrawMinimizeTrading": "0x7Db9Be22E449153bb86ABeeF5D6e4C5b72E4F5B8"
       }
     }, {
       "name": "WBNB-BUSD PancakeswapWorker",
@@ -161,7 +166,8 @@
       "strategies": {
         "StrategyAddAllBaseToken": "0x5D0c3a0C79fCe9c177D7140e975681447C747D05",
         "StrategyLiquidate": "0x3be48dD0b9AA62560AAF0bff2115cc8617A4BD70",
-        "StrategyAddTwoSidesOptimal": "0x6582A80b6c23BE7ecEC23Ef28E078C1edCf12e6E"
+        "StrategyAddTwoSidesOptimal": "0x6582A80b6c23BE7ecEC23Ef28E078C1edCf12e6E",
+        "StrategyWithdrawMinimizeTrading": "0x7Db9Be22E449153bb86ABeeF5D6e4C5b72E4F5B8"
       }
     }]
   }]

@@ -4884,6 +4884,164 @@
           }
         }
       }
+    },
+    "9b7b6662d8188e4aa2820e58f41ddd4e652a09e52894dae36017eb5509dff65d": {
+      "address": "0xFe2C462a24a70337b59b84aAF2B1152E34B000bF",
+      "txHash": "0x52d6f6d2e9f03fe6b6cb31ece6acc21a53089b92a09df2dcbe6847e7041a6480",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "initialized",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol:21"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initializing",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol:26"
+          },
+          {
+            "contract": "Initializable",
+            "label": "______gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol:61"
+          },
+          {
+            "contract": "ReentrancyGuardUpgradeSafe",
+            "label": "_notEntered",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/utils/ReentrancyGuard.sol:21"
+          },
+          {
+            "contract": "ReentrancyGuardUpgradeSafe",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/utils/ReentrancyGuard.sol:63"
+          },
+          {
+            "contract": "StrategyWithdrawMinimizeTrading",
+            "label": "factory",
+            "type": "t_contract(IPancakeFactory)3151",
+            "src": "contracts/6/protocol/strategies/pancakeswap/StrategyWithdrawMinimizeTrading.sol:18"
+          },
+          {
+            "contract": "StrategyWithdrawMinimizeTrading",
+            "label": "router",
+            "type": "t_contract(IPancakeRouter02)9393",
+            "src": "contracts/6/protocol/strategies/pancakeswap/StrategyWithdrawMinimizeTrading.sol:19"
+          }
+        ],
+        "types": {
+          "t_contract(IPancakeFactory)3151": {
+            "label": "contract IPancakeFactory"
+          },
+          "t_contract(IPancakeRouter02)9393": {
+            "label": "contract IPancakeRouter02"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
+    },
+    "b668969f6adac4bcd98fca48f9c5daed4f112014ab4d6118f2fa4f0e408f7246": {
+      "address": "0xe9EEf24fC74CaD87b2Fc95b030D8929cb77B81cD",
+      "txHash": "0x16f9ad87cf14e4fd7ad28a3bf3ec6ad9000fac9be5e066ee1fe13a843712b8a2",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "initialized",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol:21"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initializing",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol:26"
+          },
+          {
+            "contract": "Initializable",
+            "label": "______gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol:61"
+          },
+          {
+            "contract": "ReentrancyGuardUpgradeSafe",
+            "label": "_notEntered",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/utils/ReentrancyGuard.sol:21"
+          },
+          {
+            "contract": "ReentrancyGuardUpgradeSafe",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-ethereum-package/contracts/utils/ReentrancyGuard.sol:63"
+          },
+          {
+            "contract": "StrategyWithdrawMinimizeTrading",
+            "label": "factory",
+            "type": "t_contract(IPancakeFactory)3151",
+            "src": "contracts/6/protocol/strategies/pancakeswap/StrategyWithdrawMinimizeTrading.sol:20"
+          },
+          {
+            "contract": "StrategyWithdrawMinimizeTrading",
+            "label": "router",
+            "type": "t_contract(IPancakeRouter02)9393",
+            "src": "contracts/6/protocol/strategies/pancakeswap/StrategyWithdrawMinimizeTrading.sol:21"
+          },
+          {
+            "contract": "StrategyWithdrawMinimizeTrading",
+            "label": "wbnb",
+            "type": "t_contract(IWETH)12503",
+            "src": "contracts/6/protocol/strategies/pancakeswap/StrategyWithdrawMinimizeTrading.sol:22"
+          },
+          {
+            "contract": "StrategyWithdrawMinimizeTrading",
+            "label": "wNativeRelayer",
+            "type": "t_contract(IWNativeRelayer)12511",
+            "src": "contracts/6/protocol/strategies/pancakeswap/StrategyWithdrawMinimizeTrading.sol:23"
+          }
+        ],
+        "types": {
+          "t_contract(IPancakeFactory)3151": {
+            "label": "contract IPancakeFactory"
+          },
+          "t_contract(IPancakeRouter02)9393": {
+            "label": "contract IPancakeRouter02"
+          },
+          "t_contract(IWETH)12503": {
+            "label": "contract IWETH"
+          },
+          "t_contract(IWNativeRelayer)12511": {
+            "label": "contract IWNativeRelayer"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
     }
   },
   "admin": {

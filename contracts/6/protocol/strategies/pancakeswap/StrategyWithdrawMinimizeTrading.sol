@@ -9,6 +9,8 @@ import "@pancakeswap-libs/pancake-swap-core/contracts/interfaces/IPancakePair.so
 
 import "../../apis/pancake/IPancakeRouter02.sol";
 import "../../interfaces/IStrategy.sol";
+import "../../interfaces/IWETH.sol";
+import "../../interfaces/IWNativeRelayer.sol";
 import "../../../utils/SafeToken.sol";
 
 contract StrategyWithdrawMinimizeTrading is ReentrancyGuardUpgradeSafe, IStrategy {
@@ -17,14 +19,20 @@ contract StrategyWithdrawMinimizeTrading is ReentrancyGuardUpgradeSafe, IStrateg
 
   IPancakeFactory public factory;
   IPancakeRouter02 public router;
+  IWETH public wbnb;
+  IWNativeRelayer public wNativeRelayer;
 
   /// @dev Create a new withdraw minimize trading strategy instance.
   /// @param _router The Uniswap router smart contract.
-  function initialize(IPancakeRouter02 _router) public initializer {
+  /// @param _wbnb The wrapped BNB token.
+  /// @param _wNativeRelayer The relayer to support native transfer
+  function initialize(IPancakeRouter02 _router, IWETH _wbnb, IWNativeRelayer _wNativeRelayer) public initializer {
     ReentrancyGuardUpgradeSafe.__ReentrancyGuard_init();
 
     factory = IPancakeFactory(_router.factory());
     router = _router;
+    wbnb = _wbnb;
+    wNativeRelayer = _wNativeRelayer;
   }
 
   /// @dev Execute worker strategy. Take LP tokens. Return FarmingToken + BaseToken.
@@ -62,7 +70,13 @@ contract StrategyWithdrawMinimizeTrading is ReentrancyGuardUpgradeSafe, IStrateg
     uint256 remainingFarmingToken = farmingToken.myBalance();
     require(remainingFarmingToken >= minFarmingToken, "StrategyWithdrawMinimizeTrading::execute:: insufficient farming tokens received");
     if (remainingFarmingToken > 0) {
-      farmingToken.safeTransfer(user, remainingFarmingToken);
+      if (farmingToken == address(wbnb)) {
+        SafeToken.safeTransfer(farmingToken, address(wNativeRelayer), remainingFarmingToken);
+        wNativeRelayer.withdraw(remainingFarmingToken);
+        SafeToken.safeTransferETH(user, remainingFarmingToken);
+      } else {
+        SafeToken.safeTransfer(farmingToken, user, remainingFarmingToken);
+      }
     }
     // 7. Reset approval for safety reason
     lpToken.approve(address(router), 0);
